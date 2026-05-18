@@ -1,0 +1,591 @@
+{
+  "admins": [
+    {
+      "id": "admin-1",
+      "username": "admin",
+      "password": "$2b$10$egz7d56/eHnosdsO6jExouRQY/2Z0YAt1YPLTb5CZ4eQDP7HTZbSu",
+      "name": "Principal Admin",
+      "role": "superadmin",
+      "email": "admin@balajiacademy.in",
+      "createdAt": "2026-04-13T06:10:21.359Z"
+    },
+    {
+      "id": "admin-2",
+      "username": "accountant",
+      "password": "$2b$10$IQrwe9sGvKdu4g4zjUche.qnpbOsK3PPguXY4mvDr3QzkpuKXQoz.",
+      "name": "Fees Accountant",
+      "role": "accountant",
+      "email": "accounts@balajiacademy.in",
+      "createdAt": "2026-04-13T06:10:21.459Z"
+    }
+  ],
+  "students": [
+    {
+      "id": "S001",
+      "name": "Rahul Kumar Gupta",
+      "cls": "Class 10",
+      "section": "A",
+      "roll": "2024-10-01",
+      "fatherName": "Suresh Gupta",
+      "mobile": "9876543210",
+      "address": "Gursahaiganj, Kannauj",
+      "category": "General",
+      "dob": "2010-05-14",
+      "gender": "Male",
+      "createdAt": "2024-04-01"
+    },
+    {
+      "id": "S002",
+      "name": "Priya Dubey",
+      "cls": "Class 8",
+      "section": "A",
+      "roll": "2024-08-12",
+      "fatherName": "Ravi Dubey",
+      "mobile": "9812345678",
+      "address": "Tirwa, Kannauj",
+      "category": "OBC",
+      "dob": "2012-08-22",
+      "gender": "Female",
+      "createdAt": "2024-04-01"
+    },
+    {
+      "id": "S003",
+      "name": "Amit Singh Yadav",
+      "cls": "Class 12",
+      "section": "A",
+      "roll": "2024-12-03",
+      "fatherName": "Ramesh Yadav",
+      "mobile": "9900112233",
+      "address": "Kannauj City",
+      "category": "OBC",
+      "dob": "2007-11-30",
+      "gender": "Male",
+      "createdAt": "2024-04-01"
+    },
+    {
+      "id": "S004",
+      "name": "Sunita Kushwaha",
+      "cls": "Class 9",
+      "section": "A",
+      "roll": "2024-09-07",
+      "fatherName": "Dinesh Kushwaha",
+      "mobile": "9988776655",
+      "address": "Umarda, Kannauj",
+      "category": "SC",
+      "dob": "2011-03-18",
+      "gender": "Female",
+      "createdAt": "2024-04-01"
+    },
+    {
+      "id": "S005",
+      "name": "Deepak Vishwakarma",
+      "cls": "Class 6",
+      "section": "A",
+      "roll": "2024-06-04",
+      "fatherName": "Ashok Vishwakarma",
+      "mobile": "9765432108",
+      "address": "Gursahaiganj",
+      "category": "OBC",
+      "dob": "2013-07-09",
+      "gender": "Male",
+      "createdAt": "2024-04-01"
+    },
+    {
+      "id": "S006",
+      "name": "Kavita Prajapati",
+      "cls": "Class 7",
+      "section": "A",
+      "roll": "2024-07-09",
+      "fatherName": "Sunil Prajapati",
+      "mobile": "9234567891",
+      "address": "Kanpur Road, Kannauj",
+      "category": "OBC",
+      "dob": "2012-12-05",
+      "gender": "Female",
+      "createdAt": "2024-04-01"
+    },
+    {
+      "id": "S007",
+      "name": "Rohit Nishad",
+      "cls": "Class 5",
+      "section": "A",
+      "roll": "2024-05-11",
+      "fatherName": "Harish Nishad",
+      "mobile": "9123456780",
+      "address": "Dibiyapur, Kannauj",
+      "category": "SC",
+      "dob": "2014-02-28",
+      "gender": "Male",
+      "createdAt": "2024-04-01"
+    },
+    {
+      "id": "S008",
+      "name": "Anita Maurya",
+      "cls": "Class 11",
+      "section": "A",
+      "roll": "2024-11-06",
+      "fatherName": "Ramakant Maurya",
+      "mobile": "9876501234",
+      "address": "Sarai Akil, Kannauj",
+      "category": "OBC",
+      "dob": "2008-09-15",
+      "gender": "Female",
+      "createdAt": "2024-04-01"
+    }
+  ],
+  "feePayments": [
+    {
+      "id": "F001",
+      "studentId": "S001",
+      "studentName": "Rahul Kumar Gupta",
+      "cls": "Class 10",
+      "feeType": "Tuition Fee",
+      "amount": 1500,
+      "status": "Paid",
+      "dueDate": "2024-10-01",
+      "paidDate": "2024-09-28",
+      "month": "October 2024",
+      "receiptNo": "BA-RCP-001"
+    },
+    {
+      "id": "F002",
+      "studentId": "S002",
+      "studentName": "Priya Dubey",
+      "cls": "Class 8",
+      "feeType": "Tuition Fee",
+      "amount": 1300,
+      "status": "Pending",
+      "dueDate": "2024-10-01",
+      "paidDate": null,
+      "month": "October 2024",
+      "receiptNo": null
+    },
+    {
+      "id": "F003",
+      "studentId": "S003",
+      "studentName": "Amit Singh Yadav",
+      "cls": "Class 12",
+      "feeType": "Annual Charges",
+      "amount": 4500,
+      "status": "Partial",
+      "dueDate": "2024-09-30",
+      "paidDate": null,
+      "month": "Annual 2024",
+      "receiptNo": null
+    },
+    {
+      "id": "F004",
+      "studentId": "S004",
+      "studentName": "Sunita Kushwaha",
+      "cls": "Class 9",
+      "feeType": "Tuition Fee",
+      "amount": 1500,
+      "status": "Paid",
+      "dueDate": "2024-10-01",
+      "paidDate": "2024-09-30",
+      "month": "October 2024",
+      "receiptNo": "BA-RCP-002"
+    },
+    {
+      "id": "F005",
+      "studentId": "S005",
+      "studentName": "Deepak Vishwakarma",
+      "cls": "Class 6",
+      "feeType": "Exam Fee",
+      "amount": 700,
+      "status": "Pending",
+      "dueDate": "2024-10-15",
+      "paidDate": null,
+      "month": "Half-Yearly 2024",
+      "receiptNo": null
+    },
+    {
+      "id": "F006",
+      "studentId": "S006",
+      "studentName": "Kavita Prajapati",
+      "cls": "Class 7",
+      "feeType": "Tuition Fee",
+      "amount": 1200,
+      "status": "Paid",
+      "dueDate": "2024-10-01",
+      "paidDate": "2024-10-01",
+      "month": "October 2024",
+      "receiptNo": "BA-RCP-003"
+    },
+    {
+      "id": "F007",
+      "studentId": "S007",
+      "studentName": "Rohit Nishad",
+      "cls": "Class 5",
+      "feeType": "Tuition Fee",
+      "amount": 1100,
+      "status": "Partial",
+      "dueDate": "2024-10-01",
+      "paidDate": null,
+      "month": "October 2024",
+      "receiptNo": null
+    },
+    {
+      "id": "F008",
+      "studentId": "S008",
+      "studentName": "Anita Maurya",
+      "cls": "Class 11",
+      "feeType": "Annual Charges",
+      "amount": 4500,
+      "status": "Paid",
+      "dueDate": "2024-09-30",
+      "paidDate": "2024-09-25",
+      "month": "Annual 2024",
+      "receiptNo": "BA-RCP-004"
+    }
+  ],
+  "results": [
+    {
+      "id": "R001",
+      "studentId": "S001",
+      "studentName": "Rahul Kumar Gupta",
+      "cls": "Class 10",
+      "roll": "2024-10-01",
+      "exam": "Half-Yearly Exam 2024",
+      "marks": {
+        "Hindi": 78,
+        "English": 82,
+        "Maths": 91,
+        "Science": 85,
+        "SocialScience": 74,
+        "Computer": 88
+      },
+      "total": 498,
+      "percentage": 83,
+      "grade": "A",
+      "status": "Pass",
+      "createdAt": "2024-09-20"
+    },
+    {
+      "id": "R002",
+      "studentId": "S002",
+      "studentName": "Priya Dubey",
+      "cls": "Class 8",
+      "roll": "2024-08-12",
+      "exam": "Half-Yearly Exam 2024",
+      "marks": {
+        "Hindi": 88,
+        "English": 90,
+        "Maths": 76,
+        "Science": 84,
+        "SocialScience": 91,
+        "Computer": 95
+      },
+      "total": 524,
+      "percentage": 87.3,
+      "grade": "A",
+      "status": "Pass",
+      "createdAt": "2024-09-20"
+    },
+    {
+      "id": "R003",
+      "studentId": "S003",
+      "studentName": "Amit Singh Yadav",
+      "cls": "Class 12",
+      "roll": "2024-12-03",
+      "exam": "Unit Test – II",
+      "marks": {
+        "Hindi": 55,
+        "English": 62,
+        "Maths": 48,
+        "Science": 58,
+        "SocialScience": 60,
+        "Computer": 70
+      },
+      "total": 353,
+      "percentage": 58.8,
+      "grade": "C",
+      "status": "Pass",
+      "createdAt": "2024-09-20"
+    },
+    {
+      "id": "R004",
+      "studentId": "S004",
+      "studentName": "Sunita Kushwaha",
+      "cls": "Class 9",
+      "roll": "2024-09-07",
+      "exam": "Half-Yearly Exam 2024",
+      "marks": {
+        "Hindi": 92,
+        "English": 88,
+        "Maths": 95,
+        "Science": 90,
+        "SocialScience": 85,
+        "Computer": 98
+      },
+      "total": 548,
+      "percentage": 91.3,
+      "grade": "A+",
+      "status": "Pass",
+      "createdAt": "2024-09-20"
+    },
+    {
+      "id": "R005",
+      "studentId": "S005",
+      "studentName": "Deepak Vishwakarma",
+      "cls": "Class 6",
+      "roll": "2024-06-04",
+      "exam": "Unit Test – I",
+      "marks": {
+        "Hindi": 35,
+        "English": 28,
+        "Maths": 40,
+        "Science": 32,
+        "SocialScience": 38,
+        "Computer": 45
+      },
+      "total": 218,
+      "percentage": 36.3,
+      "grade": "D",
+      "status": "Fail",
+      "createdAt": "2024-09-20"
+    }
+  ],
+  "admissions": [
+    {
+      "id": "BA-1023",
+      "studentName": "Ananya Singh",
+      "fatherName": "Rajesh Singh",
+      "motherName": "Meena Singh",
+      "cls": "Class 6",
+      "mobile": "9876501234",
+      "dob": "2013-05-10",
+      "gender": "Female",
+      "address": "Gursahaiganj, Kannauj",
+      "category": "General",
+      "aadhaar": "123456789012",
+      "prevSchool": "GPS Gursahaiganj",
+      "status": "Approved",
+      "appliedDate": "2024-09-05",
+      "photo": null
+    },
+    {
+      "id": "BA-1024",
+      "studentName": "Kartik Yadav",
+      "fatherName": "Sunil Yadav",
+      "motherName": "Savita Yadav",
+      "cls": "Class 9",
+      "mobile": "9812345670",
+      "dob": "2010-08-22",
+      "gender": "Male",
+      "address": "Tirwa, Kannauj",
+      "category": "OBC",
+      "aadhaar": "234567890123",
+      "prevSchool": "Kendriya Vidyalaya",
+      "status": "Pending",
+      "appliedDate": "2024-09-08",
+      "photo": null
+    },
+    {
+      "id": "BA-1025",
+      "studentName": "Meena Kumari",
+      "fatherName": "Ram Prasad",
+      "motherName": "Geeta Devi",
+      "cls": "Class 1",
+      "mobile": "9900112233",
+      "dob": "2018-03-14",
+      "gender": "Female",
+      "address": "Dibiyapur, Kannauj",
+      "category": "SC",
+      "aadhaar": "345678901234",
+      "prevSchool": "",
+      "status": "Approved",
+      "appliedDate": "2024-09-12",
+      "photo": null
+    },
+    {
+      "id": "BA-1026",
+      "studentName": "Shivam Gupta",
+      "fatherName": "Ashok Gupta",
+      "motherName": "Rekha Gupta",
+      "cls": "Class 11",
+      "mobile": "9988776655",
+      "dob": "2008-11-30",
+      "gender": "Male",
+      "address": "Kannauj City",
+      "category": "General",
+      "aadhaar": "456789012345",
+      "prevSchool": "St. Mary School Kannauj",
+      "status": "Pending",
+      "appliedDate": "2024-09-14",
+      "photo": null
+    },
+    {
+      "id": "BA-1027",
+      "studentName": "Pooja Chauhan",
+      "fatherName": "Virendra Chauhan",
+      "motherName": "Nirmala Chauhan",
+      "cls": "LKG",
+      "mobile": "9765432108",
+      "dob": "2021-07-19",
+      "gender": "Female",
+      "address": "Sarai Akil, Kannauj",
+      "category": "General",
+      "aadhaar": "",
+      "prevSchool": "",
+      "status": "Rejected",
+      "appliedDate": "2024-09-18",
+      "photo": null
+    },
+    {
+      "id": "BA-1028",
+      "studentName": "Rahul Tiwari",
+      "fatherName": "Ravi Tiwari",
+      "motherName": "Sunita Tiwari",
+      "cls": "Class 3",
+      "mobile": "9234567891",
+      "dob": "2016-01-25",
+      "gender": "Male",
+      "address": "Umarda, Kannauj",
+      "category": "General",
+      "aadhaar": "567890123456",
+      "prevSchool": "GPS Umarda",
+      "status": "Approved",
+      "appliedDate": "2024-09-20",
+      "photo": null
+    }
+  ],
+  "classes": [
+    {
+      "id": "C001",
+      "name": "Nursery",
+      "section": "A",
+      "teacher": "Smt. Reena Verma",
+      "students": 28,
+      "room": "01"
+    },
+    {
+      "id": "C002",
+      "name": "LKG",
+      "section": "A",
+      "teacher": "Smt. Kavita Dubey",
+      "students": 32,
+      "room": "02"
+    },
+    {
+      "id": "C003",
+      "name": "UKG",
+      "section": "A",
+      "teacher": "Smt. Anita Mishra",
+      "students": 35,
+      "room": "03"
+    },
+    {
+      "id": "C004",
+      "name": "Class 1",
+      "section": "A",
+      "teacher": "Sh. Ram Prakash",
+      "students": 40,
+      "room": "04"
+    },
+    {
+      "id": "C005",
+      "name": "Class 5",
+      "section": "A",
+      "teacher": "Sh. Vijay Singh",
+      "students": 44,
+      "room": "08"
+    },
+    {
+      "id": "C006",
+      "name": "Class 8",
+      "section": "A",
+      "teacher": "Sh. Arvind Kumar",
+      "students": 46,
+      "room": "11"
+    },
+    {
+      "id": "C007",
+      "name": "Class 10",
+      "section": "A",
+      "teacher": "Sh. Santosh Yadav",
+      "students": 50,
+      "room": "13"
+    },
+    {
+      "id": "C008",
+      "name": "Class 12",
+      "section": "A",
+      "teacher": "Sh. Suresh Gupta",
+      "students": 34,
+      "room": "15"
+    }
+  ],
+  "notices": [
+    {
+      "id": "N001",
+      "title": "Half-Yearly Exam Schedule",
+      "body": "Half-Yearly Examinations will begin from 10 October 2024. All students must collect their admit cards from the office by 5 October.",
+      "priority": "high",
+      "postedBy": "Principal",
+      "date": "2024-09-25",
+      "active": true
+    },
+    {
+      "id": "N002",
+      "title": "Annual Prize Distribution",
+      "body": "Annual Prize Distribution Ceremony will be held on 25 November 2024 at 4 PM in School Auditorium. All parents are cordially invited.",
+      "priority": "medium",
+      "postedBy": "Admin",
+      "date": "2024-09-22",
+      "active": true
+    },
+    {
+      "id": "N003",
+      "title": "Fee Payment Deadline",
+      "body": "Last date for October 2024 fee submission is 15 October 2024. Late payment will attract fine of ₹50 per day.",
+      "priority": "high",
+      "postedBy": "Accounts",
+      "date": "2024-09-20",
+      "active": true
+    },
+    {
+      "id": "N004",
+      "title": "Diwali Holiday Notice",
+      "body": "School will remain closed for Diwali holidays from 29 October to 3 November 2024. Classes will resume on 4 November 2024.",
+      "priority": "low",
+      "postedBy": "Principal",
+      "date": "2024-09-18",
+      "active": true
+    }
+  ],
+  "auditLog": [
+    {
+      "id": "22795e1f-5c03-4a99-8055-c9045c1b8d14",
+      "action": "LOGIN",
+      "entity": "Auth",
+      "details": "User \"admin\" logged in",
+      "performedBy": "Principal Admin",
+      "timestamp": "2026-04-13T06:10:23.686Z"
+    },
+    {
+      "id": "c45a8f53-58c0-4380-9789-8d5549f13e16",
+      "action": "LOGIN",
+      "entity": "Auth",
+      "details": "User \"admin\" logged in",
+      "performedBy": "Principal Admin",
+      "timestamp": "2026-05-18T10:27:07.884Z"
+    },
+    {
+      "id": "68db6d8b-23c9-4bb3-b018-3df84278ca1f",
+      "action": "LOGOUT",
+      "entity": "Auth",
+      "details": "User \"admin\" logged out",
+      "performedBy": "Principal Admin",
+      "timestamp": "2026-05-18T10:28:17.176Z"
+    },
+    {
+      "id": "86b60c2a-d445-4a27-9f25-a7735066b45c",
+      "action": "LOGIN",
+      "entity": "Auth",
+      "details": "User \"accountant\" logged in",
+      "performedBy": "Fees Accountant",
+      "timestamp": "2026-05-18T10:28:44.240Z"
+    }
+  ]
+}

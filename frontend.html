@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balaji Academy – Gursahaiganj, Kannauj</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & VARIABLES ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#1a3c6e;
+  --primary-light:#2456a4;
+  --accent:#e8a020;
+  --accent-light:#f5c842;
+  --success:#16a34a;
+  --danger:#dc2626;
+  --warning:#d97706;
+  --bg:#f0f4fa;
+  --card:#ffffff;
+  --text:#1e293b;
+  --text-muted:#64748b;
+  --border:#e2e8f0;
+  --sidebar-w:260px;
+  --header-h:64px;
+  --radius:12px;
+  --shadow:0 2px 16px rgba(26,60,110,.08);
+  --shadow-lg:0 8px 32px rgba(26,60,110,.14);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+h1,h2,h3,h4,h5{font-family:'Poppins',sans-serif}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:'Inter',sans-serif}
+input,select,textarea{font-family:'Inter',sans-serif}
+table{border-collapse:collapse;width:100%}
+img{max-width:100%}
+ 
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#f1f5f9}
+::-webkit-scrollbar-thumb{background:#94a3b8;border-radius:3px}
+ 
+/* ===== SIDEBAR ===== */
+.sidebar{
+  position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);
+  background:var(--primary);
+  display:flex;flex-direction:column;
+  z-index:100;transition:transform .3s ease;
+  overflow-y:auto;
+}
+.sidebar-logo{
+  padding:20px 20px 16px;
+  display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid rgba(255,255,255,.12);
+}
+.logo-crest{
+  width:44px;height:44px;flex-shrink:0;
+  background:var(--accent);
+  clip-path:polygon(50% 0%,100% 20%,100% 70%,50% 100%,0% 70%,0% 20%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Poppins',sans-serif;font-weight:800;font-size:14px;
+  color:var(--primary);letter-spacing:1px;
+}
+.logo-text{color:#fff}
+.logo-text h3{font-size:13px;font-weight:700;line-height:1.2;letter-spacing:.5px}
+.logo-text span{font-size:10px;color:rgba(255,255,255,.6);font-weight:400}
+.nav-section{padding:12px 0}
+.nav-label{padding:6px 20px;font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:1.5px;font-weight:600}
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 20px;cursor:pointer;
+  color:rgba(255,255,255,.75);font-size:13.5px;font-weight:500;
+  transition:all .2s;border-left:3px solid transparent;
+  position:relative;
+}
+.nav-item:hover{background:rgba(255,255,255,.08);color:#fff}
+.nav-item.active{background:rgba(255,255,255,.12);color:#fff;border-left-color:var(--accent)}
+.nav-icon{font-size:18px;width:22px;text-align:center;flex-shrink:0}
+.sidebar-footer{margin-top:auto;padding:16px 20px;border-top:1px solid rgba(255,255,255,.1)}
+.sidebar-footer p{font-size:11px;color:rgba(255,255,255,.4);line-height:1.6}
+ 
+/* ===== TOPBAR ===== */
+.topbar{
+  position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--header-h);
+  background:#fff;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;z-index:90;box-shadow:0 1px 8px rgba(0,0,0,.05);
+}
+.topbar-left{display:flex;align-items:center;gap:16px}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:.3s}
+.page-title{font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;color:var(--primary)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.topbar-btn{
+  padding:6px 14px;border-radius:8px;border:1px solid var(--border);
+  background:#fff;font-size:12.5px;font-weight:500;color:var(--text);
+  transition:.2s;
+}
+.topbar-btn:hover{background:var(--bg);border-color:var(--primary-light)}
+.user-chip{
+  display:flex;align-items:center;gap:8px;
+  background:var(--bg);padding:6px 12px 6px 8px;border-radius:20px;
+}
+.user-avatar{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--primary);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;
+}
+.user-chip span{font-size:12.5px;font-weight:500}
+ 
+/* ===== MAIN CONTENT ===== */
+.main{margin-left:var(--sidebar-w);padding-top:var(--header-h);min-height:100vh}
+.section{display:none;padding:28px 28px 40px}
+.section.active{display:block}
+ 
+/* ===== SECTION HEADERS ===== */
+.section-header{margin-bottom:24px}
+.section-header h2{font-size:22px;font-weight:700;color:var(--primary);margin-bottom:4px}
+.section-header p{font-size:13.5px;color:var(--text-muted)}
+.section-header-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+ 
+/* ===== CARDS ===== */
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;transition:.2s}
+.card:hover{box-shadow:var(--shadow-lg)}
+ 
+/* ===== BUTTONS ===== */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;
+  border:none;transition:.2s;
+}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-light)}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-accent:hover{background:var(--accent-light);color:var(--primary)}
+.btn-success{background:var(--success);color:#fff}
+.btn-success:hover{opacity:.9}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger:hover{opacity:.9}
+.btn-outline{background:transparent;border:1.5px solid var(--primary);color:var(--primary)}
+.btn-outline:hover{background:var(--primary);color:#fff}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-xs{padding:3px 9px;font-size:11px}
+ 
+/* ===== BADGES ===== */
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:600}
+.badge-success{background:#dcfce7;color:#16a34a}
+.badge-danger{background:#fee2e2;color:#dc2626}
+.badge-warning{background:#fef3c7;color:#d97706}
+.badge-primary{background:#dbeafe;color:#1d4ed8}
+.badge-muted{background:#f1f5f9;color:#64748b}
+ 
+/* ===== FORM ELEMENTS ===== */
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:6px}
+.form-control{
+  width:100%;padding:9px 13px;border:1.5px solid var(--border);
+  border-radius:8px;font-size:13.5px;color:var(--text);
+  background:#fff;transition:.2s;
+}
+.form-control:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,60,110,.1)}
+.form-control.error{border-color:var(--danger)}
+.form-error{color:var(--danger);font-size:11.5px;margin-top:4px;display:none}
+.form-error.show{display:block}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.form-note{font-size:11.5px;color:var(--text-muted);margin-top:4px}
+ 
+/* ===== TABLE ===== */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);background:#fff;box-shadow:var(--shadow)}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{background:var(--primary);color:#fff;padding:11px 14px;font-size:12.5px;font-weight:600;text-align:left;white-space:nowrap}
+.tbl th:first-child{border-radius:var(--radius) 0 0 0}
+.tbl th:last-child{border-radius:0 var(--radius) 0 0}
+.tbl td{padding:10px 14px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:#f8fafc}
+.tbl-sm th,.tbl-sm td{padding:8px 12px;font-size:12px}
+ 
+/* ===== STAT CARDS ===== */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{
+  background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:20px;display:flex;align-items:center;gap:16px;
+  transition:.2s;cursor:default;overflow:hidden;position:relative;
+}
+.stat-card::before{
+  content:'';position:absolute;right:-15px;top:-15px;
+  width:80px;height:80px;border-radius:50%;
+  background:var(--card-accent,rgba(26,60,110,.06));
+}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.stat-icon{
+  width:52px;height:52px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;flex-shrink:0;
+}
+.stat-info h3{font-size:26px;font-weight:800;color:var(--primary);line-height:1}
+.stat-info p{font-size:12px;color:var(--text-muted);margin-top:4px;font-weight:500}
+ 
+/* ===== HERO SECTION ===== */
+.hero-banner{
+  background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 50%,#1e5799 100%);
+  border-radius:16px;padding:48px 40px;color:#fff;position:relative;overflow:hidden;
+  margin-bottom:24px;
+}
+.hero-banner::before{
+  content:'';position:absolute;right:-80px;top:-80px;
+  width:300px;height:300px;border-radius:50%;
+  border:60px solid rgba(255,255,255,.06);
+}
+.hero-banner::after{
+  content:'';position:absolute;right:80px;bottom:-60px;
+  width:200px;height:200px;border-radius:50%;
+  border:40px solid rgba(255,255,255,.04);
+}
+.hero-crest{
+  width:80px;height:80px;
+  background:var(--accent);
+  clip-path:polygon(50% 0%,100% 20%,100% 70%,50% 100%,0% 70%,0% 20%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Poppins',sans-serif;font-weight:900;font-size:26px;
+  color:var(--primary);margin-bottom:20px;
+}
+.hero-banner h1{font-size:34px;font-weight:800;letter-spacing:.5px;margin-bottom:6px}
+.hero-banner h1 span{color:var(--accent-light)}
+.hero-banner p.tagline{font-size:16px;font-weight:400;opacity:.85;margin-bottom:8px;font-style:italic}
+.hero-banner p.location{font-size:13px;opacity:.7;display:flex;align-items:center;gap:6px}
+.hero-btns{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap}
+ 
+/* ===== NOTICE TICKER ===== */
+.ticker-wrap{
+  background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:12px 20px;display:flex;align-items:center;gap:16px;
+  overflow:hidden;margin-bottom:24px;
+}
+.ticker-label{
+  background:var(--accent);color:#fff;padding:4px 12px;border-radius:20px;
+  font-size:11px;font-weight:700;white-space:nowrap;text-transform:uppercase;letter-spacing:.5px;
+}
+.ticker-track{overflow:hidden;flex:1}
+.ticker-inner{display:flex;gap:40px;animation:ticker 30s linear infinite;white-space:nowrap}
+.ticker-inner:hover{animation-play-state:paused}
+.ticker-inner span{font-size:13px;color:var(--text);padding-right:40px;border-right:1px solid var(--border)}
+@keyframes ticker{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+ 
+/* ===== GALLERY ===== */
+.gallery-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.filter-btn{
+  padding:7px 18px;border-radius:20px;border:1.5px solid var(--border);
+  background:#fff;font-size:12.5px;font-weight:600;color:var(--text-muted);
+  transition:.2s;cursor:pointer;
+}
+.filter-btn:hover,.filter-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:16px;
+}
+.gallery-item{
+  border-radius:10px;overflow:hidden;
+  box-shadow:var(--shadow);cursor:pointer;
+  position:relative;group:1;
+  aspect-ratio:4/3;background:#e2e8f0;
+}
+.gallery-item img{width:100%;height:100%;object-fit:cover;transition:.3s}
+.gallery-item:hover img{transform:scale(1.06)}
+.gallery-overlay{
+  position:absolute;inset:0;background:linear-gradient(to top,rgba(26,60,110,.85),transparent);
+  display:flex;align-items:flex-end;padding:14px;
+  opacity:0;transition:.3s;
+}
+.gallery-item:hover .gallery-overlay{opacity:1}
+.gallery-overlay span{color:#fff;font-size:12.5px;font-weight:600}
+ 
+/* ===== LIGHTBOX ===== */
+.lightbox{
+  position:fixed;inset:0;background:rgba(0,0,0,.88);
+  z-index:1000;display:none;align-items:center;justify-content:center;
+  padding:20px;
+}
+.lightbox.open{display:flex}
+.lightbox-img{max-width:90vw;max-height:80vh;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.lightbox-close{
+  position:absolute;top:20px;right:24px;
+  color:#fff;font-size:32px;cursor:pointer;line-height:1;
+  background:none;border:none;padding:4px 8px;
+}
+.lightbox-caption{position:absolute;bottom:30px;color:#fff;font-size:14px;font-weight:600;text-align:center}
+ 
+/* ===== FEES ===== */
+.fee-section-title{
+  font-size:15px;font-weight:700;color:var(--primary);
+  margin:24px 0 12px;padding-bottom:8px;
+  border-bottom:2px solid var(--accent);display:inline-block;
+}
+.fee-filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.fee-filters select,.fee-filters input{padding:7px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px}
+ 
+/* ===== RESULT ===== */
+.result-form-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;margin-bottom:24px}
+.subjects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
+.subject-input-group label{font-size:11.5px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px}
+.result-summary{
+  background:linear-gradient(135deg,var(--primary),var(--primary-light));
+  color:#fff;border-radius:var(--radius);padding:20px;
+  display:none;margin-top:16px;
+}
+.result-summary.show{display:block}
+.grade-badge{
+  display:inline-block;padding:4px 16px;border-radius:20px;
+  font-size:20px;font-weight:800;background:var(--accent);color:var(--primary);
+}
+ 
+/* ===== ADMISSION ===== */
+.admission-success{
+  display:none;text-align:center;padding:32px;
+  background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);
+  margin-bottom:24px;
+}
+.admission-success.show{display:block}
+.app-id{font-size:28px;font-weight:800;color:var(--primary);margin:10px 0}
+ 
+/* ===== CLASS CARDS ===== */
+.class-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.class-card{
+  background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);
+  overflow:hidden;transition:.2s;
+}
+.class-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.class-card-header{
+  background:var(--primary);padding:16px 18px;color:#fff;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.class-card-header h3{font-size:16px;font-weight:700}
+.class-badge{
+  background:rgba(255,255,255,.2);padding:3px 10px;
+  border-radius:12px;font-size:11px;font-weight:600;
+}
+.class-card-body{padding:16px 18px}
+.class-info{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.class-info-row{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-muted)}
+.class-info-row strong{color:var(--text);min-width:90px}
+.class-card-actions{display:flex;gap:8px;border-top:1px solid var(--border);padding:12px 18px}
+.class-students{display:none;padding:0 18px 16px}
+.class-students.open{display:block}
+.student-pill{
+  display:flex;align-items:center;gap:8px;padding:7px 0;
+  border-bottom:1px solid var(--border);font-size:12.5px;
+}
+.student-pill:last-child{border-bottom:none}
+.s-avatar{
+  width:28px;height:28px;border-radius:50%;background:var(--primary);
+  color:#fff;font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+ 
+/* ===== MODAL ===== */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.5);
+  z-index:200;display:none;align-items:center;justify-content:center;padding:20px;
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.2);
+  width:100%;max-width:560px;max-height:90vh;overflow-y:auto;
+}
+.modal-header{
+  padding:20px 24px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.modal-header h3{font-size:17px;font-weight:700;color:var(--primary)}
+.modal-close{background:none;border:none;font-size:22px;color:var(--text-muted);cursor:pointer}
+.modal-body{padding:24px}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px}
+ 
+/* ===== FOOTER ===== */
+.footer{
+  background:var(--primary);color:rgba(255,255,255,.8);
+  padding:32px 28px 20px;margin-left:var(--sidebar-w);
+}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:32px;margin-bottom:24px}
+.footer h4{color:#fff;font-size:14px;font-weight:700;margin-bottom:12px;font-family:'Poppins',sans-serif}
+.footer p,.footer li{font-size:12.5px;line-height:1.8}
+.footer ul{list-style:none}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.15);padding-top:16px;text-align:center;font-size:12px;color:rgba(255,255,255,.5)}
+ 
+/* ===== OVERLAY SIDEBAR ===== */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}
+ 
+/* ===== PRINT ===== */
+@media print{
+  .sidebar,.topbar,.no-print{display:none!important}
+  .main{margin-left:0;padding-top:0}
+  .footer{margin-left:0}
+  body{background:#fff}
+  .section{display:block!important}
+  .result-summary{background:#1a3c6e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+ 
+/* ===== RESPONSIVE ===== */
+@media(max-width:1024px){
+  .stat-grid{grid-template-columns:repeat(2,1fr)}
+  .form-grid-3{grid-template-columns:1fr 1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .subjects-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  :root{--sidebar-w:260px}
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.open{display:block}
+  .topbar{left:0}
+  .main{margin-left:0}
+  .footer{margin-left:0}
+  .hamburger{display:flex}
+  .section{padding:20px 16px 32px}
+  .stat-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .form-grid{grid-template-columns:1fr}
+  .form-grid-3{grid-template-columns:1fr}
+  .hero-banner{padding:32px 24px}
+  .hero-banner h1{font-size:24px}
+  .footer-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .stat-grid{grid-template-columns:1fr 1fr}
+  .stat-info h3{font-size:20px}
+}
+ 
+/* ===== EXTRAS ===== */
+.divider{height:1px;background:var(--border);margin:20px 0}
+.text-center{text-align:center}
+.mt-16{margin-top:16px}
+.mb-16{margin-bottom:16px}
+.flex{display:flex}
+.flex-wrap{flex-wrap:wrap}
+.gap-8{gap:8px}
+.gap-12{gap:12px}
+.items-center{align-items:center}
+.justify-between{justify-content:space-between}
+</style>
+</head>
+<body>
+ 
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-crest">BA</div>
+    <div class="logo-text">
+      <h3>Balaji Academy</h3>
+      <span>Gursahaiganj, Kannauj</span>
+    </div>
+  </div>
+  <nav class="nav-section">
+    <div class="nav-label">Main</div>
+    <div class="nav-item active" data-section="home">
+      <span class="nav-icon">🏠</span> Home
+    </div>
+    <div class="nav-item" data-section="gallery">
+      <span class="nav-icon">🖼️</span> Gallery
+    </div>
+  </nav>
+  <nav class="nav-section">
+    <div class="nav-label">Management</div>
+    <div class="nav-item" data-section="fees">
+      <span class="nav-icon">💰</span> Fees Management
+    </div>
+    <div class="nav-item" data-section="result">
+      <span class="nav-icon">📊</span> Result Management
+    </div>
+    <div class="nav-item" data-section="admission">
+      <span class="nav-icon">📝</span> Admission
+    </div>
+    <div class="nav-item" data-section="classes">
+      <span class="nav-icon">🏫</span> Class Management
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <p>Academic Year 2024–25<br>Powered by Balaji Academy</p>
+  </div>
+</aside>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+ 
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-left">
+    <div class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="page-title" id="pageTitle">🏠 Home Dashboard</div>
+  </div>
+  <div class="topbar-right">
+    <button class="topbar-btn no-print">📅 2024–25</button>
+    <div class="user-chip">
+      <div class="user-avatar">AD</div>
+      <span>Admin</span>
+    </div>
+  </div>
+</header>
+ 
+<!-- MAIN CONTENT -->
+<main class="main">
+ 
+<!-- ===== HOME SECTION ===== -->
+<section class="section active" id="home">
+  <div class="hero-banner">
+    <div class="hero-crest">BA</div>
+    <h1>BALAJI ACADEMY<br><span>Gursahaiganj</span></h1>
+    <p class="tagline">"Shaping Futures, Building Characters"</p>
+    <p class="location">📍 Gursahaiganj, Kannauj, Uttar Pradesh – 209721</p>
+    <div class="hero-btns">
+      <button class="btn btn-accent" onclick="switchSection('admission')">Apply for Admission</button>
+      <button class="btn btn-outline" style="border-color:rgba(255,255,255,.6);color:#fff;" onclick="switchSection('result')">View Results</button>
+    </div>
+  </div>
+ 
+  <!-- Ticker -->
+  <div class="ticker-wrap">
+    <span class="ticker-label">📢 Notice</span>
+    <div class="ticker-track">
+      <div class="ticker-inner">
+        <span>🎉 Annual Prize Distribution Ceremony on 25 November 2024 — All students & parents are invited</span>
+        <span>📚 Half-Yearly Examinations begin from 10 October 2024 — Check timetable on notice board</span>
+        <span>🏆 Balaji Academy wins District-Level Science Quiz — Congratulations to Team!</span>
+        <span>💰 Last date for fee submission: 15 October 2024 — Avoid late fine</span>
+        <span>🌿 School will remain closed on Diwali holidays: 29 Oct – 3 Nov 2024</span>
+        <span>📣 Parent-Teacher Meeting scheduled for 30 September 2024 at 10:00 AM</span>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- Stats -->
+  <div class="stat-grid">
+    <div class="stat-card" style="--card-accent:rgba(26,60,110,.08)">
+      <div class="stat-icon" style="background:#dbeafe">👩‍🎓</div>
+      <div class="stat-info"><h3 id="statStudents">847</h3><p>Total Students</p></div>
+    </div>
+    <div class="stat-card" style="--card-accent:rgba(232,160,32,.1)">
+      <div class="stat-icon" style="background:#fef3c7">🏫</div>
+      <div class="stat-info"><h3>18</h3><p>Classes / Sections</p></div>
+    </div>
+    <div class="stat-card" style="--card-accent:rgba(22,163,74,.08)">
+      <div class="stat-icon" style="background:#dcfce7">👨‍🏫</div>
+      <div class="stat-info"><h3>34</h3><p>Teaching Staff</p></div>
+    </div>
+    <div class="stat-card" style="--card-accent:rgba(220,38,38,.06)">
+      <div class="stat-icon" style="background:#fee2e2">🎯</div>
+      <div class="stat-info"><h3>94%</h3><p>Pass Rate 2023–24</p></div>
+    </div>
+  </div>
+ 
+  <!-- Quick Cards -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div class="card">
+      <h3 style="font-size:15px;font-weight:700;color:var(--primary);margin-bottom:14px">📋 Today's Highlights</h3>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding-bottom:8px;border-bottom:1px solid var(--border)"><span>Students Present Today</span><strong style="color:var(--success)">812 / 847</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding-bottom:8px;border-bottom:1px solid var(--border)"><span>New Admissions (This Month)</span><strong style="color:var(--primary)">23</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding-bottom:8px;border-bottom:1px solid var(--border)"><span>Fee Collection (October)</span><strong style="color:var(--accent)">₹3,42,500</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px"><span>Pending Fee (This Month)</span><strong style="color:var(--danger)">₹48,000</strong></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:15px;font-weight:700;color:var(--primary);margin-bottom:14px">📅 Upcoming Events</h3>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="background:var(--primary);color:#fff;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:700;text-align:center;min-width:44px;line-height:1.4">30<br>Sep</div>
+          <div><p style="font-size:13px;font-weight:600">Parent-Teacher Meeting</p><p style="font-size:11.5px;color:var(--text-muted)">10:00 AM – School Premises</p></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="background:var(--accent);color:#fff;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:700;text-align:center;min-width:44px;line-height:1.4">10<br>Oct</div>
+          <div><p style="font-size:13px;font-weight:600">Half-Yearly Examinations</p><p style="font-size:11.5px;color:var(--text-muted)">All Classes</p></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="background:var(--success);color:#fff;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:700;text-align:center;min-width:44px;line-height:1.4">25<br>Nov</div>
+          <div><p style="font-size:13px;font-weight:600">Annual Prize Distribution</p><p style="font-size:11.5px;color:var(--text-muted)">4:00 PM – School Auditorium</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- ===== GALLERY SECTION ===== -->
+<section class="section" id="gallery">
+  <div class="section-header-row">
+    <div class="section-header">
+      <h2>School Gallery</h2>
+      <p>Memories, milestones and moments from Balaji Academy</p>
+    </div>
+    <button class="btn btn-primary no-print">📤 Upload Photo</button>
+  </div>
+ 
+  <div class="gallery-filters">
+    <button class="filter-btn active" data-cat="all">🌟 All</button>
+    <button class="filter-btn" data-cat="events">🎉 Events</button>
+    <button class="filter-btn" data-cat="sports">⚽ Sports</button>
+    <button class="filter-btn" data-cat="classrooms">📚 Classrooms</button>
+    <button class="filter-btn" data-cat="functions">🎭 Functions</button>
+    <button class="filter-btn" data-cat="annualday">🏆 Annual Day</button>
+  </div>
+ 
+  <div class="gallery-grid" id="galleryGrid"></div>
+ 
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+</section>
+ 
+<!-- ===== FEES SECTION ===== -->
+<section class="section" id="fees">
+  <div class="section-header">
+    <h2>Fees Management</h2>
+    <p>Fee structure, transport charges and payment status for Academic Year 2024–25</p>
+  </div>
+ 
+  <div class="fee-section-title">📋 Class-wise Fee Structure</div>
+  <div class="table-wrap mb-16">
+    <table class="tbl">
+      <thead><tr>
+        <th>Class</th><th>Tuition Fee (Monthly)</th><th>Exam Fee (Yearly)</th><th>Annual Charges</th><th>Total (Yearly)</th>
+      </tr></thead>
+      <tbody id="feeStructureBody"></tbody>
+    </table>
+  </div>
+ 
+  <div class="fee-section-title">🚌 Transport Charges</div>
+  <div class="table-wrap mb-16" style="max-width:500px">
+    <table class="tbl">
+      <thead><tr><th>Distance Slab</th><th>Monthly Charge</th></tr></thead>
+      <tbody>
+        <tr><td>0 – 5 km</td><td>₹400/month</td></tr>
+        <tr><td>5 – 10 km</td><td>₹600/month</td></tr>
+        <tr><td>10 – 15 km</td><td>₹800/month</td></tr>
+        <tr><td>15+ km</td><td>₹1,000/month</td></tr>
+      </tbody>
+    </table>
+  </div>
+ 
+  <div class="fee-section-title">💳 Fee Payment Status</div>
+  <div class="fee-filters no-print">
+    <input class="form-control" style="max-width:220px" id="feeSearch" placeholder="🔍 Search student..." oninput="filterFees()">
+    <select class="form-control" style="max-width:160px" id="feeClassFilter" onchange="filterFees()">
+      <option value="">All Classes</option>
+      <option>Nursery</option><option>LKG</option><option>UKG</option>
+      <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+      <option>Class 4</option><option>Class 5</option><option>Class 6</option>
+      <option>Class 7</option><option>Class 8</option><option>Class 9</option>
+      <option>Class 10</option><option>Class 11</option><option>Class 12</option>
+    </select>
+    <select class="form-control" style="max-width:140px" id="feeStatusFilter" onchange="filterFees()">
+      <option value="">All Status</option>
+      <option>Paid</option><option>Pending</option><option>Partial</option>
+    </select>
+  </div>
+  <div class="table-wrap">
+    <table class="tbl" id="feeTable">
+      <thead><tr>
+        <th>#</th><th>Student Name</th><th>Class</th><th>Fee Type</th><th>Amount</th><th>Status</th><th>Due Date</th><th class="no-print">Action</th>
+      </tr></thead>
+      <tbody id="feeTableBody"></tbody>
+    </table>
+  </div>
+</section>
+ 
+<!-- ===== RESULT SECTION ===== -->
+<section class="section" id="result">
+  <div class="section-header">
+    <h2>Result Management</h2>
+    <p>Enter marks, auto-calculate grades and print result cards</p>
+  </div>
+ 
+  <div class="result-form-card no-print">
+    <h3 style="font-size:16px;font-weight:700;color:var(--primary);margin-bottom:16px">✏️ Enter Student Result</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Student Name *</label>
+        <input class="form-control" id="rName" placeholder="e.g. Rahul Kumar Gupta">
+        <div class="form-error" id="rNameErr">Please enter student name</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Roll Number *</label>
+        <input class="form-control" id="rRoll" placeholder="e.g. 2024-08-15">
+        <div class="form-error" id="rRollErr">Please enter roll number</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Class *</label>
+        <select class="form-control" id="rClass">
+          <option value="">Select Class</option>
+          <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+          <option>Class 4</option><option>Class 5</option><option>Class 6</option>
+          <option>Class 7</option><option>Class 8</option><option>Class 9</option>
+          <option>Class 10</option><option>Class 11</option><option>Class 12</option>
+        </select>
+        <div class="form-error" id="rClassErr">Please select class</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Exam Type</label>
+        <select class="form-control" id="rExam">
+          <option>Half-Yearly Exam 2024</option>
+          <option>Annual Exam 2024</option>
+          <option>Unit Test – I</option>
+          <option>Unit Test – II</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-label" style="margin-bottom:10px">📚 Subject Marks (out of 100 each)</div>
+    <div class="subjects-grid" id="subjectsGrid">
+      <div class="subject-input-group">
+        <label>Hindi</label>
+        <input class="form-control sub-mark" id="mHindi" type="number" min="0" max="100" placeholder="0–100" oninput="calcResult()">
+      </div>
+      <div class="subject-input-group">
+        <label>English</label>
+        <input class="form-control sub-mark" id="mEnglish" type="number" min="0" max="100" placeholder="0–100" oninput="calcResult()">
+      </div>
+      <div class="subject-input-group">
+        <label>Mathematics</label>
+        <input class="form-control sub-mark" id="mMaths" type="number" min="0" max="100" placeholder="0–100" oninput="calcResult()">
+      </div>
+      <div class="subject-input-group">
+        <label>Science</label>
+        <input class="form-control sub-mark" id="mScience" type="number" min="0" max="100" placeholder="0–100" oninput="calcResult()">
+      </div>
+      <div class="subject-input-group">
+        <label>Social Science</label>
+        <input class="form-control sub-mark" id="mSST" type="number" min="0" max="100" placeholder="0–100" oninput="calcResult()">
+      </div>
+      <div class="subject-input-group">
+        <label>Computer</label>
+        <input class="form-control sub-mark" id="mComp" type="number" min="0" max="100" placeholder="0–100" oninput="calcResult()">
+      </div>
+    </div>
+    <div class="result-summary" id="resultSummary">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+        <div><p style="font-size:11px;opacity:.7">TOTAL MARKS</p><h3 id="rTotal" style="font-size:24px;font-weight:800">—</h3><p style="font-size:11px;opacity:.7">out of 600</p></div>
+        <div><p style="font-size:11px;opacity:.7">PERCENTAGE</p><h3 id="rPercent" style="font-size:24px;font-weight:800">—</h3></div>
+        <div style="text-align:right"><p style="font-size:11px;opacity:.7">GRADE</p><div class="grade-badge" id="rGrade">—</div><br><span id="rPassFail" style="font-size:12px;font-weight:600;margin-top:8px;display:inline-block"></span></div>
+      </div>
+    </div>
+    <div class="flex gap-8 mt-16">
+      <button class="btn btn-primary" onclick="submitResult()">💾 Save Result</button>
+      <button class="btn btn-outline no-print" onclick="printResult()">🖨️ Print Result</button>
+      <button class="btn btn-outline" onclick="clearResultForm()">🔄 Clear</button>
+    </div>
+  </div>
+ 
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:10px">
+    <h3 style="font-size:15px;font-weight:700;color:var(--primary)">📊 Student Results</h3>
+    <input class="form-control no-print" style="max-width:240px" id="resultSearch" placeholder="🔍 Search by name or class..." oninput="filterResults()">
+  </div>
+  <div class="table-wrap">
+    <table class="tbl">
+      <thead><tr>
+        <th>#</th><th>Student Name</th><th>Class</th><th>Roll No</th><th>Exam</th><th>Total</th><th>%</th><th>Grade</th><th>Status</th>
+      </tr></thead>
+      <tbody id="resultTableBody"></tbody>
+    </table>
+  </div>
+</section>
+ 
+<!-- ===== ADMISSION SECTION ===== -->
+<section class="section" id="admission">
+  <div class="section-header">
+    <h2>Admission Management</h2>
+    <p>Online admission form and application tracker</p>
+  </div>
+ 
+  <div id="admissionSuccess" class="admission-success">
+    <div style="font-size:48px">✅</div>
+    <h2 style="color:var(--primary);margin:12px 0 6px">Application Submitted Successfully!</h2>
+    <p style="color:var(--text-muted);margin-bottom:12px">Your application has been received. Please note your Application ID.</p>
+    <div class="app-id" id="appIdDisplay">BA-0000</div>
+    <p style="font-size:12.5px;color:var(--text-muted)">Keep this ID for future reference. You will be contacted on your registered mobile number.</p>
+    <button class="btn btn-primary mt-16" onclick="resetAdmission()">➕ New Application</button>
+  </div>
+ 
+  <div class="card no-print" id="admissionFormCard">
+    <h3 style="font-size:16px;font-weight:700;color:var(--primary);margin-bottom:20px">📝 Online Admission Form — Academic Year 2025–26</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Student Full Name *</label>
+        <input class="form-control" id="aName" placeholder="e.g. Ananya Sharma">
+        <div class="form-error" id="aNameErr">Required field</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Date of Birth *</label>
+        <input class="form-control" id="aDob" type="date">
+        <div class="form-error" id="aDobErr">Required field</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Father's Name *</label>
+        <input class="form-control" id="aFather" placeholder="e.g. Ramesh Kumar Sharma">
+        <div class="form-error" id="aFatherErr">Required field</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mother's Name *</label>
+        <input class="form-control" id="aMother" placeholder="e.g. Sunita Sharma">
+        <div class="form-error" id="aMotherErr">Required field</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Gender *</label>
+        <select class="form-control" id="aGender">
+          <option value="">Select Gender</option>
+          <option>Male</option><option>Female</option><option>Other</option>
+        </select>
+        <div class="form-error" id="aGenderErr">Required field</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Class Applying For *</label>
+        <select class="form-control" id="aClass">
+          <option value="">Select Class</option>
+          <option>Nursery</option><option>LKG</option><option>UKG</option>
+          <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+          <option>Class 4</option><option>Class 5</option><option>Class 6</option>
+          <option>Class 7</option><option>Class 8</option><option>Class 9</option>
+          <option>Class 10</option><option>Class 11</option><option>Class 12</option>
+        </select>
+        <div class="form-error" id="aClassErr">Required field</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Previous School (if any)</label>
+        <input class="form-control" id="aPrevSchool" placeholder="Name of previous school">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mobile Number *</label>
+        <input class="form-control" id="aMobile" type="tel" maxlength="10" placeholder="10-digit mobile number">
+        <div class="form-error" id="aMobileErr">Enter valid 10-digit mobile number</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Aadhaar Number</label>
+        <input class="form-control" id="aAadhaar" type="text" maxlength="12" placeholder="12-digit Aadhaar number">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category *</label>
+        <select class="form-control" id="aCategory">
+          <option value="">Select Category</option>
+          <option>General</option><option>OBC</option><option>SC</option><option>ST</option>
+        </select>
+        <div class="form-error" id="aCategoryErr">Required field</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Residential Address *</label>
+      <textarea class="form-control" id="aAddress" rows="2" placeholder="Village/Mohalla, Post, District, PIN"></textarea>
+      <div class="form-error" id="aAddressErr">Required field</div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Upload Student Photo (UI only)</label>
+      <input type="file" class="form-control" accept="image/*" style="padding:6px">
+      <div class="form-note">Accepted: JPG, PNG (max 2MB)</div>
+    </div>
+    <button class="btn btn-primary" onclick="submitAdmission()">📨 Submit Application</button>
+  </div>
+ 
+  <div class="divider"></div>
+ 
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:10px">
+    <h3 style="font-size:15px;font-weight:700;color:var(--primary)">📋 Admission Applications</h3>
+  </div>
+  <div class="table-wrap">
+    <table class="tbl">
+      <thead><tr>
+        <th>App ID</th><th>Student Name</th><th>Class</th><th>Father's Name</th><th>Mobile</th><th>Applied Date</th><th>Status</th>
+      </tr></thead>
+      <tbody id="admissionTableBody"></tbody>
+    </table>
+  </div>
+</section>
+ 
+<!-- ===== CLASS MANAGEMENT SECTION ===== -->
+<section class="section" id="classes">
+  <div class="section-header-row">
+    <div class="section-header">
+      <h2>Class Management</h2>
+      <p>Manage classes, sections and student rosters</p>
+    </div>
+    <button class="btn btn-primary no-print" onclick="openAddClassModal()">➕ Add New Class</button>
+  </div>
+  <div class="class-grid" id="classGrid"></div>
+</section>
+ 
+</main>
+ 
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <div class="logo-crest" style="width:40px;height:40px;font-size:13px">BA</div>
+        <div>
+          <h4 style="margin:0;font-size:15px">Balaji Academy</h4>
+          <span style="font-size:11px;color:rgba(255,255,255,.5)">Est. 2005</span>
+        </div>
+      </div>
+      <p>Committed to providing quality education to every child in Gursahaiganj and surrounding villages. Nurturing young minds since 2005.</p>
+    </div>
+    <div>
+      <h4>📞 Contact Us</h4>
+      <ul>
+        <li>📱 +91 9876543210</li>
+        <li>📱 +91 9123456789</li>
+        <li>📧 balajiacademy@gmail.com</li>
+        <li>📠 Fax: 05698-XXXXXX</li>
+      </ul>
+    </div>
+    <div>
+      <h4>📍 Address</h4>
+      <p>Near Balaji Temple, Main Road,<br>Gursahaiganj, Kannauj,<br>Uttar Pradesh – 209721</p>
+      <div style="margin-top:10px">
+        <span class="badge badge-success" style="font-size:11px">Affiliated: CBSE Board</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2024 Balaji Academy, Gursahaiganj, Kannauj. All Rights Reserved.
+  </div>
+</footer>
+ 
+<!-- ADD CLASS MODAL -->
+<div class="modal-overlay" id="addClassModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>➕ Add New Class</h3>
+      <button class="modal-close" onclick="closeModal('addClassModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Class Name *</label>
+          <input class="form-control" id="ncName" placeholder="e.g. Class 8">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Section</label>
+          <input class="form-control" id="ncSection" placeholder="e.g. A">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Class Teacher *</label>
+          <input class="form-control" id="ncTeacher" placeholder="Teacher's name">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Room No *</label>
+          <input class="form-control" id="ncRoom" placeholder="e.g. 12">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Total Students</label>
+          <input class="form-control" id="ncStrength" type="number" placeholder="e.g. 40">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('addClassModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveNewClass()">Save Class</button>
+    </div>
+  </div>
+</div>
+ 
+<script>
+// =====================================================
+// NAVIGATION
+// =====================================================
+const pageTitles = {
+  home:'🏠 Home Dashboard',
+  gallery:'🖼️ School Gallery',
+  fees:'💰 Fees Management',
+  result:'📊 Result Management',
+  admission:'📝 Admission Management',
+  classes:'🏫 Class Management'
+};
+ 
+function switchSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelector(`[data-section="${id}"]`).classList.add('active');
+  document.getElementById('pageTitle').textContent = pageTitles[id];
+  closeSidebar();
+  window.scrollTo(0,0);
+}
+ 
+document.querySelectorAll('.nav-item').forEach(item=>{
+  item.addEventListener('click',()=>switchSection(item.dataset.section));
+});
+ 
+// Hamburger
+document.getElementById('hamburger').addEventListener('click',()=>{
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+});
+document.getElementById('sidebarOverlay').addEventListener('click',closeSidebar);
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
+ 
+// =====================================================
+// GALLERY
+// =====================================================
+const galleryData = [
+  {cat:'annualday',title:'Annual Day 2024 – Cultural Programme',seed:10},
+  {cat:'annualday',title:'Prize Distribution Ceremony',seed:20},
+  {cat:'annualday',title:'Chief Guest Felicitation',seed:30},
+  {cat:'events',title:'Independence Day Celebration',seed:40},
+  {cat:'events',title:'Republic Day Flag Hoisting',seed:50},
+  {cat:'events',title:'Diwali Mela – School Campus',seed:60},
+  {cat:'sports',title:'District Cricket Championship',seed:70},
+  {cat:'sports',title:'Inter-School Football Match',seed:80},
+  {cat:'sports',title:'Sports Day – 100m Race',seed:90},
+  {cat:'classrooms',title:'Science Lab – Class 10',seed:100},
+  {cat:'classrooms',title:'Computer Lab Session',seed:110},
+  {cat:'classrooms',title:'Library Reading Hour',seed:120},
+  {cat:'functions',title:'Teacher\'s Day Celebration',seed:130},
+  {cat:'functions',title:'Children\'s Day Programme',seed:140},
+  {cat:'functions',title:'Farewell Ceremony – Class 12',seed:150},
+  {cat:'events',title:'Science Exhibition 2024',seed:160},
+  {cat:'sports',title:'Kho-Kho Finals – Girls Team',seed:170},
+  {cat:'classrooms',title:'Art & Craft Workshop',seed:180},
+];
+ 
+function renderGallery(cat='all'){
+  const grid = document.getElementById('galleryGrid');
+  const items = cat==='all'?galleryData:galleryData.filter(i=>i.cat===cat);
+  grid.innerHTML = items.map((item,idx)=>`
+    <div class="gallery-item" onclick="openLightbox('https://picsum.photos/seed/${item.seed}/800/600','${item.title.replace(/'/,"\\'")}')">
+      <img src="https://picsum.photos/seed/${item.seed}/400/300" alt="${item.title}" loading="lazy">
+      <div class="gallery-overlay"><span>${item.title}</span></div>
+    </div>
+  `).join('');
+}
+renderGallery();
+ 
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    renderGallery(btn.dataset.cat);
+  });
+});
+ 
+function openLightbox(src,caption){
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightboxCaption').textContent = caption;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+}
+document.getElementById('lightbox').addEventListener('click',function(e){
+  if(e.target===this) closeLightbox();
+});
+ 
+// =====================================================
+// FEES MANAGEMENT
+// =====================================================
+const feeStructure = [
+  ['Nursery',600,500,2000,9700],['LKG',700,500,2000,10900],['UKG',800,500,2000,12100],
+  ['Class 1',900,600,2500,13900],['Class 2',900,600,2500,13900],['Class 3',1000,600,2500,15100],
+  ['Class 4',1000,600,2500,15100],['Class 5',1100,700,3000,16900],['Class 6',1200,700,3000,18100],
+  ['Class 7',1200,700,3000,18100],['Class 8',1300,800,3500,20100],['Class 9',1500,1000,4000,23000],
+  ['Class 10',1500,1000,4000,23000],['Class 11',1800,1200,4500,27300],['Class 12',1800,1200,4500,27300],
+];
+ 
+document.getElementById('feeStructureBody').innerHTML = feeStructure.map(r=>`
+  <tr><td><strong>${r[0]}</strong></td>
+  <td>₹${r[1].toLocaleString('en-IN')}/month</td>
+  <td>₹${r[2].toLocaleString('en-IN')}</td>
+  <td>₹${r[3].toLocaleString('en-IN')}</td>
+  <td><strong>₹${r[4].toLocaleString('en-IN')}</strong></td></tr>
+`).join('');
+ 
+let feePayments = [
+  {name:'Aakash Verma',cls:'Class 8',type:'Tuition Fee',amount:1300,status:'Paid',due:'01 Oct 2024'},
+  {name:'Priya Sharma',cls:'Class 10',type:'Tuition Fee',amount:1500,status:'Pending',due:'01 Oct 2024'},
+  {name:'Mohit Yadav',cls:'Class 6',type:'Exam Fee',amount:700,status:'Paid',due:'15 Sep 2024'},
+  {name:'Sunita Gupta',cls:'Class 12',type:'Annual Charges',amount:4500,status:'Partial',due:'30 Sep 2024'},
+  {name:'Rajan Singh',cls:'Class 9',type:'Tuition Fee',amount:1500,status:'Pending',due:'01 Oct 2024'},
+  {name:'Kiran Mishra',cls:'Class 3',type:'Tuition Fee',amount:1000,status:'Paid',due:'01 Oct 2024'},
+  {name:'Deepak Patel',cls:'Class 11',type:'Annual Charges',amount:4500,status:'Partial',due:'30 Sep 2024'},
+  {name:'Anjali Tiwari',cls:'Class 5',type:'Tuition Fee',amount:1100,status:'Paid',due:'01 Oct 2024'},
+  {name:'Vikas Dubey',cls:'Class 7',type:'Exam Fee',amount:700,status:'Pending',due:'15 Oct 2024'},
+  {name:'Pooja Rani',cls:'Class 1',type:'Tuition Fee',amount:900,status:'Paid',due:'01 Oct 2024'},
+  {name:'Suresh Rajput',cls:'Class 4',type:'Tuition Fee',amount:1000,status:'Partial',due:'01 Oct 2024'},
+  {name:'Nisha Pandey',cls:'Class 2',type:'Annual Charges',amount:2500,status:'Paid',due:'30 Sep 2024'},
+];
+ 
+// Load from localStorage if available
+if(localStorage.getItem('feePayments')) feePayments = JSON.parse(localStorage.getItem('feePayments'));
+ 
+function statusBadge(s){
+  const map={Paid:'badge-success',Pending:'badge-danger',Partial:'badge-warning'};
+  return `<span class="badge ${map[s]||'badge-muted'}">${s}</span>`;
+}
+ 
+function renderFeeTable(data){
+  document.getElementById('feeTableBody').innerHTML = data.map((r,i)=>`
+    <tr id="feeRow${i}">
+      <td>${i+1}</td><td><strong>${r.name}</strong></td><td>${r.cls}</td>
+      <td>${r.type}</td><td>₹${r.amount.toLocaleString('en-IN')}</td>
+      <td>${statusBadge(r.status)}</td><td>${r.due}</td>
+      <td class="no-print">
+        ${r.status!=='Paid'?`<button class="btn btn-success btn-xs" onclick="markPaid(${i})">✓ Mark Paid</button>`:'<span style="font-size:11px;color:var(--text-muted)">✔ Settled</span>'}
+      </td>
+    </tr>
+  `).join('');
+}
+renderFeeTable(feePayments);
+ 
+function markPaid(i){
+  feePayments[i].status='Paid';
+  localStorage.setItem('feePayments',JSON.stringify(feePayments));
+  filterFees();
+}
+ 
+function filterFees(){
+  const q=document.getElementById('feeSearch').value.toLowerCase();
+  const cls=document.getElementById('feeClassFilter').value;
+  const sts=document.getElementById('feeStatusFilter').value;
+  const filtered = feePayments.filter((r,i)=>{
+    return (!q||r.name.toLowerCase().includes(q))&&(!cls||r.cls===cls)&&(!sts||r.status===sts);
+  });
+  renderFeeTable(filtered);
+}
+ 
+// =====================================================
+// RESULT MANAGEMENT
+// =====================================================
+let mockResults = [
+  {name:'Rahul Kumar Gupta',cls:'Class 10',roll:'2024-10-01',exam:'Half-Yearly Exam 2024',marks:{Hindi:78,English:82,Maths:91,Science:85,SST:74,Comp:88}},
+  {name:'Priya Dubey',cls:'Class 8',roll:'2024-08-12',exam:'Half-Yearly Exam 2024',marks:{Hindi:88,English:90,Maths:76,Science:84,SST:91,Comp:95}},
+  {name:'Amit Singh Yadav',cls:'Class 12',roll:'2024-12-03',exam:'Unit Test – II',marks:{Hindi:55,English:62,Maths:48,Science:58,SST:60,Comp:70}},
+  {name:'Sunita Kushwaha',cls:'Class 9',roll:'2024-09-07',exam:'Half-Yearly Exam 2024',marks:{Hindi:92,English:88,Maths:95,Science:90,SST:85,Comp:98}},
+  {name:'Deepak Vishwakarma',cls:'Class 6',roll:'2024-06-04',exam:'Unit Test – I',marks:{Hindi:35,English:28,Maths:40,Science:32,SST:38,Comp:45}},
+  {name:'Kavita Prajapati',cls:'Class 7',roll:'2024-07-09',exam:'Half-Yearly Exam 2024',marks:{Hindi:70,English:75,Maths:68,Science:72,SST:66,Comp:80}},
+  {name:'Rohit Nishad',cls:'Class 5',roll:'2024-05-11',exam:'Half-Yearly Exam 2024',marks:{Hindi:82,English:79,Maths:85,Science:81,SST:77,Comp:88}},
+  {name:'Anita Maurya',cls:'Class 11',roll:'2024-11-06',exam:'Unit Test – II',marks:{Hindi:65,English:70,Maths:58,Science:62,SST:68,Comp:72}},
+];
+ 
+if(localStorage.getItem('results')) mockResults = JSON.parse(localStorage.getItem('results'));
+ 
+function getGrade(pct){
+  if(pct>=90) return 'A+';
+  if(pct>=80) return 'A';
+  if(pct>=70) return 'B';
+  if(pct>=60) return 'C';
+  if(pct>=33) return 'D';
+  return 'F';
+}
+ 
+function calcResultRow(marks){
+  const total = Object.values(marks).reduce((a,b)=>a+(+b||0),0);
+  const pct = ((total/600)*100).toFixed(1);
+  const grade = getGrade(parseFloat(pct));
+  const pass = Object.values(marks).every(m=>(+m||0)>=33) && parseFloat(pct)>=33;
+  return {total,pct,grade,pass};
+}
+ 
+function calcResult(){
+  const fields=['mHindi','mEnglish','mMaths','mScience','mSST','mComp'];
+  const marks={};
+  fields.forEach((f,i)=>{
+    const keys=['Hindi','English','Maths','Science','SST','Comp'];
+    marks[keys[i]]=parseInt(document.getElementById(f).value)||0;
+  });
+  const filled = fields.some(f=>document.getElementById(f).value!=='');
+  if(!filled){document.getElementById('resultSummary').classList.remove('show');return;}
+  const {total,pct,grade,pass} = calcResultRow(marks);
+  document.getElementById('rTotal').textContent = total;
+  document.getElementById('rPercent').textContent = pct+'%';
+  document.getElementById('rGrade').textContent = grade;
+  document.getElementById('rPassFail').textContent = pass?'✅ PASS':'❌ FAIL';
+  document.getElementById('resultSummary').classList.add('show');
+}
+ 
+function submitResult(){
+  const name=document.getElementById('rName').value.trim();
+  const roll=document.getElementById('rRoll').value.trim();
+  const cls=document.getElementById('rClass').value;
+  let ok=true;
+  [['rName','rNameErr'],['rRoll','rRollErr'],['rClass','rClassErr']].forEach(([f,e])=>{
+    const v=document.getElementById(f).value.trim();
+    if(!v){document.getElementById(e).classList.add('show');ok=false;}
+    else document.getElementById(e).classList.remove('show');
+  });
+  if(!ok) return;
+  const fields=['mHindi','mEnglish','mMaths','mScience','mSST','mComp'];
+  const marks={};
+  ['Hindi','English','Maths','Science','SST','Comp'].forEach((k,i)=>marks[k]=parseInt(document.getElementById(fields[i]).value)||0);
+  const exam = document.getElementById('rExam').value;
+  mockResults.unshift({name,cls,roll,exam,marks});
+  localStorage.setItem('results',JSON.stringify(mockResults));
+  renderResultTable(mockResults);
+  alert(`✅ Result saved for ${name}!`);
+  clearResultForm();
+}
+ 
+function clearResultForm(){
+  ['rName','rRoll','mHindi','mEnglish','mMaths','mScience','mSST','mComp'].forEach(id=>{
+    document.getElementById(id).value='';
+  });
+  document.getElementById('rClass').selectedIndex=0;
+  document.getElementById('resultSummary').classList.remove('show');
+}
+ 
+function renderResultTable(data){
+  document.getElementById('resultTableBody').innerHTML = data.map((r,i)=>{
+    const {total,pct,grade,pass} = calcResultRow(r.marks);
+    const gb = grade==='A+'||grade==='A'?'badge-success':grade==='F'?'badge-danger':'badge-primary';
+    return `<tr>
+      <td>${i+1}</td><td><strong>${r.name}</strong></td><td>${r.cls}</td><td>${r.roll}</td>
+      <td style="font-size:11.5px">${r.exam}</td>
+      <td>${total}/600</td><td>${pct}%</td>
+      <td><span class="badge ${gb}">${grade}</span></td>
+      <td><span class="badge ${pass?'badge-success':'badge-danger'}">${pass?'Pass':'Fail'}</span></td>
+    </tr>`;
+  }).join('');
+}
+renderResultTable(mockResults);
+ 
+function filterResults(){
+  const q=document.getElementById('resultSearch').value.toLowerCase();
+  const filtered=mockResults.filter(r=>r.name.toLowerCase().includes(q)||r.cls.toLowerCase().includes(q));
+  renderResultTable(filtered);
+}
+ 
+function printResult(){
+  window.print();
+}
+ 
+// =====================================================
+// ADMISSION MANAGEMENT
+// =====================================================
+let admissions = [
+  {id:'BA-1023',name:'Ananya Singh',cls:'Class 6',father:'Rajesh Singh',mobile:'9876501234',date:'05 Sep 2024',status:'Approved'},
+  {id:'BA-1024',name:'Kartik Yadav',cls:'Class 9',father:'Sunil Yadav',mobile:'9812345670',date:'08 Sep 2024',status:'Pending'},
+  {id:'BA-1025',name:'Meena Kumari',cls:'Class 1',father:'Ram Prasad',mobile:'9900112233',date:'12 Sep 2024',status:'Approved'},
+  {id:'BA-1026',name:'Shivam Gupta',cls:'Class 11',father:'Ashok Gupta',mobile:'9988776655',date:'14 Sep 2024',status:'Pending'},
+  {id:'BA-1027',name:'Pooja Chauhan',cls:'LKG',father:'Virendra Chauhan',mobile:'9765432108',date:'18 Sep 2024',status:'Rejected'},
+  {id:'BA-1028',name:'Rahul Tiwari',cls:'Class 3',father:'Ravi Tiwari',mobile:'9234567891',date:'20 Sep 2024',status:'Approved'},
+];
+if(localStorage.getItem('admissions')) admissions=JSON.parse(localStorage.getItem('admissions'));
+ 
+const statusColors={'Approved':'badge-success','Pending':'badge-warning','Rejected':'badge-danger'};
+ 
+function renderAdmissions(){
+  document.getElementById('admissionTableBody').innerHTML = admissions.map((a,i)=>`
+    <tr>
+      <td><strong>${a.id}</strong></td>
+      <td>${a.name}</td><td>${a.cls}</td><td>${a.father}</td><td>${a.mobile}</td><td>${a.date}</td>
+      <td>
+        <select class="form-control" style="padding:4px 8px;font-size:12px;min-width:110px" onchange="changeAdmStatus(${i},this.value)">
+          ${['Approved','Pending','Rejected'].map(s=>`<option ${a.status===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </td>
+    </tr>
+  `).join('');
+}
+renderAdmissions();
+ 
+function changeAdmStatus(i,val){
+  admissions[i].status=val;
+  localStorage.setItem('admissions',JSON.stringify(admissions));
+  renderAdmissions();
+}
+ 
+function submitAdmission(){
+  const fields=[
+    ['aName','aNameErr'],['aDob','aDobErr'],['aFather','aFatherErr'],['aMother','aMotherErr'],
+    ['aGender','aGenderErr'],['aClass','aClassErr'],['aCategory','aCategoryErr'],['aAddress','aAddressErr']
+  ];
+  let ok=true;
+  fields.forEach(([f,e])=>{
+    const v=document.getElementById(f).value.trim();
+    if(!v){document.getElementById(e).classList.add('show');ok=false;}
+    else document.getElementById(e).classList.remove('show');
+  });
+  const mob=document.getElementById('aMobile').value;
+  if(!/^\d{10}$/.test(mob)){document.getElementById('aMobileErr').classList.add('show');ok=false;}
+  else document.getElementById('aMobileErr').classList.remove('show');
+  if(!ok) return;
+  const id='BA-'+Math.floor(1000+Math.random()*9000);
+  const today=new Date();
+  const dateStr=today.getDate()+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][today.getMonth()]+' '+today.getFullYear();
+  const newAdm={
+    id,name:document.getElementById('aName').value,
+    cls:document.getElementById('aClass').value,
+    father:document.getElementById('aFather').value,
+    mobile:mob,date:dateStr,status:'Pending'
+  };
+  admissions.unshift(newAdm);
+  localStorage.setItem('admissions',JSON.stringify(admissions));
+  renderAdmissions();
+  document.getElementById('appIdDisplay').textContent=id;
+  document.getElementById('admissionFormCard').style.display='none';
+  document.getElementById('admissionSuccess').classList.add('show');
+}
+ 
+function resetAdmission(){
+  document.getElementById('admissionSuccess').classList.remove('show');
+  document.getElementById('admissionFormCard').style.display='block';
+  ['aName','aDob','aFather','aMother','aPrevSchool','aMobile','aAadhaar','aAddress'].forEach(id=>{
+    document.getElementById(id).value='';
+  });
+  ['aGender','aClass','aCategory'].forEach(id=>document.getElementById(id).selectedIndex=0);
+}
+ 
+// =====================================================
+// CLASS MANAGEMENT
+// =====================================================
+let classData = [
+  {name:'Nursery',section:'A',teacher:'Smt. Reena Verma',students:28,room:'01',list:['Aarav Sharma','Priya Singh','Ravi Yadav','Sneha Gupta','Mohan Mishra']},
+  {name:'LKG',section:'A',teacher:'Smt. Kavita Dubey',students:32,room:'02',list:['Divya Tiwari','Ankush Patel','Neha Rajput','Sachin Yadav','Pooja Nishad']},
+  {name:'UKG',section:'A',teacher:'Smt. Anita Mishra',students:35,room:'03',list:['Harsh Verma','Ritu Singh','Deepak Pandey','Suman Gupta','Raj Kushwaha']},
+  {name:'Class 1',section:'A',teacher:'Sh. Ram Prakash',students:40,room:'04',list:['Akash Kumar','Neha Sharma','Vikas Singh','Pinki Yadav','Suresh Tiwari']},
+  {name:'Class 2',section:'A',teacher:'Smt. Savita Yadav',students:38,room:'05',list:['Rahul Mishra','Sita Devi','Pawan Gupta','Sangeeta Verma','Alok Dubey']},
+  {name:'Class 3',section:'A',teacher:'Sh. Sunil Pandey',students:42,room:'06',list:['Arun Prajapati','Mamta Singh','Dinesh Yadav','Kiran Maurya','Anil Chauhan']},
+  {name:'Class 4',section:'A',teacher:'Smt. Rekha Gupta',students:40,room:'07',list:['Priyanka Joshi','Deepak Rao','Nidhi Srivastava','Rohit Misra','Garima Pandey']},
+  {name:'Class 5',section:'A',teacher:'Sh. Vijay Singh',students:44,room:'08',list:['Ankit Tiwari','Sunita Yadav','Pankaj Verma','Meena Dubey','Ritesh Kumar']},
+  {name:'Class 6',section:'A',teacher:'Sh. Rajesh Sharma',students:45,room:'09',list:['Shubham Gupta','Priti Mishra','Manish Yadav','Anjali Tiwari','Vipin Rajput']},
+  {name:'Class 7',section:'A',teacher:'Smt. Madhuri Pandey',students:43,room:'10',list:['Sachin Singh','Rekha Patel','Aakash Mishra','Deepika Yadav','Rohit Nishad']},
+  {name:'Class 8',section:'A',teacher:'Sh. Arvind Kumar',students:46,room:'11',list:['Priya Gupta','Manish Tiwari','Sandeep Verma','Nisha Dubey','Vikash Singh']},
+  {name:'Class 9',section:'A',teacher:'Sh. Dinesh Mishra',students:48,room:'12',list:['Ankita Sharma','Rajan Yadav','Pooja Kushwaha','Shyam Prasad','Kavita Misra']},
+  {name:'Class 10',section:'A',teacher:'Sh. Santosh Yadav',students:50,room:'13',list:['Kiran Patel','Arun Kumar','Sunita Singh','Deepak Gupta','Reena Tiwari']},
+  {name:'Class 11',section:'A',teacher:'Sh. Ramesh Dubey',students:36,room:'14',list:['Rohit Pandey','Priya Verma','Vikas Chauhan','Anita Rajput','Sanjay Mishra']},
+  {name:'Class 12',section:'A',teacher:'Sh. Suresh Gupta',students:34,room:'15',list:['Amita Singh','Sandeep Yadav','Ritu Sharma','Manish Tiwari','Priti Kumar']},
+];
+ 
+if(localStorage.getItem('classData')) classData=JSON.parse(localStorage.getItem('classData'));
+ 
+const classColors=['#1a3c6e','#2456a4','#16a34a','#d97706','#dc2626','#7c3aed','#0891b2','#c2410c'];
+ 
+function renderClasses(){
+  document.getElementById('classGrid').innerHTML = classData.map((c,i)=>`
+    <div class="class-card" id="classCard${i}">
+      <div class="class-card-header" style="background:${classColors[i%classColors.length]}">
+        <h3>${c.name}</h3>
+        <span class="class-badge">Sec ${c.section}</span>
+      </div>
+      <div class="class-card-body">
+        <div class="class-info">
+          <div class="class-info-row"><strong>🧑‍🏫 Teacher:</strong><span>${c.teacher}</span></div>
+          <div class="class-info-row"><strong>👥 Students:</strong><span>${c.students}</span></div>
+          <div class="class-info-row"><strong>🚪 Room No:</strong><span>${c.room}</span></div>
+        </div>
+        <button class="btn btn-outline btn-sm" style="width:100%" onclick="toggleStudents(${i})">👁 View Students</button>
+      </div>
+      <div class="class-students" id="classStudents${i}">
+        ${c.list.map((s,si)=>`
+          <div class="student-pill">
+            <div class="s-avatar">${s.charAt(0)}</div>
+            <span>${s}</span>
+            <span class="badge badge-muted" style="margin-left:auto;font-size:10px">Roll ${si+1}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div class="class-card-actions no-print">
+        <button class="btn btn-outline btn-xs" onclick="editClass(${i})">✏️ Edit</button>
+        <button class="btn btn-danger btn-xs" onclick="deleteClass(${i})">🗑️ Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+renderClasses();
+ 
+function toggleStudents(i){
+  const el=document.getElementById(`classStudents${i}`);
+  el.classList.toggle('open');
+}
+ 
+function editClass(i){
+  const c=classData[i];
+  document.getElementById('ncName').value=c.name;
+  document.getElementById('ncSection').value=c.section;
+  document.getElementById('ncTeacher').value=c.teacher;
+  document.getElementById('ncRoom').value=c.room;
+  document.getElementById('ncStrength').value=c.students;
+  document.getElementById('addClassModal').dataset.editIdx=i;
+  openAddClassModal();
+}
+ 
+function deleteClass(i){
+  if(confirm(`Delete ${classData[i].name}?`)){
+    classData.splice(i,1);
+    localStorage.setItem('classData',JSON.stringify(classData));
+    renderClasses();
+  }
+}
+ 
+function openAddClassModal(){
+  document.getElementById('addClassModal').classList.add('open');
+}
+ 
+function saveNewClass(){
+  const name=document.getElementById('ncName').value.trim();
+  const section=document.getElementById('ncSection').value.trim()||'A';
+  const teacher=document.getElementById('ncTeacher').value.trim();
+  const room=document.getElementById('ncRoom').value.trim();
+  const students=parseInt(document.getElementById('ncStrength').value)||0;
+  if(!name||!teacher||!room){alert('Please fill required fields.');return;}
+  const idx=document.getElementById('addClassModal').dataset.editIdx;
+  if(idx!==undefined&&idx!==''){
+    classData[parseInt(idx)]={...classData[parseInt(idx)],name,section,teacher,room,students};
+    delete document.getElementById('addClassModal').dataset.editIdx;
+  } else {
+    classData.push({name,section,teacher,students,room,list:[]});
+  }
+  localStorage.setItem('classData',JSON.stringify(classData));
+  renderClasses();
+  closeModal('addClassModal');
+  ['ncName','ncSection','ncTeacher','ncRoom','ncStrength'].forEach(id=>document.getElementById(id).value='');
+}
+ 
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+}
+ 
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay=>{
+  overlay.addEventListener('click',function(e){
+    if(e.target===this) closeModal(this.id);
+  });
+});
+</script>
+</body>
+</html>

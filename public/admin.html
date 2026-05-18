@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel – Balaji Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --p:#1a3c6e;--pl:#2456a4;--acc:#e8a020;--accl:#f5c842;
+  --ok:#16a34a;--err:#dc2626;--warn:#d97706;
+  --bg:#f0f4fa;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;
+  --sw:260px;--th:64px;
+  --r:12px;--sh:0 2px 16px rgba(26,60,110,.08);--shl:0 8px 32px rgba(26,60,110,.14);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+h1,h2,h3,h4{font-family:'Poppins',sans-serif}
+button{cursor:pointer;font-family:'Inter',sans-serif}
+input,select,textarea{font-family:'Inter',sans-serif}
+table{border-collapse:collapse;width:100%}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:#94a3b8;border-radius:3px}
+
+/* ── LOGIN SCREEN ── */
+#loginScreen{
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;background:linear-gradient(135deg,var(--p) 0%,var(--pl) 60%,#1e5799 100%);
+  position:relative;overflow:hidden;
+}
+#loginScreen::before{content:'';position:absolute;right:-100px;top:-100px;width:400px;height:400px;border-radius:50%;border:80px solid rgba(255,255,255,.04)}
+#loginScreen::after{content:'';position:absolute;left:-80px;bottom:-80px;width:300px;height:300px;border-radius:50%;border:60px solid rgba(255,255,255,.04)}
+.login-box{
+  background:#fff;border-radius:20px;padding:40px;
+  width:100%;max-width:420px;box-shadow:0 24px 80px rgba(0,0,0,.25);
+  position:relative;z-index:1;
+}
+.login-logo{text-align:center;margin-bottom:28px}
+.crest{
+  width:64px;height:64px;margin:0 auto 12px;
+  background:var(--acc);
+  clip-path:polygon(50% 0%,100% 20%,100% 70%,50% 100%,0% 70%,0% 20%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Poppins',sans-serif;font-weight:900;font-size:20px;color:var(--p);
+}
+.login-logo h2{font-size:20px;font-weight:800;color:var(--p)}
+.login-logo p{font-size:12px;color:var(--muted);margin-top:2px}
+.login-err{background:#fee2e2;color:var(--err);border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:16px;display:none}
+.login-err.show{display:block}
+.fg{margin-bottom:16px}
+.fl{display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px}
+.fc{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;transition:.2s}
+.fc:focus{outline:none;border-color:var(--p);box-shadow:0 0 0 3px rgba(26,60,110,.1)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;border:none;transition:.2s;cursor:pointer}
+.btn-p{background:var(--p);color:#fff;width:100%;justify-content:center;padding:12px}
+.btn-p:hover{background:var(--pl)}
+.btn-acc{background:var(--acc);color:#fff}
+.btn-acc:hover{background:var(--accl);color:var(--p)}
+.btn-ok{background:var(--ok);color:#fff}
+.btn-ok:hover{opacity:.9}
+.btn-err{background:var(--err);color:#fff}
+.btn-err:hover{opacity:.9}
+.btn-out{background:transparent;border:1.5px solid var(--p);color:var(--p)}
+.btn-out:hover{background:var(--p);color:#fff}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-xs{padding:3px 9px;font-size:11px}
+.login-hint{background:#f0f4fa;border-radius:8px;padding:12px;margin-top:16px;font-size:12px;color:var(--muted);line-height:1.8}
+.login-hint strong{color:var(--p)}
+
+/* ── APP SHELL ── */
+#app{display:none}
+.sidebar{
+  position:fixed;left:0;top:0;bottom:0;width:var(--sw);
+  background:var(--p);display:flex;flex-direction:column;
+  z-index:100;overflow-y:auto;transition:transform .3s;
+}
+.sl{padding:18px 18px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sl-crest{width:40px;height:40px;flex-shrink:0;background:var(--acc);clip-path:polygon(50% 0%,100% 20%,100% 70%,50% 100%,0% 70%,0% 20%);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-weight:900;font-size:13px;color:var(--p)}
+.sl-t h3{font-size:12.5px;font-weight:700;color:#fff;letter-spacing:.3px}
+.sl-t span{font-size:10px;color:rgba(255,255,255,.5)}
+.nav-sec{padding:10px 0}
+.nav-lbl{padding:5px 18px;font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1.5px;font-weight:600}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 18px;cursor:pointer;color:rgba(255,255,255,.7);font-size:13px;font-weight:500;transition:.15s;border-left:3px solid transparent}
+.ni:hover{background:rgba(255,255,255,.07);color:#fff}
+.ni.active{background:rgba(255,255,255,.1);color:#fff;border-left-color:var(--acc)}
+.ni-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.sb-foot{margin-top:auto;padding:14px 18px;border-top:1px solid rgba(255,255,255,.1)}
+.user-info{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.u-av{width:32px;height:32px;border-radius:50%;background:var(--acc);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--p);flex-shrink:0}
+.u-name{font-size:12px;color:#fff;font-weight:600}
+.u-role{font-size:10px;color:rgba(255,255,255,.4);text-transform:capitalize}
+.logout-btn{width:100%;padding:7px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:7px;color:rgba(255,255,255,.75);font-size:12px;cursor:pointer;transition:.15s}
+.logout-btn:hover{background:rgba(220,38,38,.3);color:#fff;border-color:transparent}
+
+/* ── TOPBAR ── */
+.topbar{position:fixed;top:0;left:var(--sw);right:0;height:var(--th);background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:90;box-shadow:0 1px 6px rgba(0,0,0,.05)}
+.tb-left{display:flex;align-items:center;gap:14px}
+.hb{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:4px}
+.hb span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px}
+#pgTitle{font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;color:var(--p)}
+.tb-right{display:flex;align-items:center;gap:10px}
+.time-chip{font-size:12px;color:var(--muted);background:var(--bg);padding:5px 10px;border-radius:6px}
+.api-dot{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block;margin-right:4px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sw);padding-top:var(--th);min-height:100vh}
+.sec{display:none;padding:24px 24px 40px;animation:fadeIn .25s ease}
+.sec.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── SECTION HEADER ── */
+.sh{margin-bottom:20px}
+.sh h2{font-size:21px;font-weight:700;color:var(--p);margin-bottom:3px}
+.sh p{font-size:13px;color:var(--muted)}
+.shr{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+
+/* ── CARDS ── */
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:20px;transition:.2s}
+.card:hover{box-shadow:var(--shl)}
+
+/* ── STAT GRID ── */
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.sc{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:18px;display:flex;align-items:center;gap:14px;transition:.2s;overflow:hidden;position:relative}
+.sc::after{content:'';position:absolute;right:-12px;top:-12px;width:70px;height:70px;border-radius:50%;background:rgba(26,60,110,.05)}
+.sc:hover{transform:translateY(-2px);box-shadow:var(--shl)}
+.si{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.sv h3{font-size:24px;font-weight:800;color:var(--p);line-height:1}
+.sv p{font-size:11.5px;color:var(--muted);margin-top:3px;font-weight:500}
+
+/* ── BADGES ── */
+.bk{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:600}
+.bk-ok{background:#dcfce7;color:#16a34a}
+.bk-err{background:#fee2e2;color:#dc2626}
+.bk-warn{background:#fef3c7;color:#d97706}
+.bk-p{background:#dbeafe;color:#1d4ed8}
+.bk-mu{background:#f1f5f9;color:#64748b}
+
+/* ── TABLE ── */
+.tw{overflow-x:auto;border-radius:var(--r);background:#fff;box-shadow:var(--sh)}
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{background:var(--p);color:#fff;padding:10px 13px;font-size:12px;font-weight:600;text-align:left;white-space:nowrap}
+.tbl th:first-child{border-radius:var(--r) 0 0 0}
+.tbl th:last-child{border-radius:0 var(--r) 0 0}
+.tbl td{padding:9px 13px;font-size:12.5px;border-bottom:1px solid var(--border);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:#f8fafc}
+.empty-row td{text-align:center;color:var(--muted);padding:32px;font-size:13px}
+
+/* ── FORM ── */
+.fg2{margin-bottom:14px}
+.fl2{display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px}
+.fc2{width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;color:var(--text);transition:.2s}
+.fc2:focus{outline:none;border-color:var(--p);box-shadow:0 0 0 3px rgba(26,60,110,.1)}
+.fc2.err{border-color:var(--err)}
+.ferr{color:var(--err);font-size:11px;margin-top:3px;display:none}
+.ferr.show{display:block}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* ── MODAL ── */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:none;align-items:center;justify-content:center;padding:16px}
+.mo.open{display:flex}
+.md{background:#fff;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.2);width:100%;max-width:560px;max-height:90vh;overflow-y:auto}
+.md-h{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.md-h h3{font-size:16px;font-weight:700;color:var(--p)}
+.md-x{background:none;border:none;font-size:20px;color:var(--muted);cursor:pointer;line-height:1}
+.md-b{padding:22px}
+.md-f{padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:24px;right:24px;z-index:999;
+  display:flex;flex-direction:column;gap:8px;
+  pointer-events:none;
+}
+.toast{
+  background:#fff;border-radius:10px;box-shadow:var(--shl);
+  padding:12px 16px;display:flex;align-items:center;gap:10px;
+  min-width:260px;max-width:360px;pointer-events:all;
+  animation:slideIn .3s ease;
+  border-left:4px solid var(--ok);
+}
+.toast.error{border-left-color:var(--err)}
+.toast.warn{border-left-color:var(--warn)}
+.toast-msg{font-size:13px;flex:1}
+.toast-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:0 2px}
+@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
+
+/* ── FILTERS BAR ── */
+.fb{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.fb input,.fb select{padding:7px 11px;border:1.5px solid var(--border);border-radius:7px;font-size:12.5px;color:var(--text);background:#fff}
+.fb input:focus,.fb select:focus{outline:none;border-color:var(--p)}
+
+/* ── PRIORITY ── */
+.pri-high{color:var(--err);font-weight:600}
+.pri-med{color:var(--warn);font-weight:600}
+.pri-low{color:var(--ok);font-weight:600}
+
+/* ── LOADING ── */
+.loading{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--muted);gap:10px;font-size:13px}
+.spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--p);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── API CONFIG ── */
+.api-bar{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.api-bar label{font-size:12px;font-weight:600;color:var(--muted)}
+.api-bar input{padding:6px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:12.5px;min-width:280px;flex:1}
+.api-bar input:focus{outline:none;border-color:var(--p)}
+.api-status{font-size:12px;font-weight:600;padding:4px 12px;border-radius:12px}
+.api-status.ok{background:#dcfce7;color:#16a34a}
+.api-status.err{background:#fee2e2;color:var(--err)}
+
+/* ── AUDIT LOG ── */
+.audit-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:12.5px}
+.audit-item:last-child{border-bottom:none}
+.audit-time{color:var(--muted);white-space:nowrap;min-width:130px}
+.audit-action{font-weight:600;color:var(--p);min-width:70px}
+.audit-entity{min-width:70px}
+.audit-detail{color:var(--text);flex:1}
+.audit-by{color:var(--muted)}
+
+/* ── OVERLAY ── */
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){.sg{grid-template-columns:repeat(2,1fr)}.fg-row3{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}
+  .sb-overlay.open{display:block}.topbar{left:0}.main{margin-left:0}
+  .hb{display:flex}.sec{padding:16px 14px 32px}.sg{grid-template-columns:repeat(2,1fr);gap:10px}
+  .fg-row,.fg-row3{grid-template-columns:1fr}
+}
+@media(max-width:480px){.sg{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══════════════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="crest">BA</div>
+      <h2>Admin Panel</h2>
+      <p>Balaji Academy, Gursahaiganj</p>
+    </div>
+    <div class="login-err" id="loginErr"></div>
+    <div class="fg">
+      <label class="fl">Username</label>
+      <input class="fc" id="lUser" type="text" placeholder="Enter username" autocomplete="username">
+    </div>
+    <div class="fg">
+      <label class="fl">Password</label>
+      <input class="fc" id="lPass" type="password" placeholder="Enter password" autocomplete="current-password">
+    </div>
+    <button class="btn btn-p" onclick="doLogin()">🔐 Login to Admin Panel</button>
+    <div class="login-hint">
+      <strong>Default Credentials:</strong><br>
+      Admin: <strong>admin</strong> / <strong>admin@123</strong><br>
+      Accountant: <strong>accountant</strong> / <strong>fees@123</strong>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ APP ══════════════════════════════════════════════════ -->
+<div id="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sl">
+      <div class="sl-crest">BA</div>
+      <div class="sl-t"><h3>Balaji Academy</h3><span>Admin Panel</span></div>
+    </div>
+    <nav class="nav-sec">
+      <div class="nav-lbl">Overview</div>
+      <div class="ni active" data-sec="dashboard"><span class="ni-icon">📊</span> Dashboard</div>
+    </nav>
+    <nav class="nav-sec">
+      <div class="nav-lbl">Management</div>
+      <div class="ni" data-sec="students"><span class="ni-icon">👩‍🎓</span> Students</div>
+      <div class="ni" data-sec="fees"><span class="ni-icon">💰</span> Fees</div>
+      <div class="ni" data-sec="results"><span class="ni-icon">📈</span> Results</div>
+      <div class="ni" data-sec="admissions"><span class="ni-icon">📝</span> Admissions</div>
+      <div class="ni" data-sec="classes"><span class="ni-icon">🏫</span> Classes</div>
+      <div class="ni" data-sec="notices"><span class="ni-icon">📢</span> Notices</div>
+    </nav>
+    <nav class="nav-sec">
+      <div class="nav-lbl">System</div>
+      <div class="ni" data-sec="admins"><span class="ni-icon">👤</span> Admin Users</div>
+      <div class="ni" data-sec="audit"><span class="ni-icon">🗒️</span> Audit Log</div>
+      <div class="ni" data-sec="settings"><span class="ni-icon">⚙️</span> API Settings</div>
+    </nav>
+    <div class="sb-foot">
+      <div class="user-info">
+        <div class="u-av" id="userAv">A</div>
+        <div><div class="u-name" id="userName">Admin</div><div class="u-role" id="userRole">superadmin</div></div>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">⏻ Logout</button>
+    </div>
+  </aside>
+  <div class="sb-overlay" id="sbOverlay"></div>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="tb-left">
+      <div class="hb" id="hb"><span></span><span></span><span></span></div>
+      <div id="pgTitle">📊 Dashboard</div>
+    </div>
+    <div class="tb-right">
+      <span class="time-chip"><span class="api-dot"></span><span id="apiStatusText">API Connected</span></span>
+      <span class="time-chip" id="clockDisplay">--:--</span>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ── DASHBOARD ── -->
+    <section class="sec active" id="dashboard">
+      <div class="sh"><h2>Dashboard Overview</h2><p>Welcome back! Here's what's happening at Balaji Academy today.</p></div>
+      <div class="sg" id="dashStats">
+        <div class="sc"><div class="si" style="background:#dbeafe">👩‍🎓</div><div class="sv"><h3 id="ds-students">—</h3><p>Total Students</p></div></div>
+        <div class="sc"><div class="si" style="background:#dcfce7">💰</div><div class="sv"><h3 id="ds-feesPaid">—</h3><p>Fees Collected</p></div></div>
+        <div class="sc"><div class="si" style="background:#fef3c7">📝</div><div class="sv"><h3 id="ds-admissions">—</h3><p>Applications</p></div></div>
+        <div class="sc"><div class="si" style="background:#fee2e2">🎯</div><div class="sv"><h3 id="ds-passRate">—</h3><p>Pass Rate</p></div></div>
+        <div class="sc"><div class="si" style="background:#f3e8ff">🏫</div><div class="sv"><h3 id="ds-classes">—</h3><p>Classes</p></div></div>
+        <div class="sc"><div class="si" style="background:#fef9c3">⚠️</div><div class="sv"><h3 id="ds-pending">—</h3><p>Pending Admissions</p></div></div>
+        <div class="sc"><div class="si" style="background:#ffedd5">💳</div><div class="sv"><h3 id="ds-feesPending">—</h3><p>Fees Pending</p></div></div>
+        <div class="sc"><div class="si" style="background:#e0f2fe">📢</div><div class="sv"><h3 id="ds-notices">—</h3><p>Active Notices</p></div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="card">
+          <h3 style="font-size:14px;font-weight:700;color:var(--p);margin-bottom:14px">📋 Recent Admissions</h3>
+          <div id="recentAdmissions"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:14px;font-weight:700;color:var(--p);margin-bottom:14px">💰 Recent Fee Payments</h3>
+          <div id="recentFees"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── STUDENTS ── -->
+    <section class="sec" id="students">
+      <div class="shr">
+        <div class="sh"><h2>Students</h2><p>Manage all student records</p></div>
+        <button class="btn btn-p" onclick="openModal('studentModal','','add')">➕ Add Student</button>
+      </div>
+      <div class="fb">
+        <input id="stuSearch" placeholder="🔍 Search by name or roll..." oninput="loadStudents()">
+        <select id="stuClass" onchange="loadStudents()">
+          <option value="">All Classes</option>
+          <option>Nursery</option><option>LKG</option><option>UKG</option>
+          <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+          <option>Class 4</option><option>Class 5</option><option>Class 6</option>
+          <option>Class 7</option><option>Class 8</option><option>Class 9</option>
+          <option>Class 10</option><option>Class 11</option><option>Class 12</option>
+        </select>
+      </div>
+      <div class="tw"><table class="tbl">
+        <thead><tr><th>#</th><th>Student Name</th><th>Class</th><th>Roll No</th><th>Father's Name</th><th>Mobile</th><th>Category</th><th>Actions</th></tr></thead>
+        <tbody id="stuBody"></tbody>
+      </table></div>
+    </section>
+
+    <!-- ── FEES ── -->
+    <section class="sec" id="fees">
+      <div class="shr">
+        <div class="sh"><h2>Fee Management</h2><p>Track and manage all fee payments</p></div>
+        <button class="btn btn-p" onclick="openModal('feeModal','','add')">➕ Add Fee Record</button>
+      </div>
+      <div class="fb">
+        <input id="feeSearch" placeholder="🔍 Search student..." oninput="loadFees()">
+        <select id="feeClass" onchange="loadFees()">
+          <option value="">All Classes</option>
+          <option>Nursery</option><option>LKG</option><option>UKG</option>
+          <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+          <option>Class 4</option><option>Class 5</option><option>Class 6</option>
+          <option>Class 7</option><option>Class 8</option><option>Class 9</option>
+          <option>Class 10</option><option>Class 11</option><option>Class 12</option>
+        </select>
+        <select id="feeStatus" onchange="loadFees()">
+          <option value="">All Status</option>
+          <option>Paid</option><option>Pending</option><option>Partial</option>
+        </select>
+      </div>
+      <div class="tw"><table class="tbl">
+        <thead><tr><th>#</th><th>Student</th><th>Class</th><th>Fee Type</th><th>Amount</th><th>Month</th><th>Status</th><th>Due Date</th><th>Receipt</th><th>Actions</th></tr></thead>
+        <tbody id="feeBody"></tbody>
+      </table></div>
+    </section>
+
+    <!-- ── RESULTS ── -->
+    <section class="sec" id="results">
+      <div class="shr">
+        <div class="sh"><h2>Results</h2><p>Manage student exam results</p></div>
+        <button class="btn btn-p" onclick="openModal('resultModal','','add')">➕ Add Result</button>
+      </div>
+      <div class="fb">
+        <input id="resSearch" placeholder="🔍 Search by student name..." oninput="loadResults()">
+        <select id="resClass" onchange="loadResults()">
+          <option value="">All Classes</option>
+          <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+          <option>Class 4</option><option>Class 5</option><option>Class 6</option>
+          <option>Class 7</option><option>Class 8</option><option>Class 9</option>
+          <option>Class 10</option><option>Class 11</option><option>Class 12</option>
+        </select>
+      </div>
+      <div class="tw"><table class="tbl">
+        <thead><tr><th>#</th><th>Student</th><th>Class</th><th>Roll</th><th>Exam</th><th>Total</th><th>%</th><th>Grade</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="resBody"></tbody>
+      </table></div>
+    </section>
+
+    <!-- ── ADMISSIONS ── -->
+    <section class="sec" id="admissions">
+      <div class="shr">
+        <div class="sh"><h2>Admissions</h2><p>Review and manage admission applications</p></div>
+      </div>
+      <div class="fb">
+        <input id="admSearch" placeholder="🔍 Search by name or App ID..." oninput="loadAdmissions()">
+        <select id="admStatus" onchange="loadAdmissions()">
+          <option value="">All Status</option>
+          <option>Pending</option><option>Approved</option><option>Rejected</option>
+        </select>
+      </div>
+      <div class="tw"><table class="tbl">
+        <thead><tr><th>App ID</th><th>Student Name</th><th>Class</th><th>Father</th><th>Mobile</th><th>DOB</th><th>Category</th><th>Applied</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="admBody"></tbody>
+      </table></div>
+    </section>
+
+    <!-- ── CLASSES ── -->
+    <section class="sec" id="classes">
+      <div class="shr">
+        <div class="sh"><h2>Class Management</h2><p>Manage classes and sections</p></div>
+        <button class="btn btn-p" onclick="openModal('classModal','','add')">➕ Add Class</button>
+      </div>
+      <div class="tw"><table class="tbl">
+        <thead><tr><th>#</th><th>Class</th><th>Section</th><th>Class Teacher</th><th>Students</th><th>Room No</th><th>Actions</th></tr></thead>
+        <tbody id="clsBody"></tbody>
+      </table></div>
+    </section>
+
+    <!-- ── NOTICES ── -->
+    <section class="sec" id="notices">
+      <div class="shr">
+        <div class="sh"><h2>Notice Board</h2><p>Post and manage school announcements</p></div>
+        <button class="btn btn-p" onclick="openModal('noticeModal','','add')">➕ Post Notice</button>
+      </div>
+      <div id="noticesList"></div>
+    </section>
+
+    <!-- ── ADMINS ── -->
+    <section class="sec" id="admins">
+      <div class="shr">
+        <div class="sh"><h2>Admin Users</h2><p>Manage admin accounts (Superadmin only)</p></div>
+        <button class="btn btn-p" id="addAdminBtn" onclick="openModal('adminModal','','add')">➕ Add Admin</button>
+      </div>
+      <div class="tw"><table class="tbl">
+        <thead><tr><th>#</th><th>Name</th><th>Username</th><th>Email</th><th>Role</th><th>Created</th><th>Actions</th></tr></thead>
+        <tbody id="adminBody"></tbody>
+      </table></div>
+    </section>
+
+    <!-- ── AUDIT ── -->
+    <section class="sec" id="audit">
+      <div class="sh"><h2>Audit Log</h2><p>System activity log (last 100 actions)</p></div>
+      <div class="card" id="auditContent"><div class="loading"><div class="spinner"></div>Loading...</div></div>
+    </section>
+
+    <!-- ── SETTINGS ── -->
+    <section class="sec" id="settings">
+      <div class="sh"><h2>API Settings</h2><p>Configure backend server connection</p></div>
+      <div class="card" style="max-width:600px">
+        <h3 style="font-size:14px;font-weight:700;color:var(--p);margin-bottom:16px">🔗 Backend API Configuration</h3>
+        <div class="fg2">
+          <label class="fl2">API Base URL</label>
+          <input class="fc2" id="apiUrlInput" type="text" value="http://localhost:3001/api">
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:16px">
+          <button class="btn btn-p btn-sm" onclick="saveApiUrl()">💾 Save URL</button>
+          <button class="btn btn-out btn-sm" onclick="testConnection()">🔁 Test Connection</button>
+        </div>
+        <div id="connResult" style="font-size:13px;padding:10px 14px;border-radius:8px;display:none"></div>
+        <div style="margin-top:20px;padding:14px;background:var(--bg);border-radius:8px;font-size:12.5px;line-height:2;color:var(--muted)">
+          <strong style="color:var(--p)">📋 Setup Instructions:</strong><br>
+          1. Install Node.js (v16+) on your server<br>
+          2. Run <code style="background:#e2e8f0;padding:1px 5px;border-radius:3px">npm install</code> in the project folder<br>
+          3. Start with <code style="background:#e2e8f0;padding:1px 5px;border-radius:3px">npm start</code> (runs on port 3001)<br>
+          4. Update the API URL above if hosting remotely<br>
+          5. Default login: <strong>admin / admin@123</strong>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ═══ MODALS ═══════════════════════════════════════════════ -->
+
+<!-- Student Modal -->
+<div class="mo" id="studentModal">
+  <div class="md">
+    <div class="md-h"><h3 id="stuModalTitle">Add Student</h3><button class="md-x" onclick="closeModal('studentModal')">✕</button></div>
+    <div class="md-b">
+      <input type="hidden" id="stuId">
+      <div class="fg-row">
+        <div class="fg2"><label class="fl2">Full Name *</label><input class="fc2" id="stu-name" placeholder="Student's full name"></div>
+        <div class="fg2"><label class="fl2">Roll Number *</label><input class="fc2" id="stu-roll" placeholder="e.g. 2024-08-05"></div>
+        <div class="fg2"><label class="fl2">Class *</label>
+          <select class="fc2" id="stu-cls"><option value="">Select Class</option>
+            <option>Nursery</option><option>LKG</option><option>UKG</option>
+            <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+            <option>Class 4</option><option>Class 5</option><option>Class 6</option>
+            <option>Class 7</option><option>Class 8</option><option>Class 9</option>
+            <option>Class 10</option><option>Class 11</option><option>Class 12</option>
+          </select>
+        </div>
+        <div class="fg2"><label class="fl2">Section</label><input class="fc2" id="stu-sec" placeholder="A" maxlength="1"></div>
+        <div class="fg2"><label class="fl2">Father's Name</label><input class="fc2" id="stu-father" placeholder="Father's full name"></div>
+        <div class="fg2"><label class="fl2">Mobile</label><input class="fc2" id="stu-mobile" placeholder="10-digit number" maxlength="10"></div>
+        <div class="fg2"><label class="fl2">Date of Birth</label><input class="fc2" id="stu-dob" type="date"></div>
+        <div class="fg2"><label class="fl2">Gender</label>
+          <select class="fc2" id="stu-gender"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option></select>
+        </div>
+        <div class="fg2"><label class="fl2">Category</label>
+          <select class="fc2" id="stu-cat"><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select>
+        </div>
+      </div>
+      <div class="fg2"><label class="fl2">Address</label><textarea class="fc2" id="stu-addr" rows="2" placeholder="Village, Post, District, PIN"></textarea></div>
+    </div>
+    <div class="md-f">
+      <button class="btn btn-out btn-sm" onclick="closeModal('studentModal')">Cancel</button>
+      <button class="btn btn-p btn-sm" onclick="saveStudent()">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Fee Modal -->
+<div class="mo" id="feeModal">
+  <div class="md">
+    <div class="md-h"><h3>Add Fee Record</h3><button class="md-x" onclick="closeModal('feeModal')">✕</button></div>
+    <div class="md-b">
+      <div class="fg-row">
+        <div class="fg2"><label class="fl2">Student Name *</label><input class="fc2" id="fee-name" placeholder="Student's name"></div>
+        <div class="fg2"><label class="fl2">Class *</label>
+          <select class="fc2" id="fee-cls"><option value="">Select Class</option>
+            <option>Nursery</option><option>LKG</option><option>UKG</option>
+            <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+            <option>Class 4</option><option>Class 5</option><option>Class 6</option>
+            <option>Class 7</option><option>Class 8</option><option>Class 9</option>
+            <option>Class 10</option><option>Class 11</option><option>Class 12</option>
+          </select>
+        </div>
+        <div class="fg2"><label class="fl2">Fee Type</label>
+          <select class="fc2" id="fee-type"><option>Tuition Fee</option><option>Exam Fee</option><option>Annual Charges</option><option>Transport Fee</option><option>Misc</option></select>
+        </div>
+        <div class="fg2"><label class="fl2">Amount (₹) *</label><input class="fc2" id="fee-amount" type="number" placeholder="e.g. 1500"></div>
+        <div class="fg2"><label class="fl2">Month/Period</label><input class="fc2" id="fee-month" placeholder="e.g. October 2024"></div>
+        <div class="fg2"><label class="fl2">Due Date</label><input class="fc2" id="fee-due" type="date"></div>
+      </div>
+    </div>
+    <div class="md-f">
+      <button class="btn btn-out btn-sm" onclick="closeModal('feeModal')">Cancel</button>
+      <button class="btn btn-p btn-sm" onclick="saveFee()">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Result Modal -->
+<div class="mo" id="resultModal">
+  <div class="md" style="max-width:600px">
+    <div class="md-h"><h3 id="resModalTitle">Add Result</h3><button class="md-x" onclick="closeModal('resultModal')">✕</button></div>
+    <div class="md-b">
+      <input type="hidden" id="resId">
+      <div class="fg-row">
+        <div class="fg2"><label class="fl2">Student Name *</label><input class="fc2" id="res-name" placeholder="Full name"></div>
+        <div class="fg2"><label class="fl2">Roll No</label><input class="fc2" id="res-roll" placeholder="Roll number"></div>
+        <div class="fg2"><label class="fl2">Class *</label>
+          <select class="fc2" id="res-cls"><option value="">Select</option>
+            <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+            <option>Class 4</option><option>Class 5</option><option>Class 6</option>
+            <option>Class 7</option><option>Class 8</option><option>Class 9</option>
+            <option>Class 10</option><option>Class 11</option><option>Class 12</option>
+          </select>
+        </div>
+        <div class="fg2"><label class="fl2">Exam Type</label>
+          <select class="fc2" id="res-exam"><option>Half-Yearly Exam 2024</option><option>Annual Exam 2024</option><option>Unit Test – I</option><option>Unit Test – II</option></select>
+        </div>
+      </div>
+      <div style="background:var(--bg);border-radius:8px;padding:14px;margin-top:4px">
+        <p style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:10px">📚 Subject Marks (out of 100)</p>
+        <div class="fg-row3">
+          <div class="fg2"><label class="fl2">Hindi</label><input class="fc2 res-mark" id="rm-hindi" type="number" min="0" max="100" placeholder="0–100" oninput="calcModalResult()"></div>
+          <div class="fg2"><label class="fl2">English</label><input class="fc2 res-mark" id="rm-english" type="number" min="0" max="100" placeholder="0–100" oninput="calcModalResult()"></div>
+          <div class="fg2"><label class="fl2">Mathematics</label><input class="fc2 res-mark" id="rm-maths" type="number" min="0" max="100" placeholder="0–100" oninput="calcModalResult()"></div>
+          <div class="fg2"><label class="fl2">Science</label><input class="fc2 res-mark" id="rm-sci" type="number" min="0" max="100" placeholder="0–100" oninput="calcModalResult()"></div>
+          <div class="fg2"><label class="fl2">Social Science</label><input class="fc2 res-mark" id="rm-sst" type="number" min="0" max="100" placeholder="0–100" oninput="calcModalResult()"></div>
+          <div class="fg2"><label class="fl2">Computer</label><input class="fc2 res-mark" id="rm-comp" type="number" min="0" max="100" placeholder="0–100" oninput="calcModalResult()"></div>
+        </div>
+        <div id="resSummary" style="display:none;margin-top:8px;padding:10px;background:#fff;border-radius:6px;font-size:12.5px;display:flex;gap:16px">
+          <span>Total: <strong id="resTotal">—</strong>/600</span>
+          <span>Percentage: <strong id="resPct">—</strong></span>
+          <span>Grade: <strong id="resGrd">—</strong></span>
+          <span id="resPass"></span>
+        </div>
+      </div>
+    </div>
+    <div class="md-f">
+      <button class="btn btn-out btn-sm" onclick="closeModal('resultModal')">Cancel</button>
+      <button class="btn btn-p btn-sm" onclick="saveResult()">💾 Save Result</button>
+    </div>
+  </div>
+</div>
+
+<!-- Class Modal -->
+<div class="mo" id="classModal">
+  <div class="md">
+    <div class="md-h"><h3 id="clsModalTitle">Add Class</h3><button class="md-x" onclick="closeModal('classModal')">✕</button></div>
+    <div class="md-b">
+      <input type="hidden" id="clsId">
+      <div class="fg-row">
+        <div class="fg2"><label class="fl2">Class Name *</label><input class="fc2" id="cls-name" placeholder="e.g. Class 8"></div>
+        <div class="fg2"><label class="fl2">Section</label><input class="fc2" id="cls-sec" placeholder="A" maxlength="1"></div>
+        <div class="fg2"><label class="fl2">Class Teacher *</label><input class="fc2" id="cls-teacher" placeholder="Teacher's name"></div>
+        <div class="fg2"><label class="fl2">Room No</label><input class="fc2" id="cls-room" placeholder="e.g. 12"></div>
+        <div class="fg2"><label class="fl2">Total Students</label><input class="fc2" id="cls-stu" type="number" placeholder="e.g. 40"></div>
+      </div>
+    </div>
+    <div class="md-f">
+      <button class="btn btn-out btn-sm" onclick="closeModal('classModal')">Cancel</button>
+      <button class="btn btn-p btn-sm" onclick="saveClass()">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Notice Modal -->
+<div class="mo" id="noticeModal">
+  <div class="md">
+    <div class="md-h"><h3 id="noticeModalTitle">Post Notice</h3><button class="md-x" onclick="closeModal('noticeModal')">✕</button></div>
+    <div class="md-b">
+      <input type="hidden" id="noticeId">
+      <div class="fg2"><label class="fl2">Title *</label><input class="fc2" id="n-title" placeholder="Notice title"></div>
+      <div class="fg2"><label class="fl2">Body *</label><textarea class="fc2" id="n-body" rows="4" placeholder="Notice content..."></textarea></div>
+      <div class="fg2"><label class="fl2">Priority</label>
+        <select class="fc2" id="n-priority"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select>
+      </div>
+    </div>
+    <div class="md-f">
+      <button class="btn btn-out btn-sm" onclick="closeModal('noticeModal')">Cancel</button>
+      <button class="btn btn-p btn-sm" onclick="saveNotice()">📢 Post</button>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Modal -->
+<div class="mo" id="adminModal">
+  <div class="md">
+    <div class="md-h"><h3>Add Admin User</h3><button class="md-x" onclick="closeModal('adminModal')">✕</button></div>
+    <div class="md-b">
+      <div class="fg-row">
+        <div class="fg2"><label class="fl2">Full Name *</label><input class="fc2" id="adm-name" placeholder="Full name"></div>
+        <div class="fg2"><label class="fl2">Username *</label><input class="fc2" id="adm-user" placeholder="Username (no spaces)"></div>
+        <div class="fg2"><label class="fl2">Password *</label><input class="fc2" id="adm-pass" type="password" placeholder="Strong password"></div>
+        <div class="fg2"><label class="fl2">Email</label><input class="fc2" id="adm-email" type="email" placeholder="email@example.com"></div>
+        <div class="fg2"><label class="fl2">Role</label>
+          <select class="fc2" id="adm-role"><option value="staff">Staff</option><option value="accountant">Accountant</option><option value="superadmin">Superadmin</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="md-f">
+      <button class="btn btn-out btn-sm" onclick="closeModal('adminModal')">Cancel</button>
+      <button class="btn btn-p btn-sm" onclick="saveAdmin()">💾 Create</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// CONFIG & STATE
+// ═══════════════════════════════════════════════════════
+let API = localStorage.getItem('ba_api') || 'http://localhost:3001/api';
+let TOKEN = localStorage.getItem('ba_token') || '';
+let CURRENT_USER = JSON.parse(localStorage.getItem('ba_user') || 'null');
+
+document.getElementById('apiUrlInput').value = API;
+
+// ═══════════════════════════════════════════════════════
+// CLOCK
+// ═══════════════════════════════════════════════════════
+function updateClock(){
+  const now = new Date();
+  document.getElementById('clockDisplay').textContent =
+    now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ═══════════════════════════════════════════════════════
+// API HELPER
+// ═══════════════════════════════════════════════════════
+async function api(method, path, data, isForm=false){
+  const opts = {
+    method,
+    headers: { 'Authorization': `Bearer ${TOKEN}` }
+  };
+  if(data && !isForm){
+    opts.headers['Content-Type'] = 'application/json';
+    opts.body = JSON.stringify(data);
+  } else if(data && isForm){
+    opts.body = data;
+  }
+  try {
+    const res = await fetch(API + path, opts);
+    const json = await res.json();
+    if(res.status === 401){ doLogout(); return null; }
+    return json;
+  } catch(e){
+    setApiStatus(false);
+    return null;
+  }
+}
+
+function setApiStatus(ok){
+  const dot = document.querySelector('.api-dot');
+  const txt = document.getElementById('apiStatusText');
+  if(dot) dot.style.background = ok ? '#16a34a' : '#dc2626';
+  if(txt) txt.textContent = ok ? 'API Connected' : 'API Offline';
+}
+
+// ═══════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════
+function toast(msg, type='success'){
+  const t = document.getElementById('toast');
+  const el = document.createElement('div');
+  el.className = `toast ${type==='error'?'error':type==='warn'?'warn':''}`;
+  el.innerHTML = `<span>${type==='error'?'❌':type==='warn'?'⚠️':'✅'}</span><span class="toast-msg">${msg}</span><button class="toast-close" onclick="this.parentElement.remove()">✕</button>`;
+  t.appendChild(el);
+  setTimeout(()=>el.remove(), 4000);
+}
+
+// ═══════════════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════════════
+async function doLogin(){
+  const user = document.getElementById('lUser').value.trim();
+  const pass = document.getElementById('lPass').value;
+  const errEl = document.getElementById('loginErr');
+  errEl.classList.remove('show');
+  if(!user||!pass){ errEl.textContent='Please enter username and password.'; errEl.classList.add('show'); return; }
+  const btn = document.querySelector('#loginScreen .btn');
+  btn.textContent = '🔄 Logging in...'; btn.disabled = true;
+  const res = await fetch(API + '/auth/login', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({username:user, password:pass})
+  }).then(r=>r.json()).catch(()=>null);
+  btn.textContent = '🔐 Login to Admin Panel'; btn.disabled = false;
+  if(!res || !res.success){ errEl.textContent = res?.message || 'Cannot connect to server. Check API URL in Settings.'; errEl.classList.add('show'); return; }
+  TOKEN = res.token;
+  CURRENT_USER = res.user;
+  localStorage.setItem('ba_token', TOKEN);
+  localStorage.setItem('ba_user', JSON.stringify(CURRENT_USER));
+  initApp();
+}
+
+document.getElementById('lPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+document.getElementById('lUser').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('lPass').focus(); });
+
+function doLogout(){
+  api('POST','/auth/logout');
+  TOKEN=''; CURRENT_USER=null;
+  localStorage.removeItem('ba_token'); localStorage.removeItem('ba_user');
+  document.getElementById('app').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('lPass').value='';
+}
+
+function initApp(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('userName').textContent = CURRENT_USER.name;
+  document.getElementById('userRole').textContent = CURRENT_USER.role;
+  document.getElementById('userAv').textContent = CURRENT_USER.name.charAt(0).toUpperCase();
+  if(CURRENT_USER.role !== 'superadmin'){
+    document.getElementById('addAdminBtn').style.display='none';
+  }
+  loadDashboard();
+  setApiStatus(true);
+}
+
+// Auto-login if token exists
+if(TOKEN && CURRENT_USER){
+  document.getElementById('loginScreen').style.display='none';
+  initApp();
+}
+
+// ═══════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════
+const pgTitles = {
+  dashboard:'📊 Dashboard',students:'👩‍🎓 Students',fees:'💰 Fee Management',
+  results:'📈 Results',admissions:'📝 Admissions',classes:'🏫 Classes',
+  notices:'📢 Notices',admins:'👤 Admin Users',audit:'🗒️ Audit Log',settings:'⚙️ API Settings'
+};
+const loaders = {
+  dashboard:loadDashboard,students:loadStudents,fees:loadFees,
+  results:loadResults,admissions:loadAdmissions,classes:loadClasses,
+  notices:loadNotices,admins:loadAdmins,audit:loadAudit,settings:()=>{}
+};
+
+document.querySelectorAll('.ni').forEach(item=>{
+  item.addEventListener('click',()=>{
+    const sec = item.dataset.sec;
+    document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+    document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+    item.classList.add('active');
+    document.getElementById(sec).classList.add('active');
+    document.getElementById('pgTitle').textContent = pgTitles[sec];
+    if(loaders[sec]) loaders[sec]();
+    closeSb();
+  });
+});
+
+document.getElementById('hb').addEventListener('click',()=>{
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sbOverlay').classList.toggle('open');
+});
+document.getElementById('sbOverlay').addEventListener('click',closeSb);
+function closeSb(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('sbOverlay').classList.remove('open'); }
+
+// ═══════════════════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════════════════
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.mo').forEach(m=>{
+  m.addEventListener('click',e=>{ if(e.target===m) closeModal(m.id); });
+});
+
+// ═══════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════
+async function loadDashboard(){
+  const res = await api('GET','/dashboard/stats');
+  if(!res) return;
+  const d = res.data;
+  document.getElementById('ds-students').textContent = d.students;
+  document.getElementById('ds-feesPaid').textContent = '₹'+Number(d.feesPaid).toLocaleString('en-IN');
+  document.getElementById('ds-admissions').textContent = d.admissions;
+  document.getElementById('ds-passRate').textContent = d.passRate+'%';
+  document.getElementById('ds-classes').textContent = d.classes;
+  document.getElementById('ds-pending').textContent = d.pendingAdmissions;
+  document.getElementById('ds-feesPending').textContent = '₹'+Number(d.feesPending).toLocaleString('en-IN');
+  document.getElementById('ds-notices').textContent = d.notices;
+
+  // Recent admissions
+  const adm = await api('GET','/admissions?status=Pending');
+  document.getElementById('recentAdmissions').innerHTML = adm?.data?.length
+    ? adm.data.slice(0,5).map(a=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12.5px">
+        <div><strong>${a.studentName}</strong><br><span style="color:var(--muted)">${a.id} • ${a.cls}</span></div>
+        <span class="bk bk-warn">Pending</span></div>`).join('')
+    : '<p style="font-size:13px;color:var(--muted);text-align:center;padding:20px">No pending admissions</p>';
+
+  // Recent fees
+  const fees = await api('GET','/fees?status=Pending');
+  document.getElementById('recentFees').innerHTML = fees?.data?.length
+    ? fees.data.slice(0,5).map(f=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12.5px">
+        <div><strong>${f.studentName}</strong><br><span style="color:var(--muted)">${f.cls} • ${f.feeType}</span></div>
+        <span style="font-weight:700;color:var(--err)">₹${f.amount.toLocaleString('en-IN')}</span></div>`).join('')
+    : '<p style="font-size:13px;color:var(--muted);text-align:center;padding:20px">No pending fees</p>';
+}
+
+// ═══════════════════════════════════════════════════════
+// STUDENTS
+// ═══════════════════════════════════════════════════════
+async function loadStudents(){
+  const q = document.getElementById('stuSearch').value;
+  const cls = document.getElementById('stuClass').value;
+  let url = '/students?';
+  if(q) url += `q=${encodeURIComponent(q)}&`;
+  if(cls) url += `cls=${encodeURIComponent(cls)}`;
+  const res = await api('GET', url);
+  const body = document.getElementById('stuBody');
+  if(!res){ body.innerHTML='<tr class="empty-row"><td colspan="8">Failed to load data.</td></tr>'; return; }
+  body.innerHTML = res.data.length ? res.data.map((s,i)=>`
+    <tr>
+      <td>${i+1}</td><td><strong>${s.name}</strong></td><td>${s.cls}</td>
+      <td>${s.roll}</td><td>${s.fatherName||'—'}</td><td>${s.mobile||'—'}</td>
+      <td><span class="bk bk-mu">${s.category||'General'}</span></td>
+      <td><button class="btn btn-p btn-xs" onclick="editStudent('${s.id}')">✏️</button> <button class="btn btn-err btn-xs" onclick="delStudent('${s.id}','${s.name}')">🗑️</button></td>
+    </tr>`).join('')
+  : '<tr class="empty-row"><td colspan="8">No students found.</td></tr>';
+}
+
+function editStudent(id){ openModal('studentModal');
+  api('GET',`/students/${id}`).then(r=>{
+    if(!r) return;
+    const s=r.data;
+    document.getElementById('stuId').value=s.id;
+    document.getElementById('stuModalTitle').textContent='Edit Student';
+    document.getElementById('stu-name').value=s.name||'';
+    document.getElementById('stu-roll').value=s.roll||'';
+    document.getElementById('stu-cls').value=s.cls||'';
+    document.getElementById('stu-sec').value=s.section||'';
+    document.getElementById('stu-father').value=s.fatherName||'';
+    document.getElementById('stu-mobile').value=s.mobile||'';
+    document.getElementById('stu-dob').value=s.dob||'';
+    document.getElementById('stu-gender').value=s.gender||'';
+    document.getElementById('stu-cat').value=s.category||'General';
+    document.getElementById('stu-addr').value=s.address||'';
+  });
+}
+
+async function saveStudent(){
+  const id = document.getElementById('stuId').value;
+  const data = {
+    name:document.getElementById('stu-name').value.trim(),
+    roll:document.getElementById('stu-roll').value.trim(),
+    cls:document.getElementById('stu-cls').value,
+    section:document.getElementById('stu-sec').value||'A',
+    fatherName:document.getElementById('stu-father').value.trim(),
+    mobile:document.getElementById('stu-mobile').value.trim(),
+    dob:document.getElementById('stu-dob').value,
+    gender:document.getElementById('stu-gender').value,
+    category:document.getElementById('stu-cat').value,
+    address:document.getElementById('stu-addr').value.trim()
+  };
+  if(!data.name||!data.roll||!data.cls){ toast('Name, Roll No and Class are required.','error'); return; }
+  const res = id ? await api('PUT',`/students/${id}`,data) : await api('POST','/students',data);
+  if(res?.success){ toast(res.message); closeModal('studentModal'); loadStudents();
+    document.getElementById('stuId').value=''; document.getElementById('stuModalTitle').textContent='Add Student';
+  } else toast(res?.message||'Failed.','error');
+}
+
+async function delStudent(id,name){
+  if(!confirm(`Delete student: ${name}?`)) return;
+  const res = await api('DELETE',`/students/${id}`);
+  if(res?.success){ toast('Student deleted.'); loadStudents(); }
+  else toast(res?.message||'Failed.','error');
+}
+
+// ═══════════════════════════════════════════════════════
+// FEES
+// ═══════════════════════════════════════════════════════
+async function loadFees(){
+  const q = document.getElementById('feeSearch').value;
+  const cls = document.getElementById('feeClass').value;
+  const sts = document.getElementById('feeStatus').value;
+  let url = '/fees?';
+  if(q) url += `q=${encodeURIComponent(q)}&`;
+  if(cls) url += `cls=${encodeURIComponent(cls)}&`;
+  if(sts) url += `status=${encodeURIComponent(sts)}`;
+  const res = await api('GET', url);
+  const body = document.getElementById('feeBody');
+  if(!res){ body.innerHTML='<tr class="empty-row"><td colspan="10">Failed to load.</td></tr>'; return; }
+  const stMap = {Paid:'bk-ok',Pending:'bk-err',Partial:'bk-warn'};
+  body.innerHTML = res.data.length ? res.data.map((f,i)=>`
+    <tr>
+      <td>${i+1}</td><td><strong>${f.studentName}</strong></td><td>${f.cls}</td>
+      <td>${f.feeType}</td><td>₹${f.amount.toLocaleString('en-IN')}</td>
+      <td>${f.month||'—'}</td>
+      <td><span class="bk ${stMap[f.status]||'bk-mu'}">${f.status}</span></td>
+      <td>${f.dueDate||'—'}</td>
+      <td>${f.receiptNo?`<span style="font-size:11px;color:var(--ok)">${f.receiptNo}</span>`:'—'}</td>
+      <td>
+        ${f.status!=='Paid'?`<button class="btn btn-ok btn-xs" onclick="markPaid('${f.id}')">✓ Pay</button> `:''}
+        <button class="btn btn-err btn-xs" onclick="delFee('${f.id}')">🗑️</button>
+      </td>
+    </tr>`).join('')
+  : '<tr class="empty-row"><td colspan="10">No fee records found.</td></tr>';
+}
+
+async function saveFee(){
+  const data = {
+    studentName:document.getElementById('fee-name').value.trim(),
+    cls:document.getElementById('fee-cls').value,
+    feeType:document.getElementById('fee-type').value,
+    amount:document.getElementById('fee-amount').value,
+    month:document.getElementById('fee-month').value,
+    dueDate:document.getElementById('fee-due').value
+  };
+  if(!data.studentName||!data.cls||!data.amount){ toast('Student, class and amount are required.','error'); return; }
+  const res = await api('POST','/fees',data);
+  if(res?.success){ toast('Fee record added.'); closeModal('feeModal'); loadFees();
+    ['fee-name','fee-amount','fee-month','fee-due'].forEach(id=>document.getElementById(id).value='');
+  } else toast(res?.message||'Failed.','error');
+}
+
+async function markPaid(id){
+  const res = await api('PATCH',`/fees/${id}/pay`);
+  if(res?.success){ toast(`Fee marked as Paid! Receipt: ${res.data.receiptNo}`); loadFees(); }
+  else toast(res?.message||'Failed.','error');
+}
+
+async function delFee(id){
+  if(!confirm('Delete this fee record?')) return;
+  const res = await api('DELETE',`/fees/${id}`);
+  if(res?.success){ toast('Record deleted.'); loadFees(); }
+  else toast(res?.message||'Failed.','error');
+}
+
+// ═══════════════════════════════════════════════════════
+// RESULTS
+// ═══════════════════════════════════════════════════════
+function calcModalResult(){
+  const ids = ['rm-hindi','rm-english','rm-maths','rm-sci','rm-sst','rm-comp'];
+  const vals = ids.map(id=>parseInt(document.getElementById(id).value)||0);
+  const total = vals.reduce((a,b)=>a+b,0);
+  const pct = ((total/600)*100).toFixed(1);
+  const grade = pct>=90?'A+':pct>=80?'A':pct>=70?'B':pct>=60?'C':pct>=33?'D':'F';
+  const pass = vals.every(v=>v>=33) && parseFloat(pct)>=33;
+  document.getElementById('resTotal').textContent=total;
+  document.getElementById('resPct').textContent=pct+'%';
+  document.getElementById('resGrd').textContent=grade;
+  document.getElementById('resPass').innerHTML=`<span class="bk ${pass?'bk-ok':'bk-err'}">${pass?'Pass':'Fail'}</span>`;
+  document.getElementById('resSummary').style.display='flex';
+}
+
+async function loadResults(){
+  const q = document.getElementById('resSearch').value;
+  const cls = document.getElementById('resClass').value;
+  let url = '/results?';
+  if(q) url += `q=${encodeURIComponent(q)}&`;
+  if(cls) url += `cls=${encodeURIComponent(cls)}`;
+  const res = await api('GET', url);
+  const body = document.getElementById('resBody');
+  if(!res){ body.innerHTML='<tr class="empty-row"><td colspan="10">Failed.</td></tr>'; return; }
+  const gb = g => g==='A+'||g==='A'?'bk-ok':g==='F'?'bk-err':'bk-p';
+  body.innerHTML = res.data.length ? res.data.map((r,i)=>`
+    <tr>
+      <td>${i+1}</td><td><strong>${r.studentName}</strong></td><td>${r.cls}</td>
+      <td>${r.roll||'—'}</td><td style="font-size:11.5px">${r.exam}</td>
+      <td>${r.total}/600</td><td>${r.percentage}%</td>
+      <td><span class="bk ${gb(r.grade)}">${r.grade}</span></td>
+      <td><span class="bk ${r.status==='Pass'?'bk-ok':'bk-err'}">${r.status}</span></td>
+      <td><button class="btn btn-err btn-xs" onclick="delResult('${r.id}')">🗑️</button></td>
+    </tr>`).join('')
+  : '<tr class="empty-row"><td colspan="10">No results found.</td></tr>';
+}
+
+async function saveResult(){
+  const data = {
+    studentName:document.getElementById('res-name').value.trim(),
+    roll:document.getElementById('res-roll').value.trim(),
+    cls:document.getElementById('res-cls').value,
+    exam:document.getElementById('res-exam').value,
+    marks:{
+      Hindi:parseInt(document.getElementById('rm-hindi').value)||0,
+      English:parseInt(document.getElementById('rm-english').value)||0,
+      Maths:parseInt(document.getElementById('rm-maths').value)||0,
+      Science:parseInt(document.getElementById('rm-sci').value)||0,
+      SocialScience:parseInt(document.getElementById('rm-sst').value)||0,
+      Computer:parseInt(document.getElementById('rm-comp').value)||0,
+    }
+  };
+  if(!data.studentName||!data.cls){ toast('Student name and class are required.','error'); return; }
+  const res = await api('POST','/results',data);
+  if(res?.success){ toast('Result saved.'); closeModal('resultModal'); loadResults();
+    ['res-name','res-roll','rm-hindi','rm-english','rm-maths','rm-sci','rm-sst','rm-comp'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('resSummary').style.display='none';
+  } else toast(res?.message||'Failed.','error');
+}
+
+async function delResult(id){
+  if(!confirm('Delete this result?')) return;
+  const res = await api('DELETE',`/results/${id}`);
+  if(res?.success){ toast('Deleted.'); loadResults(); }
+  else toast(res?.message||'Failed.','error');
+}
+
+// ═══════════════════════════════════════════════════════
+// ADMISSIONS
+// ═══════════════════════════════════════════════════════
+async function loadAdmissions(){
+  const q = document.getElementById('admSearch').value;
+  const sts = document.getElementById('admStatus').value;
+  let url = '/admissions?';
+  if(q) url += `q=${encodeURIComponent(q)}&`;
+  if(sts) url += `status=${encodeURIComponent(sts)}`;
+  const res = await api('GET', url);
+  const body = document.getElementById('admBody');
+  if(!res){ body.innerHTML='<tr class="empty-row"><td colspan="10">Failed.</td></tr>'; return; }
+  const stMap = {Approved:'bk-ok',Pending:'bk-warn',Rejected:'bk-err'};
+  body.innerHTML = res.data.length ? res.data.map(a=>`
+    <tr>
+      <td><strong style="color:var(--p)">${a.id}</strong></td>
+      <td>${a.studentName}</td><td>${a.cls}</td><td>${a.fatherName}</td>
+      <td>${a.mobile}</td><td>${a.dob||'—'}</td>
+      <td><span class="bk bk-mu">${a.category||'General'}</span></td>
+      <td>${a.appliedDate}</td>
+      <td>
+        <select class="fc2" style="padding:3px 7px;font-size:11.5px" onchange="changeAdmStatus('${a.id}',this.value)">
+          ${['Pending','Approved','Rejected'].map(s=>`<option ${a.status===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </td>
+      <td><button class="btn btn-err btn-xs" onclick="delAdm('${a.id}')">🗑️</button></td>
+    </tr>`).join('')
+  : '<tr class="empty-row"><td colspan="10">No applications found.</td></tr>';
+}
+
+async function changeAdmStatus(id,status){
+  const res = await api('PATCH',`/admissions/${id}/status`,{status});
+  if(res?.success) toast(`Status changed to ${status}.`);
+  else toast('Failed.','error');
+}
+
+async function delAdm(id){
+  if(!confirm('Delete this application?')) return;
+  const res = await api('DELETE',`/admissions/${id}`);
+  if(res?.success){ toast('Deleted.'); loadAdmissions(); }
+  else toast(res?.message||'Failed.','error');
+}
+
+// ═══════════════════════════════════════════════════════
+// CLASSES
+// ═══════════════════════════════════════════════════════
+async function loadClasses(){
+  const res = await api('GET','/classes');
+  const body = document.getElementById('clsBody');
+  if(!res){ body.innerHTML='<tr class="empty-row"><td colspan="7">Failed.</td></tr>'; return; }
+  body.innerHTML = res.data.length ? res.data.map((c,i)=>`
+    <tr>
+      <td>${i+1}</td><td><strong>${c.name}</strong></td><td>${c.section}</td>
+      <td>${c.teacher}</td><td>${c.students}</td><td>${c.room}</td>
+      <td>
+        <button class="btn btn-p btn-xs" onclick="editClass('${c.id}')">✏️</button>
+        <button class="btn btn-err btn-xs" onclick="delClass('${c.id}','${c.name}')">🗑️</button>
+      </td>
+    </tr>`).join('')
+  : '<tr class="empty-row"><td colspan="7">No classes found.</td></tr>';
+}
+
+function editClass(id){
+  openModal('classModal');
+  api('GET','/classes').then(r=>{
+    const c = r?.data?.find(x=>x.id===id);
+    if(!c) return;
+    document.getElementById('clsId').value=c.id;
+    document.getElementById('clsModalTitle').textContent='Edit Class';
+    document.getElementById('cls-name').value=c.name||'';
+    document.getElementById('cls-sec').value=c.section||'';
+    document.getElementById('cls-teacher').value=c.teacher||'';
+    document.getElementById('cls-room').value=c.room||'';
+    document.getElementById('cls-stu').value=c.students||'';
+  });
+}
+
+async function saveClass(){
+  const id = document.getElementById('clsId').value;
+  const data = {
+    name:document.getElementById('cls-name').value.trim(),
+    section:document.getElementById('cls-sec').value||'A',
+    teacher:document.getElementById('cls-teacher').value.trim(),
+    room:document.getElementById('cls-room').value.trim(),
+    students:document.getElementById('cls-stu').value
+  };
+  if(!data.name||!data.teacher){ toast('Class name and teacher are required.','error'); return; }
+  const res = id ? await api('PUT',`/classes/${id}`,data) : await api('POST','/classes',data);
+  if(res?.success){ toast(res.message); closeModal('classModal'); loadClasses();
+    document.getElementById('clsId').value=''; document.getElementById('clsModalTitle').textContent='Add Class';
+  } else toast(res?.message||'Failed.','error');
+}
+
+async function delClass(id,name){
+  if(!confirm(`Delete class: ${name}?`)) return;
+  const res = await api('DELETE',`/classes/${id}`);
+  if(res?.success){ toast('Class deleted.'); loadClasses(); }
+  else toast(res?.message||'Failed.','error');
+}
+
+// ═══════════════════════════════════════════════════════
+// NOTICES
+// ═══════════════════════════════════════════════════════
+async function loadNotices(){
+  const res = await api('GET','/notices/all');
+  const container = document.getElementById('noticesList');
+  if(!res){ container.innerHTML='<div class="loading">Failed to load.</div>'; return; }
+  const priColor = {high:'var(--err)',medium:'var(--warn)',low:'var(--ok)'};
+  container.innerHTML = res.data.length ? res.data.map(n=>`
+    <div class="card" style="margin-bottom:12px;border-left:4px solid ${priColor[n.priority]||'var(--p)'}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <strong style="font-size:14px">${n.title}</strong>
+            <span class="bk bk-mu" style="font-size:10px;text-transform:capitalize">${n.priority} priority</span>
+            <span class="bk ${n.active?'bk-ok':'bk-mu'}" style="font-size:10px">${n.active?'Active':'Inactive'}</span>
+          </div>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6">${n.body}</p>
+          <p style="font-size:11px;color:var(--muted);margin-top:6px">Posted by ${n.postedBy} • ${n.date}</p>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0">
+          <button class="btn btn-p btn-xs" onclick="editNotice('${n.id}')">✏️</button>
+          <button class="btn ${n.active?'btn-acc':'btn-ok'} btn-xs" onclick="toggleNotice('${n.id}',${!n.active})">${n.active?'⏸ Hide':'▶ Show'}</button>
+          <button class="btn btn-err btn-xs" onclick="delNotice('${n.id}')">🗑️</button>
+        </div>
+      </div>
+    </div>`).join('')
+  : '<div style="text-align:center;color:var(--muted);padding:40px">No notices found.</div>';
+}
+
+function editNotice(id){
+  openModal('noticeModal');
+  api('GET','/notices/all').then(r=>{
+    const n = r?.data?.find(x=>x.id===id);
+    if(!n) return;
+    document.getElementById('noticeId').value=n.id;
+    document.getElementById('noticeModalTitle').textContent='Edit Notice';
+    document.getElementById('n-title').value=n.title||'';
+    document.getElementById('n-body').value=n.body||'';
+    document.getElementById('n-priority').value=n.priority||'medium';
+  });
+}
+
+async function saveNotice(){
+  const id = document.getElementById('noticeId').value;
+  const data = {
+    title:document.getElementById('n-title').value.trim(),
+    body:document.getElementById('n-body').value.trim(),
+    priority:document.getElementById('n-priority').value
+  };
+  if(!data.title||!data.body){ toast('Title and body are required.','error'); return; }
+  const res = id ? await api('PATCH',`/notices/${id}`,data) : await api('POST','/notices',data);
+  if(res?.success){ toast(id?'Notice updated.':'Notice posted.'); closeModal('noticeModal'); loadNotices();
+    document.getElementById('noticeId').value=''; document.getElementById('noticeModalTitle').textContent='Post Notice';
+    ['n-title','n-body'].forEach(id=>document.getElementById(id).value='');
+  } else toast(res?.message||'Failed.','error');
+}
+
+async function toggleNotice(id,active){
+  const res = await api('PATCH',`/notices/${id}`,{active});
+  if(res?.success){ toast(active?'Notice shown.':'Notice hidden.'); loadNotices(); }
+  else toast('Failed.','error');
+}
+
+async function delNotice(id){
+  if(!confirm('Delete this notice?')) return;
+  const res = await api('DELETE',`/notices/${id}`);
+  if(res?.success){ toast('Notice deleted.'); loadNotices(); }
+  else toast('Failed.','error');
+}
+
+// ═══════════════════════════════════════════════════════
+// ADMIN USERS
+// ═══════════════════════════════════════════════════════
+async function loadAdmins(){
+  const res = await api('GET','/admins');
+  const body = document.getElementById('adminBody');
+  if(!res){ body.innerHTML='<tr class="empty-row"><td colspan="7">Access denied or failed.</td></tr>'; return; }
+  const roleColor = {superadmin:'bk-err',accountant:'bk-warn',staff:'bk-p'};
+  body.innerHTML = res.data.map((a,i)=>`
+    <tr>
+      <td>${i+1}</td><td><strong>${a.name}</strong></td><td>${a.username}</td>
+      <td>${a.email||'—'}</td>
+      <td><span class="bk ${roleColor[a.role]||'bk-mu'}">${a.role}</span></td>
+      <td>${(a.createdAt||'').split('T')[0]}</td>
+      <td>${a.id!=='admin-1'?`<button class="btn btn-err btn-xs" onclick="delAdmin('${a.id}','${a.name}')">🗑️ Delete</button>`:'<span style="font-size:11px;color:var(--muted)">Protected</span>'}</td>
+    </tr>`).join('');
+}
+
+async function saveAdmin(){
+  const data = {
+    name:document.getElementById('adm-name').value.trim(),
+    username:document.getElementById('adm-user').value.trim(),
+    password:document.getElementById('adm-pass').value,
+    email:document.getElementById('adm-email').value.trim(),
+    role:document.getElementById('adm-role').value
+  };
+  if(!data.name||!data.username||!data.password){ toast('Name, username and password are required.','error'); return; }
+  const res = await api('POST','/admins',data);
+  if(res?.success){ toast('Admin user created.'); closeModal('adminModal'); loadAdmins();
+    ['adm-name','adm-user','adm-pass','adm-email'].forEach(id=>document.getElementById(id).value='');
+  } else toast(res?.message||'Failed.','error');
+}
+
+async function delAdmin(id,name){
+  if(!confirm(`Delete admin: ${name}?`)) return;
+  const res = await api('DELETE',`/admins/${id}`);
+  if(res?.success){ toast('Admin deleted.'); loadAdmins(); }
+  else toast(res?.message||'Failed.','error');
+}
+
+// ═══════════════════════════════════════════════════════
+// AUDIT LOG
+// ═══════════════════════════════════════════════════════
+async function loadAudit(){
+  const res = await api('GET','/audit');
+  const cont = document.getElementById('auditContent');
+  if(!res){ cont.innerHTML='<div class="loading">Failed.</div>'; return; }
+  const actColor = {LOGIN:'bk-ok',LOGOUT:'bk-mu',CREATE:'bk-p',UPDATE:'bk-warn',DELETE:'bk-err',PAY:'bk-ok'};
+  cont.innerHTML = res.data.length ? res.data.map(l=>`
+    <div class="audit-item">
+      <span class="audit-time">${new Date(l.timestamp).toLocaleString('en-IN')}</span>
+      <span class="audit-action"><span class="bk ${actColor[l.action]||'bk-mu'}" style="font-size:10px">${l.action}</span></span>
+      <span class="audit-entity" style="color:var(--muted);font-size:12px">${l.entity}</span>
+      <span class="audit-detail">${l.details}</span>
+      <span class="audit-by" style="font-size:11px">by ${l.performedBy}</span>
+    </div>`).join('')
+  : '<div style="text-align:center;color:var(--muted);padding:40px">No audit logs yet.</div>';
+}
+
+// ═══════════════════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════════════════
+function saveApiUrl(){
+  API = document.getElementById('apiUrlInput').value.trim();
+  localStorage.setItem('ba_api', API);
+  toast('API URL saved.');
+}
+
+async function testConnection(){
+  const url = document.getElementById('apiUrlInput').value.trim();
+  const el = document.getElementById('connResult');
+  el.style.display='block'; el.textContent='Testing...'; el.style.background='var(--bg)'; el.style.color='var(--muted)';
+  try {
+    const res = await fetch(url + '/health').then(r=>r.json());
+    el.textContent = '✅ Connected: ' + res.message;
+    el.style.background='#dcfce7'; el.style.color='#16a34a';
+    setApiStatus(true);
+  } catch(e) {
+    el.textContent = '❌ Cannot connect. Make sure the backend server is running.';
+    el.style.background='#fee2e2'; el.style.color='var(--err)';
+    setApiStatus(false);
+  }
+}
+</script>
+</body>
+</html>
