@@ -493,7 +493,7 @@ img{max-width:100%}
   </div>
   <div class="topbar-right">
     <button class="topbar-btn no-print">📅 2024–25</button>
-    <div class="user-chip">
+    <div class="user-chip" onclick="window.location.href='admin.html'" style="cursor:pointer" title="Go to Admin Panel">
       <div class="user-avatar">AD</div>
       <span>Admin</span>
     </div>
@@ -558,8 +558,7 @@ img{max-width:100%}
       <div style="display:flex;flex-direction:column;gap:10px">
         <div style="display:flex;justify-content:space-between;font-size:13px;padding-bottom:8px;border-bottom:1px solid var(--border)"><span>Students Present Today</span><strong style="color:var(--success)">812 / 847</strong></div>
         <div style="display:flex;justify-content:space-between;font-size:13px;padding-bottom:8px;border-bottom:1px solid var(--border)"><span>New Admissions (This Month)</span><strong style="color:var(--primary)">23</strong></div>
-        <div style="display:flex;justify-content:space-between;font-size:13px;padding-bottom:8px;border-bottom:1px solid var(--border)"><span>Fee Collection (October)</span><strong style="color:var(--accent)">₹3,42,500</strong></div>
-        <div style="display:flex;justify-content:space-between;font-size:13px"><span>Pending Fee (This Month)</span><strong style="color:var(--danger)">₹48,000</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px"><span>Pass Rate 2023–24</span><strong style="color:var(--success)">94%</strong></div>
       </div>
     </div>
     <div class="card">
@@ -877,9 +876,8 @@ img{max-width:100%}
   <div class="section-header-row">
     <div class="section-header">
       <h2>Class Management</h2>
-      <p>Manage classes, sections and student rosters</p>
+      <p>View classes, sections and student rosters</p>
     </div>
-    <button class="btn btn-primary no-print" onclick="openAddClassModal()">➕ Add New Class</button>
   </div>
   <div class="class-grid" id="classGrid"></div>
 </section>
@@ -1357,8 +1355,8 @@ function renderClasses(){
         `).join('')}
       </div>
       <div class="class-card-actions no-print">
-        <button class="btn btn-outline btn-xs" onclick="editClass(${i})">✏️ Edit</button>
-        <button class="btn btn-danger btn-xs" onclick="deleteClass(${i})">🗑️ Delete</button>
+        <button class="btn btn-outline btn-xs" onclick="toggleStudents(${i})">👁️ View Students</button>
+      </div>
       </div>
     </div>
   `).join('');
@@ -1370,27 +1368,9 @@ function toggleStudents(i){
   el.classList.toggle('open');
 }
  
-function editClass(i){
-  const c=classData[i];
-  document.getElementById('ncName').value=c.name;
-  document.getElementById('ncSection').value=c.section;
-  document.getElementById('ncTeacher').value=c.teacher;
-  document.getElementById('ncRoom').value=c.room;
-  document.getElementById('ncStrength').value=c.students;
-  document.getElementById('addClassModal').dataset.editIdx=i;
-  openAddClassModal();
-}
- 
-function deleteClass(i){
-  if(confirm(`Delete ${classData[i].name}?`)){
-    classData.splice(i,1);
-    localStorage.setItem('classData',JSON.stringify(classData));
-    renderClasses();
-  }
-}
- 
 function openAddClassModal(){
-  document.getElementById('addClassModal').classList.add('open');
+  // Admin only - redirecting to admin panel
+  window.location.href='admin.html';
 }
  
 function saveNewClass(){
