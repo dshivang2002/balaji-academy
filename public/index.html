@@ -473,9 +473,7 @@ img{max-width:100%}
     <div class="nav-item" data-section="admission">
       <span class="nav-icon">📝</span> Admission
     </div>
-    <div class="nav-item" data-section="classes">
-      <span class="nav-icon">🏫</span> Class Management
-    </div>
+ 
   </nav>
   <div class="sidebar-footer">
     <p>Academic Year 2024–25<br>Powered by Balaji Academy</p>
@@ -629,125 +627,19 @@ img{max-width:100%}
     </table>
   </div>
  
-  <div class="fee-section-title">💳 Fee Payment Status</div>
-  <div class="fee-filters no-print">
-    <input class="form-control" style="max-width:220px" id="feeSearch" placeholder="🔍 Search student..." oninput="filterFees()">
-    <select class="form-control" style="max-width:160px" id="feeClassFilter" onchange="filterFees()">
-      <option value="">All Classes</option>
-      <option>Nursery</option><option>LKG</option><option>UKG</option>
-      <option>Class 1</option><option>Class 2</option><option>Class 3</option>
-      <option>Class 4</option><option>Class 5</option><option>Class 6</option>
-      <option>Class 7</option><option>Class 8</option><option>Class 9</option>
-      <option>Class 10</option><option>Class 11</option><option>Class 12</option>
-    </select>
-    <select class="form-control" style="max-width:140px" id="feeStatusFilter" onchange="filterFees()">
-      <option value="">All Status</option>
-      <option>Paid</option><option>Pending</option><option>Partial</option>
-    </select>
-  </div>
-  <div class="table-wrap">
-    <table class="tbl" id="feeTable">
-      <thead><tr>
-        <th>#</th><th>Student Name</th><th>Class</th><th>Fee Type</th><th>Amount</th><th>Status</th><th>Due Date</th><th class="no-print">Action</th>
-      </tr></thead>
-      <tbody id="feeTableBody"></tbody>
-    </table>
-  </div>
 </section>
  
 <!-- ===== RESULT SECTION ===== -->
 <section class="section" id="result">
   <div class="section-header">
     <h2>Result Management</h2>
-    <p>Enter marks, auto-calculate grades and print result cards</p>
+    <p>Student results are managed by the school administration</p>
   </div>
- 
-  <div class="result-form-card no-print">
-    <h3 style="font-size:16px;font-weight:700;color:var(--primary);margin-bottom:16px">✏️ Enter Student Result</h3>
-    <div class="form-grid">
-      <div class="form-group">
-        <label class="form-label">Student Name *</label>
-        <input class="form-control" id="rName" placeholder="e.g. Rahul Kumar Gupta">
-        <div class="form-error" id="rNameErr">Please enter student name</div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Roll Number *</label>
-        <input class="form-control" id="rRoll" placeholder="e.g. 2024-08-15">
-        <div class="form-error" id="rRollErr">Please enter roll number</div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Class *</label>
-        <select class="form-control" id="rClass">
-          <option value="">Select Class</option>
-          <option>Class 1</option><option>Class 2</option><option>Class 3</option>
-          <option>Class 4</option><option>Class 5</option><option>Class 6</option>
-          <option>Class 7</option><option>Class 8</option><option>Class 9</option>
-          <option>Class 10</option><option>Class 11</option><option>Class 12</option>
-        </select>
-        <div class="form-error" id="rClassErr">Please select class</div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Exam Type</label>
-        <select class="form-control" id="rExam">
-          <option>Half-Yearly Exam 2024</option>
-          <option>Annual Exam 2024</option>
-          <option>Unit Test – I</option>
-          <option>Unit Test – II</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-label" style="margin-bottom:10px">📚 Subject Marks (out of 100 each)</div>
-    <div class="subjects-grid" id="subjectsGrid">
-      <div class="subject-input-group">
-        <label>Hindi</label>
-        <input class="form-control sub-mark" id="mHindi" type="number" min="0" max="100" placeholder="0–100" oninput="calcResult()">
-      </div>
-      <div class="subject-input-group">
-        <label>English</label>
-        <input class="form-control sub-mark" id="mEnglish" type="number" min="0" max="100" placeholder="0–100" oninput="calcResult()">
-      </div>
-      <div class="subject-input-group">
-        <label>Mathematics</label>
-        <input class="form-control sub-mark" id="mMaths" type="number" min="0" max="100" placeholder="0–100" oninput="calcResult()">
-      </div>
-      <div class="subject-input-group">
-        <label>Science</label>
-        <input class="form-control sub-mark" id="mScience" type="number" min="0" max="100" placeholder="0–100" oninput="calcResult()">
-      </div>
-      <div class="subject-input-group">
-        <label>Social Science</label>
-        <input class="form-control sub-mark" id="mSST" type="number" min="0" max="100" placeholder="0–100" oninput="calcResult()">
-      </div>
-      <div class="subject-input-group">
-        <label>Computer</label>
-        <input class="form-control sub-mark" id="mComp" type="number" min="0" max="100" placeholder="0–100" oninput="calcResult()">
-      </div>
-    </div>
-    <div class="result-summary" id="resultSummary">
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
-        <div><p style="font-size:11px;opacity:.7">TOTAL MARKS</p><h3 id="rTotal" style="font-size:24px;font-weight:800">—</h3><p style="font-size:11px;opacity:.7">out of 600</p></div>
-        <div><p style="font-size:11px;opacity:.7">PERCENTAGE</p><h3 id="rPercent" style="font-size:24px;font-weight:800">—</h3></div>
-        <div style="text-align:right"><p style="font-size:11px;opacity:.7">GRADE</p><div class="grade-badge" id="rGrade">—</div><br><span id="rPassFail" style="font-size:12px;font-weight:600;margin-top:8px;display:inline-block"></span></div>
-      </div>
-    </div>
-    <div class="flex gap-8 mt-16">
-      <button class="btn btn-primary" onclick="submitResult()">💾 Save Result</button>
-      <button class="btn btn-outline no-print" onclick="printResult()">🖨️ Print Result</button>
-      <button class="btn btn-outline" onclick="clearResultForm()">🔄 Clear</button>
-    </div>
-  </div>
- 
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:10px">
-    <h3 style="font-size:15px;font-weight:700;color:var(--primary)">📊 Student Results</h3>
-    <input class="form-control no-print" style="max-width:240px" id="resultSearch" placeholder="🔍 Search by name or class..." oninput="filterResults()">
-  </div>
-  <div class="table-wrap">
-    <table class="tbl">
-      <thead><tr>
-        <th>#</th><th>Student Name</th><th>Class</th><th>Roll No</th><th>Exam</th><th>Total</th><th>%</th><th>Grade</th><th>Status</th>
-      </tr></thead>
-      <tbody id="resultTableBody"></tbody>
-    </table>
+  <div class="card" style="text-align:center;padding:48px 24px">
+    <div style="font-size:48px;margin-bottom:16px">📊</div>
+    <h3 style="font-size:18px;font-weight:700;color:var(--primary);margin-bottom:8px">Results are available via Admin Portal</h3>
+    <p style="font-size:13.5px;color:var(--text-muted);margin-bottom:24px">Student result data is managed securely by the school administration. Please contact the school office for your result details.</p>
+    <button class="btn btn-primary" onclick="window.location.href='admin.html'">🔐 Admin Login</button>
   </div>
 </section>
  
@@ -845,31 +737,8 @@ img{max-width:100%}
     <button class="btn btn-primary" onclick="submitAdmission()">📨 Submit Application</button>
   </div>
  
-  <div class="divider"></div>
- 
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:10px">
-    <h3 style="font-size:15px;font-weight:700;color:var(--primary)">📋 Admission Applications</h3>
-  </div>
-  <div class="table-wrap">
-    <table class="tbl">
-      <thead><tr>
-        <th>App ID</th><th>Student Name</th><th>Class</th><th>Father's Name</th><th>Mobile</th><th>Applied Date</th><th>Status</th>
-      </tr></thead>
-      <tbody id="admissionTableBody"></tbody>
-    </table>
-  </div>
 </section>
  
-<!-- ===== CLASS MANAGEMENT SECTION ===== -->
-<section class="section" id="classes">
-  <div class="section-header-row">
-    <div class="section-header">
-      <h2>Class Management</h2>
-      <p>View classes, sections and student rosters</p>
-    </div>
-  </div>
-  <div class="class-grid" id="classGrid"></div>
-</section>
  
 </main>
  
