@@ -72,7 +72,6 @@ img{max-width:100%}
   padding:11px 20px;cursor:pointer;
   color:rgba(255,255,255,.75);font-size:13.5px;font-weight:500;
   transition:all .2s;border-left:3px solid transparent;
-  position:relative;
 }
 .nav-item:hover{background:rgba(255,255,255,.08);color:#fff}
 .nav-item.active{background:rgba(255,255,255,.12);color:#fff;border-left-color:var(--accent)}
@@ -262,7 +261,7 @@ img{max-width:100%}
 .gallery-item{
   border-radius:10px;overflow:hidden;
   box-shadow:var(--shadow);cursor:pointer;
-  position:relative;group:1;
+  position:relative;
   aspect-ratio:4/3;background:#e2e8f0;
 }
 .gallery-item img{width:100%;height:100%;object-fit:cover;transition:.3s}
@@ -296,23 +295,123 @@ img{max-width:100%}
   margin:24px 0 12px;padding-bottom:8px;
   border-bottom:2px solid var(--accent);display:inline-block;
 }
-.fee-filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
-.fee-filters select,.fee-filters input{padding:7px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:13px}
  
-/* ===== RESULT ===== */
-.result-form-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;margin-bottom:24px}
-.subjects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0}
-.subject-input-group label{font-size:11.5px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px}
-.result-summary{
+/* ===== RESULT – STUDENT SEARCH ===== */
+.result-search-wrap{
+  background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:28px 28px 24px;margin-bottom:24px;
+}
+.result-search-wrap h3{
+  font-size:17px;font-weight:700;color:var(--primary);
+  margin-bottom:6px;
+}
+.result-search-wrap p{font-size:13px;color:var(--text-muted);margin-bottom:20px}
+.result-search-bar{
+  display:flex;gap:10px;flex-wrap:wrap;
+}
+.result-search-bar input{
+  flex:1;min-width:200px;padding:11px 16px;
+  border:1.5px solid var(--border);border-radius:8px;
+  font-size:14px;color:var(--text);
+  transition:.2s;
+}
+.result-search-bar input:focus{
+  outline:none;border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(26,60,110,.1);
+}
+.result-search-bar select{
+  padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;
+  font-size:13.5px;color:var(--text);background:#fff;min-width:160px;
+  transition:.2s;
+}
+.result-search-bar select:focus{outline:none;border-color:var(--primary)}
+ 
+/* ===== RESULT CARD (printable) ===== */
+#resultCardArea{display:none;margin-top:20px}
+#resultCardArea.show{display:block}
+ 
+.result-card{
+  background:#fff;border-radius:var(--radius);
+  box-shadow:var(--shadow-lg);overflow:hidden;
+}
+.result-card-header{
   background:linear-gradient(135deg,var(--primary),var(--primary-light));
-  color:#fff;border-radius:var(--radius);padding:20px;
-  display:none;margin-top:16px;
+  padding:24px 28px;color:#fff;
+  display:flex;align-items:center;gap:20px;
 }
-.result-summary.show{display:block}
-.grade-badge{
-  display:inline-block;padding:4px 16px;border-radius:20px;
-  font-size:20px;font-weight:800;background:var(--accent);color:var(--primary);
+.result-card-crest{
+  width:60px;height:60px;flex-shrink:0;
+  background:var(--accent);
+  clip-path:polygon(50% 0%,100% 20%,100% 70%,50% 100%,0% 70%,0% 20%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Poppins',sans-serif;font-weight:900;font-size:18px;color:var(--primary);
 }
+.result-card-school h2{font-size:18px;font-weight:800;margin-bottom:2px}
+.result-card-school p{font-size:12px;opacity:.75}
+.result-card-exam-tag{
+  margin-left:auto;background:rgba(255,255,255,.15);
+  padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;
+  text-align:center;white-space:nowrap;
+}
+ 
+.result-card-body{padding:24px 28px}
+.result-student-info{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  margin-bottom:24px;
+  background:var(--bg);border-radius:10px;padding:16px;
+}
+.result-info-item label{font-size:11px;color:var(--text-muted);font-weight:600;display:block;margin-bottom:2px;text-transform:uppercase;letter-spacing:.5px}
+.result-info-item span{font-size:14px;font-weight:700;color:var(--primary)}
+ 
+.result-marks-table{width:100%;border-collapse:collapse;margin-bottom:20px}
+.result-marks-table th{
+  background:var(--primary);color:#fff;
+  padding:10px 14px;font-size:12.5px;font-weight:600;text-align:left;
+}
+.result-marks-table th:first-child{border-radius:8px 0 0 0}
+.result-marks-table th:last-child{border-radius:0 8px 0 0}
+.result-marks-table td{
+  padding:10px 14px;font-size:13px;
+  border-bottom:1px solid var(--border);
+}
+.result-marks-table tr:last-child td{border-bottom:none}
+.result-marks-table tr:hover td{background:#f8fafc}
+.marks-pass{color:var(--success);font-weight:700}
+.marks-fail{color:var(--danger);font-weight:700}
+ 
+.result-summary-row{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+  margin-bottom:20px;
+}
+.result-summary-box{
+  background:var(--bg);border-radius:10px;padding:14px;text-align:center;
+}
+.result-summary-box label{font-size:11px;color:var(--text-muted);font-weight:600;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.result-summary-box span{font-size:22px;font-weight:800;color:var(--primary)}
+.result-summary-box.highlight{background:var(--primary);color:#fff}
+.result-summary-box.highlight label{color:rgba(255,255,255,.7)}
+.result-summary-box.highlight span{color:#fff}
+.result-summary-box.pass-box{background:#dcfce7}
+.result-summary-box.pass-box label{color:#16a34a}
+.result-summary-box.pass-box span{color:#16a34a}
+.result-summary-box.fail-box{background:#fee2e2}
+.result-summary-box.fail-box label{color:#dc2626}
+.result-summary-box.fail-box span{color:#dc2626}
+ 
+.result-card-footer{
+  padding:16px 28px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;
+}
+.result-card-footer p{font-size:12px;color:var(--text-muted)}
+ 
+/* No result found state */
+.result-not-found{
+  text-align:center;padding:40px 20px;
+  background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);
+  margin-top:20px;display:none;
+}
+.result-not-found.show{display:block}
  
 /* ===== ADMISSION ===== */
 .admission-success{
@@ -322,40 +421,6 @@ img{max-width:100%}
 }
 .admission-success.show{display:block}
 .app-id{font-size:28px;font-weight:800;color:var(--primary);margin:10px 0}
- 
-/* ===== CLASS CARDS ===== */
-.class-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
-.class-card{
-  background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);
-  overflow:hidden;transition:.2s;
-}
-.class-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
-.class-card-header{
-  background:var(--primary);padding:16px 18px;color:#fff;
-  display:flex;align-items:center;justify-content:space-between;
-}
-.class-card-header h3{font-size:16px;font-weight:700}
-.class-badge{
-  background:rgba(255,255,255,.2);padding:3px 10px;
-  border-radius:12px;font-size:11px;font-weight:600;
-}
-.class-card-body{padding:16px 18px}
-.class-info{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
-.class-info-row{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-muted)}
-.class-info-row strong{color:var(--text);min-width:90px}
-.class-card-actions{display:flex;gap:8px;border-top:1px solid var(--border);padding:12px 18px}
-.class-students{display:none;padding:0 18px 16px}
-.class-students.open{display:block}
-.student-pill{
-  display:flex;align-items:center;gap:8px;padding:7px 0;
-  border-bottom:1px solid var(--border);font-size:12.5px;
-}
-.student-pill:last-child{border-bottom:none}
-.s-avatar{
-  width:28px;height:28px;border-radius:50%;background:var(--primary);
-  color:#fff;font-size:11px;font-weight:700;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
  
 /* ===== MODAL ===== */
 .modal-overlay{
@@ -397,7 +462,10 @@ img{max-width:100%}
   .footer{margin-left:0}
   body{background:#fff}
   .section{display:block!important}
-  .result-summary{background:#1a3c6e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .result-card{box-shadow:none!important;border:1px solid #ccc}
+  .result-card-header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .result-marks-table th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #resultSearchSection{display:none!important}
 }
  
 /* ===== RESPONSIVE ===== */
@@ -405,7 +473,7 @@ img{max-width:100%}
   .stat-grid{grid-template-columns:repeat(2,1fr)}
   .form-grid-3{grid-template-columns:1fr 1fr}
   .footer-grid{grid-template-columns:1fr 1fr}
-  .subjects-grid{grid-template-columns:repeat(2,1fr)}
+  .result-summary-row{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:768px){
   :root{--sidebar-w:260px}
@@ -423,6 +491,9 @@ img{max-width:100%}
   .hero-banner{padding:32px 24px}
   .hero-banner h1{font-size:24px}
   .footer-grid{grid-template-columns:1fr}
+  .result-student-info{grid-template-columns:1fr}
+  .result-summary-row{grid-template-columns:1fr 1fr}
+  .result-search-bar{flex-direction:column}
 }
 @media(max-width:480px){
   .stat-grid{grid-template-columns:1fr 1fr}
@@ -473,7 +544,6 @@ img{max-width:100%}
     <div class="nav-item" data-section="admission">
       <span class="nav-icon">📝</span> Admission
     </div>
- 
   </nav>
   <div class="sidebar-footer">
     <p>Academic Year 2024–25<br>Powered by Balaji Academy</p>
@@ -519,7 +589,7 @@ img{max-width:100%}
     <span class="ticker-label">📢 Notice</span>
     <div class="ticker-track">
       <div class="ticker-inner">
-        <span>🎉 Annual Prize Distribution Ceremony on 25 November 2024 — All students & parents are invited</span>
+        <span>🎉 Annual Prize Distribution Ceremony on 25 November 2024 — All students &amp; parents are invited</span>
         <span>📚 Half-Yearly Examinations begin from 10 October 2024 — Check timetable on notice board</span>
         <span>🏆 Balaji Academy wins District-Level Science Quiz — Congratulations to Team!</span>
         <span>💰 Last date for fee submission: 15 October 2024 — Avoid late fine</span>
@@ -533,7 +603,7 @@ img{max-width:100%}
   <div class="stat-grid">
     <div class="stat-card" style="--card-accent:rgba(26,60,110,.08)">
       <div class="stat-icon" style="background:#dbeafe">👩‍🎓</div>
-      <div class="stat-info"><h3 id="statStudents">847</h3><p>Total Students</p></div>
+      <div class="stat-info"><h3>847</h3><p>Total Students</p></div>
     </div>
     <div class="stat-card" style="--card-accent:rgba(232,160,32,.1)">
       <div class="stat-icon" style="background:#fef3c7">🏫</div>
@@ -569,13 +639,17 @@ img{max-width:100%}
 </section>
  
 <!-- ===== GALLERY SECTION ===== -->
+<!-- NOTE: Upload button removed — only Admin can upload via admin.html -->
 <section class="section" id="gallery">
   <div class="section-header-row">
     <div class="section-header">
       <h2>School Gallery</h2>
       <p>Memories, milestones and moments from Balaji Academy</p>
     </div>
-    <button class="btn btn-primary no-print">📤 Upload Photo</button>
+    <!-- Upload removed from public view. Admins can upload via the Admin Panel. -->
+    <div style="display:flex;align-items:center;gap:8px;background:#f0f4fa;padding:8px 14px;border-radius:8px;font-size:12.5px;color:var(--text-muted)">
+      🔒 <span>Photo uploads are managed by <strong style="color:var(--primary);cursor:pointer" onclick="window.location.href='admin.html'">Admin Panel</strong></span>
+    </div>
   </div>
  
   <div class="gallery-filters">
@@ -626,20 +700,54 @@ img{max-width:100%}
       </tbody>
     </table>
   </div>
- 
 </section>
  
 <!-- ===== RESULT SECTION ===== -->
 <section class="section" id="result">
   <div class="section-header">
     <h2>Result Management</h2>
-    <p>Student results are managed by the school administration</p>
+    <p>Search your result by entering your name or roll number</p>
   </div>
-  <div class="card" style="text-align:center;padding:48px 24px">
-    <div style="font-size:48px;margin-bottom:16px">📊</div>
-    <h3 style="font-size:18px;font-weight:700;color:var(--primary);margin-bottom:8px">Results are available via Admin Portal</h3>
-    <p style="font-size:13.5px;color:var(--text-muted);margin-bottom:24px">Student result data is managed securely by the school administration. Please contact the school office for your result details.</p>
-    <button class="btn btn-primary" onclick="window.location.href='admin.html'">🔐 Admin Login</button>
+ 
+  <!-- Search Bar -->
+  <div class="result-search-wrap" id="resultSearchSection">
+    <h3>🔍 Search Your Result</h3>
+    <p>Enter your name or roll number and select your class to find your result card.</p>
+    <div class="result-search-bar">
+      <input type="text" id="studentSearchInput" placeholder="Enter student name or roll number..." oninput="searchResult()">
+      <select id="studentClassFilter" onchange="searchResult()">
+        <option value="">All Classes</option>
+        <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+        <option>Class 4</option><option>Class 5</option><option>Class 6</option>
+        <option>Class 7</option><option>Class 8</option><option>Class 9</option>
+        <option>Class 10</option><option>Class 11</option><option>Class 12</option>
+      </select>
+      <button class="btn btn-primary" onclick="searchResult()">🔍 Search</button>
+      <button class="btn btn-outline" onclick="clearResultSearch()">✕ Clear</button>
+    </div>
+  </div>
+ 
+  <!-- Result Card (shown after search) -->
+  <div id="resultCardArea">
+    <!-- Filled by JS -->
+  </div>
+ 
+  <!-- Not Found State -->
+  <div class="result-not-found" id="resultNotFound">
+    <div style="font-size:48px;margin-bottom:16px">🔎</div>
+    <h3 style="font-size:18px;font-weight:700;color:var(--primary);margin-bottom:8px">No Result Found</h3>
+    <p style="font-size:13.5px;color:var(--text-muted);margin-bottom:20px">We could not find a result matching your search. Please check the name, roll number or class and try again.</p>
+    <button class="btn btn-outline" onclick="clearResultSearch()">Try Again</button>
+  </div>
+ 
+  <!-- Admin note -->
+  <div style="margin-top:20px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 20px;display:flex;align-items:center;gap:12px">
+    <span style="font-size:20px">🔐</span>
+    <div>
+      <p style="font-size:13px;font-weight:600;color:var(--primary)">Are you an administrator?</p>
+      <p style="font-size:12.5px;color:var(--text-muted)">Results are entered and managed from the <strong style="cursor:pointer;color:var(--primary)" onclick="window.location.href='admin.html'">Admin Panel</strong>.</p>
+    </div>
+    <button class="btn btn-outline btn-sm no-print" style="margin-left:auto" onclick="window.location.href='admin.html'">Admin Login →</button>
   </div>
 </section>
  
@@ -736,9 +844,7 @@ img{max-width:100%}
     </div>
     <button class="btn btn-primary" onclick="submitAdmission()">📨 Submit Application</button>
   </div>
- 
 </section>
- 
  
 </main>
  
@@ -777,44 +883,6 @@ img{max-width:100%}
   </div>
 </footer>
  
-<!-- ADD CLASS MODAL -->
-<div class="modal-overlay" id="addClassModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>➕ Add New Class</h3>
-      <button class="modal-close" onclick="closeModal('addClassModal')">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-grid">
-        <div class="form-group">
-          <label class="form-label">Class Name *</label>
-          <input class="form-control" id="ncName" placeholder="e.g. Class 8">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Section</label>
-          <input class="form-control" id="ncSection" placeholder="e.g. A">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Class Teacher *</label>
-          <input class="form-control" id="ncTeacher" placeholder="Teacher's name">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Room No *</label>
-          <input class="form-control" id="ncRoom" placeholder="e.g. 12">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Total Students</label>
-          <input class="form-control" id="ncStrength" type="number" placeholder="e.g. 40">
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('addClassModal')">Cancel</button>
-      <button class="btn btn-primary" onclick="saveNewClass()">Save Class</button>
-    </div>
-  </div>
-</div>
- 
 <script>
 // =====================================================
 // NAVIGATION
@@ -824,15 +892,15 @@ const pageTitles = {
   gallery:'🖼️ School Gallery',
   fees:'💰 Fees Management',
   result:'📊 Result Management',
-  admission:'📝 Admission Management',
-  classes:'🏫 Class Management'
+  admission:'📝 Admission Management'
 };
  
 function switchSection(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  document.querySelector(`[data-section="${id}"]`).classList.add('active');
+  const navEl = document.querySelector(`[data-section="${id}"]`);
+  if(navEl) navEl.classList.add('active');
   document.getElementById('pageTitle').textContent = pageTitles[id];
   closeSidebar();
   window.scrollTo(0,0);
@@ -842,7 +910,6 @@ document.querySelectorAll('.nav-item').forEach(item=>{
   item.addEventListener('click',()=>switchSection(item.dataset.section));
 });
  
-// Hamburger
 document.getElementById('hamburger').addEventListener('click',()=>{
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('sidebarOverlay').classList.toggle('open');
@@ -869,8 +936,8 @@ const galleryData = [
   {cat:'classrooms',title:'Science Lab – Class 10',seed:100},
   {cat:'classrooms',title:'Computer Lab Session',seed:110},
   {cat:'classrooms',title:'Library Reading Hour',seed:120},
-  {cat:'functions',title:'Teacher\'s Day Celebration',seed:130},
-  {cat:'functions',title:'Children\'s Day Programme',seed:140},
+  {cat:'functions',title:"Teacher's Day Celebration",seed:130},
+  {cat:'functions',title:"Children's Day Programme",seed:140},
   {cat:'functions',title:'Farewell Ceremony – Class 12',seed:150},
   {cat:'events',title:'Science Exhibition 2024',seed:160},
   {cat:'sports',title:'Kho-Kho Finals – Girls Team',seed:170},
@@ -880,8 +947,8 @@ const galleryData = [
 function renderGallery(cat='all'){
   const grid = document.getElementById('galleryGrid');
   const items = cat==='all'?galleryData:galleryData.filter(i=>i.cat===cat);
-  grid.innerHTML = items.map((item,idx)=>`
-    <div class="gallery-item" onclick="openLightbox('https://picsum.photos/seed/${item.seed}/800/600','${item.title.replace(/'/,"\\'")}')">
+  grid.innerHTML = items.map(item=>`
+    <div class="gallery-item" onclick="openLightbox('https://picsum.photos/seed/${item.seed}/800/600','${item.title.replace(/'/g,"\\'")}')">
       <img src="https://picsum.photos/seed/${item.seed}/400/300" alt="${item.title}" loading="lazy">
       <div class="gallery-overlay"><span>${item.title}</span></div>
     </div>
@@ -928,63 +995,11 @@ document.getElementById('feeStructureBody').innerHTML = feeStructure.map(r=>`
   <td><strong>₹${r[4].toLocaleString('en-IN')}</strong></td></tr>
 `).join('');
  
-let feePayments = [
-  {name:'Aakash Verma',cls:'Class 8',type:'Tuition Fee',amount:1300,status:'Paid',due:'01 Oct 2024'},
-  {name:'Priya Sharma',cls:'Class 10',type:'Tuition Fee',amount:1500,status:'Pending',due:'01 Oct 2024'},
-  {name:'Mohit Yadav',cls:'Class 6',type:'Exam Fee',amount:700,status:'Paid',due:'15 Sep 2024'},
-  {name:'Sunita Gupta',cls:'Class 12',type:'Annual Charges',amount:4500,status:'Partial',due:'30 Sep 2024'},
-  {name:'Rajan Singh',cls:'Class 9',type:'Tuition Fee',amount:1500,status:'Pending',due:'01 Oct 2024'},
-  {name:'Kiran Mishra',cls:'Class 3',type:'Tuition Fee',amount:1000,status:'Paid',due:'01 Oct 2024'},
-  {name:'Deepak Patel',cls:'Class 11',type:'Annual Charges',amount:4500,status:'Partial',due:'30 Sep 2024'},
-  {name:'Anjali Tiwari',cls:'Class 5',type:'Tuition Fee',amount:1100,status:'Paid',due:'01 Oct 2024'},
-  {name:'Vikas Dubey',cls:'Class 7',type:'Exam Fee',amount:700,status:'Pending',due:'15 Oct 2024'},
-  {name:'Pooja Rani',cls:'Class 1',type:'Tuition Fee',amount:900,status:'Paid',due:'01 Oct 2024'},
-  {name:'Suresh Rajput',cls:'Class 4',type:'Tuition Fee',amount:1000,status:'Partial',due:'01 Oct 2024'},
-  {name:'Nisha Pandey',cls:'Class 2',type:'Annual Charges',amount:2500,status:'Paid',due:'30 Sep 2024'},
-];
- 
-// Load from localStorage if available
-if(localStorage.getItem('feePayments')) feePayments = JSON.parse(localStorage.getItem('feePayments'));
- 
-function statusBadge(s){
-  const map={Paid:'badge-success',Pending:'badge-danger',Partial:'badge-warning'};
-  return `<span class="badge ${map[s]||'badge-muted'}">${s}</span>`;
-}
- 
-function renderFeeTable(data){
-  document.getElementById('feeTableBody').innerHTML = data.map((r,i)=>`
-    <tr id="feeRow${i}">
-      <td>${i+1}</td><td><strong>${r.name}</strong></td><td>${r.cls}</td>
-      <td>${r.type}</td><td>₹${r.amount.toLocaleString('en-IN')}</td>
-      <td>${statusBadge(r.status)}</td><td>${r.due}</td>
-      <td class="no-print">
-        ${r.status!=='Paid'?`<button class="btn btn-success btn-xs" onclick="markPaid(${i})">✓ Mark Paid</button>`:'<span style="font-size:11px;color:var(--text-muted)">✔ Settled</span>'}
-      </td>
-    </tr>
-  `).join('');
-}
-renderFeeTable(feePayments);
- 
-function markPaid(i){
-  feePayments[i].status='Paid';
-  localStorage.setItem('feePayments',JSON.stringify(feePayments));
-  filterFees();
-}
- 
-function filterFees(){
-  const q=document.getElementById('feeSearch').value.toLowerCase();
-  const cls=document.getElementById('feeClassFilter').value;
-  const sts=document.getElementById('feeStatusFilter').value;
-  const filtered = feePayments.filter((r,i)=>{
-    return (!q||r.name.toLowerCase().includes(q))&&(!cls||r.cls===cls)&&(!sts||r.status===sts);
-  });
-  renderFeeTable(filtered);
-}
- 
 // =====================================================
-// RESULT MANAGEMENT
+// RESULT MANAGEMENT – STUDENT SEARCH
 // =====================================================
-let mockResults = [
+// Default mock data (same as admin panel)
+const defaultResults = [
   {name:'Rahul Kumar Gupta',cls:'Class 10',roll:'2024-10-01',exam:'Half-Yearly Exam 2024',marks:{Hindi:78,English:82,Maths:91,Science:85,SST:74,Comp:88}},
   {name:'Priya Dubey',cls:'Class 8',roll:'2024-08-12',exam:'Half-Yearly Exam 2024',marks:{Hindi:88,English:90,Maths:76,Science:84,SST:91,Comp:95}},
   {name:'Amit Singh Yadav',cls:'Class 12',roll:'2024-12-03',exam:'Unit Test – II',marks:{Hindi:55,English:62,Maths:48,Science:58,SST:60,Comp:70}},
@@ -995,7 +1010,10 @@ let mockResults = [
   {name:'Anita Maurya',cls:'Class 11',roll:'2024-11-06',exam:'Unit Test – II',marks:{Hindi:65,English:70,Maths:58,Science:62,SST:68,Comp:72}},
 ];
  
-if(localStorage.getItem('results')) mockResults = JSON.parse(localStorage.getItem('results'));
+function getResults(){
+  const stored = localStorage.getItem('results');
+  return stored ? JSON.parse(stored) : defaultResults;
+}
  
 function getGrade(pct){
   if(pct>=90) return 'A+';
@@ -1006,85 +1024,155 @@ function getGrade(pct){
   return 'F';
 }
  
-function calcResultRow(marks){
-  const total = Object.values(marks).reduce((a,b)=>a+(+b||0),0);
-  const pct = ((total/600)*100).toFixed(1);
-  const grade = getGrade(parseFloat(pct));
-  const pass = Object.values(marks).every(m=>(+m||0)>=33) && parseFloat(pct)>=33;
-  return {total,pct,grade,pass};
-}
+function searchResult(){
+  const query = document.getElementById('studentSearchInput').value.trim().toLowerCase();
+  const classFilter = document.getElementById('studentClassFilter').value;
+  const cardArea = document.getElementById('resultCardArea');
+  const notFound = document.getElementById('resultNotFound');
  
-function calcResult(){
-  const fields=['mHindi','mEnglish','mMaths','mScience','mSST','mComp'];
-  const marks={};
-  fields.forEach((f,i)=>{
-    const keys=['Hindi','English','Maths','Science','SST','Comp'];
-    marks[keys[i]]=parseInt(document.getElementById(f).value)||0;
+  cardArea.innerHTML = '';
+  cardArea.classList.remove('show');
+  notFound.classList.remove('show');
+ 
+  if(!query && !classFilter) return;
+ 
+  const allResults = getResults();
+  const matched = allResults.filter(r => {
+    const nameMatch = r.name.toLowerCase().includes(query);
+    const rollMatch = r.roll.toLowerCase().includes(query);
+    const classMatch = !classFilter || r.cls === classFilter;
+    return (nameMatch || rollMatch) && classMatch;
   });
-  const filled = fields.some(f=>document.getElementById(f).value!=='');
-  if(!filled){document.getElementById('resultSummary').classList.remove('show');return;}
-  const {total,pct,grade,pass} = calcResultRow(marks);
-  document.getElementById('rTotal').textContent = total;
-  document.getElementById('rPercent').textContent = pct+'%';
-  document.getElementById('rGrade').textContent = grade;
-  document.getElementById('rPassFail').textContent = pass?'✅ PASS':'❌ FAIL';
-  document.getElementById('resultSummary').classList.add('show');
+ 
+  if(!matched.length){
+    notFound.classList.add('show');
+    return;
+  }
+ 
+  // Render all matched results
+  cardArea.innerHTML = matched.map((r,idx) => buildResultCard(r, idx)).join('');
+  cardArea.classList.add('show');
 }
  
-function submitResult(){
-  const name=document.getElementById('rName').value.trim();
-  const roll=document.getElementById('rRoll').value.trim();
-  const cls=document.getElementById('rClass').value;
-  let ok=true;
-  [['rName','rNameErr'],['rRoll','rRollErr'],['rClass','rClassErr']].forEach(([f,e])=>{
-    const v=document.getElementById(f).value.trim();
-    if(!v){document.getElementById(e).classList.add('show');ok=false;}
-    else document.getElementById(e).classList.remove('show');
-  });
-  if(!ok) return;
-  const fields=['mHindi','mEnglish','mMaths','mScience','mSST','mComp'];
-  const marks={};
-  ['Hindi','English','Maths','Science','SST','Comp'].forEach((k,i)=>marks[k]=parseInt(document.getElementById(fields[i]).value)||0);
-  const exam = document.getElementById('rExam').value;
-  mockResults.unshift({name,cls,roll,exam,marks});
-  localStorage.setItem('results',JSON.stringify(mockResults));
-  renderResultTable(mockResults);
-  alert(`✅ Result saved for ${name}!`);
-  clearResultForm();
-}
+function buildResultCard(r, idx){
+  const subjects = [
+    {name:'Hindi', key:'Hindi'},
+    {name:'English', key:'English'},
+    {name:'Mathematics', key:'Maths'},
+    {name:'Science', key:'Science'},
+    {name:'Social Science', key:'SST'},
+    {name:'Computer', key:'Comp'},
+  ];
  
-function clearResultForm(){
-  ['rName','rRoll','mHindi','mEnglish','mMaths','mScience','mSST','mComp'].forEach(id=>{
-    document.getElementById(id).value='';
-  });
-  document.getElementById('rClass').selectedIndex=0;
-  document.getElementById('resultSummary').classList.remove('show');
-}
- 
-function renderResultTable(data){
-  document.getElementById('resultTableBody').innerHTML = data.map((r,i)=>{
-    const {total,pct,grade,pass} = calcResultRow(r.marks);
-    const gb = grade==='A+'||grade==='A'?'badge-success':grade==='F'?'badge-danger':'badge-primary';
+  const maxMarks = 100;
+  const marksRows = subjects.map(s => {
+    const m = r.marks[s.key] || 0;
+    const pass = m >= 33;
+    const pctSubj = m;
     return `<tr>
-      <td>${i+1}</td><td><strong>${r.name}</strong></td><td>${r.cls}</td><td>${r.roll}</td>
-      <td style="font-size:11.5px">${r.exam}</td>
-      <td>${total}/600</td><td>${pct}%</td>
-      <td><span class="badge ${gb}">${grade}</span></td>
-      <td><span class="badge ${pass?'badge-success':'badge-danger'}">${pass?'Pass':'Fail'}</span></td>
+      <td>${s.name}</td>
+      <td>${maxMarks}</td>
+      <td class="${pass?'marks-pass':'marks-fail'}">${m}</td>
+      <td>${pass?'<span class="badge badge-success" style="font-size:11px">Pass</span>':'<span class="badge badge-danger" style="font-size:11px">Fail</span>'}</td>
     </tr>`;
   }).join('');
-}
-renderResultTable(mockResults);
  
-function filterResults(){
-  const q=document.getElementById('resultSearch').value.toLowerCase();
-  const filtered=mockResults.filter(r=>r.name.toLowerCase().includes(q)||r.cls.toLowerCase().includes(q));
-  renderResultTable(filtered);
+  const total = Object.values(r.marks).reduce((a,b)=>a+(+b||0),0);
+  const pct = ((total/600)*100).toFixed(1);
+  const grade = getGrade(parseFloat(pct));
+  const pass = Object.values(r.marks).every(m=>(+m||0)>=33) && parseFloat(pct)>=33;
+ 
+  const summaryBoxClass = pass ? 'pass-box' : 'fail-box';
+  const gradeBoxClass = (grade==='A+'||grade==='A') ? 'pass-box' : grade==='F' ? 'fail-box' : '';
+ 
+  return `
+  <div class="result-card" style="margin-bottom:${idx>0?'24px':'0'}">
+    <div class="result-card-header">
+      <div class="result-card-crest">BA</div>
+      <div class="result-card-school">
+        <h2>Balaji Academy</h2>
+        <p>Gursahaiganj, Kannauj, Uttar Pradesh – 209721</p>
+        <p style="margin-top:2px;font-size:11px;opacity:.65">Academic Year 2024–25</p>
+      </div>
+      <div class="result-card-exam-tag">
+        📄 ${r.exam}
+      </div>
+    </div>
+    <div class="result-card-body">
+      <div class="result-student-info">
+        <div class="result-info-item"><label>Student Name</label><span>${r.name}</span></div>
+        <div class="result-info-item"><label>Class</label><span>${r.cls}</span></div>
+        <div class="result-info-item"><label>Roll Number</label><span>${r.roll}</span></div>
+        <div class="result-info-item"><label>Exam</label><span>${r.exam}</span></div>
+      </div>
+ 
+      <table class="result-marks-table">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Max Marks</th>
+            <th>Marks Obtained</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>${marksRows}</tbody>
+      </table>
+ 
+      <div class="result-summary-row">
+        <div class="result-summary-box highlight">
+          <label>Total Marks</label>
+          <span>${total}/600</span>
+        </div>
+        <div class="result-summary-box highlight">
+          <label>Percentage</label>
+          <span>${pct}%</span>
+        </div>
+        <div class="result-summary-box ${gradeBoxClass}">
+          <label>Grade</label>
+          <span>${grade}</span>
+        </div>
+        <div class="result-summary-box ${summaryBoxClass}">
+          <label>Result</label>
+          <span>${pass?'PASS':'FAIL'}</span>
+        </div>
+      </div>
+    </div>
+    <div class="result-card-footer no-print">
+      <p>🖨️ Use the print button to save or print this result card.</p>
+      <button class="btn btn-primary btn-sm" onclick="printResultCard(${idx})">🖨️ Print Result</button>
+    </div>
+  </div>`;
 }
  
-function printResult(){
+function printResultCard(idx){
+  // Hide search area, show only the card, print, restore
+  const searchSec = document.getElementById('resultSearchSection');
+  const notFound = document.getElementById('resultNotFound');
+  const adminNote = document.querySelector('#result > div:last-child');
+ 
+  searchSec.style.display='none';
+  notFound.style.display='none';
+  if(adminNote) adminNote.style.display='none';
+ 
   window.print();
+ 
+  searchSec.style.display='';
+  notFound.style.display='';
+  if(adminNote) adminNote.style.display='';
 }
+ 
+function clearResultSearch(){
+  document.getElementById('studentSearchInput').value='';
+  document.getElementById('studentClassFilter').value='';
+  document.getElementById('resultCardArea').innerHTML='';
+  document.getElementById('resultCardArea').classList.remove('show');
+  document.getElementById('resultNotFound').classList.remove('show');
+}
+ 
+// Allow pressing Enter in search bar
+document.getElementById('studentSearchInput').addEventListener('keydown', function(e){
+  if(e.key==='Enter') searchResult();
+});
  
 // =====================================================
 // ADMISSION MANAGEMENT
@@ -1098,29 +1186,6 @@ let admissions = [
   {id:'BA-1028',name:'Rahul Tiwari',cls:'Class 3',father:'Ravi Tiwari',mobile:'9234567891',date:'20 Sep 2024',status:'Approved'},
 ];
 if(localStorage.getItem('admissions')) admissions=JSON.parse(localStorage.getItem('admissions'));
- 
-const statusColors={'Approved':'badge-success','Pending':'badge-warning','Rejected':'badge-danger'};
- 
-function renderAdmissions(){
-  document.getElementById('admissionTableBody').innerHTML = admissions.map((a,i)=>`
-    <tr>
-      <td><strong>${a.id}</strong></td>
-      <td>${a.name}</td><td>${a.cls}</td><td>${a.father}</td><td>${a.mobile}</td><td>${a.date}</td>
-      <td>
-        <select class="form-control" style="padding:4px 8px;font-size:12px;min-width:110px" onchange="changeAdmStatus(${i},this.value)">
-          ${['Approved','Pending','Rejected'].map(s=>`<option ${a.status===s?'selected':''}>${s}</option>`).join('')}
-        </select>
-      </td>
-    </tr>
-  `).join('');
-}
-renderAdmissions();
- 
-function changeAdmStatus(i,val){
-  admissions[i].status=val;
-  localStorage.setItem('admissions',JSON.stringify(admissions));
-  renderAdmissions();
-}
  
 function submitAdmission(){
   const fields=[
@@ -1148,7 +1213,6 @@ function submitAdmission(){
   };
   admissions.unshift(newAdm);
   localStorage.setItem('admissions',JSON.stringify(admissions));
-  renderAdmissions();
   document.getElementById('appIdDisplay').textContent=id;
   document.getElementById('admissionFormCard').style.display='none';
   document.getElementById('admissionSuccess').classList.add('show');
@@ -1164,104 +1228,8 @@ function resetAdmission(){
 }
  
 // =====================================================
-// CLASS MANAGEMENT
+// UPCOMING EVENTS
 // =====================================================
-let classData = [
-  {name:'Nursery',section:'A',teacher:'Smt. Reena Verma',students:28,room:'01',list:['Aarav Sharma','Priya Singh','Ravi Yadav','Sneha Gupta','Mohan Mishra']},
-  {name:'LKG',section:'A',teacher:'Smt. Kavita Dubey',students:32,room:'02',list:['Divya Tiwari','Ankush Patel','Neha Rajput','Sachin Yadav','Pooja Nishad']},
-  {name:'UKG',section:'A',teacher:'Smt. Anita Mishra',students:35,room:'03',list:['Harsh Verma','Ritu Singh','Deepak Pandey','Suman Gupta','Raj Kushwaha']},
-  {name:'Class 1',section:'A',teacher:'Sh. Ram Prakash',students:40,room:'04',list:['Akash Kumar','Neha Sharma','Vikas Singh','Pinki Yadav','Suresh Tiwari']},
-  {name:'Class 2',section:'A',teacher:'Smt. Savita Yadav',students:38,room:'05',list:['Rahul Mishra','Sita Devi','Pawan Gupta','Sangeeta Verma','Alok Dubey']},
-  {name:'Class 3',section:'A',teacher:'Sh. Sunil Pandey',students:42,room:'06',list:['Arun Prajapati','Mamta Singh','Dinesh Yadav','Kiran Maurya','Anil Chauhan']},
-  {name:'Class 4',section:'A',teacher:'Smt. Rekha Gupta',students:40,room:'07',list:['Priyanka Joshi','Deepak Rao','Nidhi Srivastava','Rohit Misra','Garima Pandey']},
-  {name:'Class 5',section:'A',teacher:'Sh. Vijay Singh',students:44,room:'08',list:['Ankit Tiwari','Sunita Yadav','Pankaj Verma','Meena Dubey','Ritesh Kumar']},
-  {name:'Class 6',section:'A',teacher:'Sh. Rajesh Sharma',students:45,room:'09',list:['Shubham Gupta','Priti Mishra','Manish Yadav','Anjali Tiwari','Vipin Rajput']},
-  {name:'Class 7',section:'A',teacher:'Smt. Madhuri Pandey',students:43,room:'10',list:['Sachin Singh','Rekha Patel','Aakash Mishra','Deepika Yadav','Rohit Nishad']},
-  {name:'Class 8',section:'A',teacher:'Sh. Arvind Kumar',students:46,room:'11',list:['Priya Gupta','Manish Tiwari','Sandeep Verma','Nisha Dubey','Vikash Singh']},
-  {name:'Class 9',section:'A',teacher:'Sh. Dinesh Mishra',students:48,room:'12',list:['Ankita Sharma','Rajan Yadav','Pooja Kushwaha','Shyam Prasad','Kavita Misra']},
-  {name:'Class 10',section:'A',teacher:'Sh. Santosh Yadav',students:50,room:'13',list:['Kiran Patel','Arun Kumar','Sunita Singh','Deepak Gupta','Reena Tiwari']},
-  {name:'Class 11',section:'A',teacher:'Sh. Ramesh Dubey',students:36,room:'14',list:['Rohit Pandey','Priya Verma','Vikas Chauhan','Anita Rajput','Sanjay Mishra']},
-  {name:'Class 12',section:'A',teacher:'Sh. Suresh Gupta',students:34,room:'15',list:['Amita Singh','Sandeep Yadav','Ritu Sharma','Manish Tiwari','Priti Kumar']},
-];
- 
-if(localStorage.getItem('classData')) classData=JSON.parse(localStorage.getItem('classData'));
- 
-const classColors=['#1a3c6e','#2456a4','#16a34a','#d97706','#dc2626','#7c3aed','#0891b2','#c2410c'];
- 
-function renderClasses(){
-  document.getElementById('classGrid').innerHTML = classData.map((c,i)=>`
-    <div class="class-card" id="classCard${i}">
-      <div class="class-card-header" style="background:${classColors[i%classColors.length]}">
-        <h3>${c.name}</h3>
-        <span class="class-badge">Sec ${c.section}</span>
-      </div>
-      <div class="class-card-body">
-        <div class="class-info">
-          <div class="class-info-row"><strong>🧑‍🏫 Teacher:</strong><span>${c.teacher}</span></div>
-          <div class="class-info-row"><strong>👥 Students:</strong><span>${c.students}</span></div>
-          <div class="class-info-row"><strong>🚪 Room No:</strong><span>${c.room}</span></div>
-        </div>
-        <button class="btn btn-outline btn-sm" style="width:100%" onclick="toggleStudents(${i})">👁 View Students</button>
-      </div>
-      <div class="class-students" id="classStudents${i}">
-        ${c.list.map((s,si)=>`
-          <div class="student-pill">
-            <div class="s-avatar">${s.charAt(0)}</div>
-            <span>${s}</span>
-            <span class="badge badge-muted" style="margin-left:auto;font-size:10px">Roll ${si+1}</span>
-          </div>
-        `).join('')}
-      </div>
-      <div class="class-card-actions no-print">
-        <button class="btn btn-outline btn-xs" onclick="toggleStudents(${i})">👁️ View Students</button>
-      </div>
-      </div>
-    </div>
-  `).join('');
-}
-renderClasses();
- 
-function toggleStudents(i){
-  const el=document.getElementById(`classStudents${i}`);
-  el.classList.toggle('open');
-}
- 
-function openAddClassModal(){
-  // Admin only - redirecting to admin panel
-  window.location.href='admin.html';
-}
- 
-function saveNewClass(){
-  const name=document.getElementById('ncName').value.trim();
-  const section=document.getElementById('ncSection').value.trim()||'A';
-  const teacher=document.getElementById('ncTeacher').value.trim();
-  const room=document.getElementById('ncRoom').value.trim();
-  const students=parseInt(document.getElementById('ncStrength').value)||0;
-  if(!name||!teacher||!room){alert('Please fill required fields.');return;}
-  const idx=document.getElementById('addClassModal').dataset.editIdx;
-  if(idx!==undefined&&idx!==''){
-    classData[parseInt(idx)]={...classData[parseInt(idx)],name,section,teacher,room,students};
-    delete document.getElementById('addClassModal').dataset.editIdx;
-  } else {
-    classData.push({name,section,teacher,students,room,list:[]});
-  }
-  localStorage.setItem('classData',JSON.stringify(classData));
-  renderClasses();
-  closeModal('addClassModal');
-  ['ncName','ncSection','ncTeacher','ncRoom','ncStrength'].forEach(id=>document.getElementById(id).value='');
-}
- 
-function closeModal(id){
-  document.getElementById(id).classList.remove('open');
-}
- 
-// Close modal on overlay click
-document.querySelectorAll('.modal-overlay').forEach(overlay=>{
-  overlay.addEventListener('click',function(e){
-    if(e.target===this) closeModal(this.id);
-  });
-});
-// ═══ UPCOMING EVENTS (from localStorage set by admin) ═══
 const DEFAULT_EVENTS = [
   {id:'ev1',title:'Parent-Teacher Meeting',desc:'10:00 AM – School Premises',date:'2024-09-30'},
   {id:'ev2',title:'Half-Yearly Examinations',desc:'All Classes',date:'2024-10-10'},
