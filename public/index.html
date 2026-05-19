@@ -563,19 +563,8 @@ img{max-width:100%}
     </div>
     <div class="card">
       <h3 style="font-size:15px;font-weight:700;color:var(--primary);margin-bottom:14px">📅 Upcoming Events</h3>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div style="display:flex;gap:12px;align-items:flex-start">
-          <div style="background:var(--primary);color:#fff;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:700;text-align:center;min-width:44px;line-height:1.4">30<br>Sep</div>
-          <div><p style="font-size:13px;font-weight:600">Parent-Teacher Meeting</p><p style="font-size:11.5px;color:var(--text-muted)">10:00 AM – School Premises</p></div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:flex-start">
-          <div style="background:var(--accent);color:#fff;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:700;text-align:center;min-width:44px;line-height:1.4">10<br>Oct</div>
-          <div><p style="font-size:13px;font-weight:600">Half-Yearly Examinations</p><p style="font-size:11.5px;color:var(--text-muted)">All Classes</p></div>
-        </div>
-        <div style="display:flex;gap:12px;align-items:flex-start">
-          <div style="background:var(--success);color:#fff;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:700;text-align:center;min-width:44px;line-height:1.4">25<br>Nov</div>
-          <div><p style="font-size:13px;font-weight:600">Annual Prize Distribution</p><p style="font-size:11.5px;color:var(--text-muted)">4:00 PM – School Auditorium</p></div>
-        </div>
+      <div style="display:flex;flex-direction:column;gap:10px" id="upcomingEventsList">
+        <div style="font-size:13px;color:var(--text-muted);text-align:center;padding:10px">Loading events...</div>
       </div>
     </div>
   </div>
@@ -1403,6 +1392,33 @@ document.querySelectorAll('.modal-overlay').forEach(overlay=>{
     if(e.target===this) closeModal(this.id);
   });
 });
+// ═══ UPCOMING EVENTS (from localStorage set by admin) ═══
+const DEFAULT_EVENTS = [
+  {id:'ev1',title:'Parent-Teacher Meeting',desc:'10:00 AM – School Premises',date:'2024-09-30'},
+  {id:'ev2',title:'Half-Yearly Examinations',desc:'All Classes',date:'2024-10-10'},
+  {id:'ev3',title:'Annual Prize Distribution',desc:'4:00 PM – School Auditorium',date:'2024-11-25'},
+];
+const COLORS = ['var(--primary)','var(--accent)','var(--success)','var(--warning)','var(--danger)'];
+ 
+function renderUpcomingEvents(){
+  const events = JSON.parse(localStorage.getItem('ba_events') || JSON.stringify(DEFAULT_EVENTS));
+  const container = document.getElementById('upcomingEventsList');
+  if(!events.length){
+    container.innerHTML='<p style="font-size:13px;color:var(--text-muted);text-align:center">No upcoming events.</p>';
+    return;
+  }
+  container.innerHTML = events.map((ev,i)=>{
+    const d = new Date(ev.date);
+    const day = d.getDate();
+    const mon = d.toLocaleString('en-IN',{month:'short'});
+    const color = COLORS[i % COLORS.length];
+    return `<div style="display:flex;gap:12px;align-items:flex-start">
+      <div style="background:${color};color:#fff;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:700;text-align:center;min-width:44px;line-height:1.4">${day}<br>${mon}</div>
+      <div><p style="font-size:13px;font-weight:600">${ev.title}</p><p style="font-size:11.5px;color:var(--text-muted)">${ev.desc||''}</p></div>
+    </div>`;
+  }).join('');
+}
+renderUpcomingEvents();
 </script>
 </body>
 </html>

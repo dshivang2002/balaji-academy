@@ -283,6 +283,7 @@ table{border-collapse:collapse;width:100%}
       <div class="ni" data-sec="admissions"><span class="ni-icon">📝</span> Admissions</div>
       <div class="ni" data-sec="classes"><span class="ni-icon">🏫</span> Classes</div>
       <div class="ni" data-sec="notices"><span class="ni-icon">📢</span> Notices</div>
+      <div class="ni" data-sec="events"><span class="ni-icon">📅</span> Upcoming Events</div>
     </nav>
     <nav class="nav-sec">
       <div class="nav-lbl">System</div>
@@ -469,6 +470,18 @@ table{border-collapse:collapse;width:100%}
       <div class="card" id="auditContent"><div class="loading"><div class="spinner"></div>Loading...</div></div>
     </section>
  
+    <!-- ── EVENTS ── -->
+    <section class="sec" id="events">
+      <div class="shr">
+        <div class="sh"><h2>Upcoming Events</h2><p>Manage events shown on the public frontend</p></div>
+        <button class="btn btn-p" onclick="openModal('eventModal');document.getElementById('evId').value='';document.getElementById('evModalTitle').textContent='Add Event';['ev-title','ev-desc','ev-date'].forEach(i=>document.getElementById(i).value='')">➕ Add Event</button>
+      </div>
+      <div class="tw"><table class="tbl">
+        <thead><tr><th>#</th><th>Date</th><th>Title</th><th>Description</th><th>Actions</th></tr></thead>
+        <tbody id="evBody"></tbody>
+      </table></div>
+    </section>
+ 
     <!-- ── SETTINGS ── -->
     <section class="sec" id="settings">
       <div class="sh"><h2>API Settings</h2><p>Configure backend server connection</p></div>
@@ -476,7 +489,7 @@ table{border-collapse:collapse;width:100%}
         <h3 style="font-size:14px;font-weight:700;color:var(--p);margin-bottom:16px">🔗 Backend API Configuration</h3>
         <div class="fg2">
           <label class="fl2">API Base URL</label>
-          <input class="fc2" id="apiUrlInput" type="text" value="https://balaji-academy-academy.onrender.com/api">
+          <input class="fc2" id="apiUrlInput" type="text" value="https://YOUR-RENDER-APP-NAME.onrender.com/api">
         </div>
         <div style="display:flex;gap:8px;margin-bottom:16px">
           <button class="btn btn-p btn-sm" onclick="saveApiUrl()">💾 Save URL</button>
@@ -676,6 +689,23 @@ table{border-collapse:collapse;width:100%}
   </div>
 </div>
  
+<!-- Event Modal -->
+<div class="mo" id="eventModal">
+  <div class="md">
+    <div class="md-h"><h3 id="evModalTitle">Add Event</h3><button class="md-x" onclick="closeModal('eventModal')">✕</button></div>
+    <div class="md-b">
+      <input type="hidden" id="evId">
+      <div class="fg2"><label class="fl2">Event Title *</label><input class="fc2" id="ev-title" placeholder="e.g. Annual Prize Distribution"></div>
+      <div class="fg2"><label class="fl2">Description</label><input class="fc2" id="ev-desc" placeholder="e.g. 4:00 PM – School Auditorium"></div>
+      <div class="fg2"><label class="fl2">Date *</label><input class="fc2" id="ev-date" type="date"></div>
+    </div>
+    <div class="md-f">
+      <button class="btn btn-out btn-sm" onclick="closeModal('eventModal')">Cancel</button>
+      <button class="btn btn-p btn-sm" onclick="saveEvent()">💾 Save</button>
+    </div>
+  </div>
+</div>
+ 
 <!-- Toast -->
 <div id="toast"></div>
  
@@ -683,7 +713,7 @@ table{border-collapse:collapse;width:100%}
 // ═══════════════════════════════════════════════════════
 // CONFIG & STATE
 // ═══════════════════════════════════════════════════════
-let API = localStorage.getItem('ba_api') || 'https://balaji-academy-academy.onrender.com/api';
+let API = localStorage.getItem('ba_api') || 'https://YOUR-RENDER-APP-NAME.onrender.com/api';
 let TOKEN = localStorage.getItem('ba_token') || '';
 let CURRENT_USER = JSON.parse(localStorage.getItem('ba_user') || 'null');
  
@@ -805,12 +835,12 @@ if(TOKEN && CURRENT_USER){
 const pgTitles = {
   dashboard:'📊 Dashboard',students:'👩‍🎓 Students',fees:'💰 Fee Management',
   results:'📈 Results',admissions:'📝 Admissions',classes:'🏫 Classes',
-  notices:'📢 Notices',admins:'👤 Admin Users',audit:'🗒️ Audit Log',settings:'⚙️ API Settings'
+  notices:'📢 Notices',events:'📅 Upcoming Events',admins:'👤 Admin Users',audit:'🗒️ Audit Log',settings:'⚙️ API Settings'
 };
 const loaders = {
   dashboard:loadDashboard,students:loadStudents,fees:loadFees,
   results:loadResults,admissions:loadAdmissions,classes:loadClasses,
-  notices:loadNotices,admins:loadAdmins,audit:loadAudit,settings:()=>{}
+  notices:loadNotices,events:loadEvents,admins:loadAdmins,audit:loadAudit,settings:()=>{}
 };
  
 document.querySelectorAll('.ni').forEach(item=>{
@@ -1301,6 +1331,86 @@ async function loadAudit(){
       <span class="audit-by" style="font-size:11px">by ${l.performedBy}</span>
     </div>`).join('')
   : '<div style="text-align:center;color:var(--muted);padding:40px">No audit logs yet.</div>';
+}
+ 
+// ═══════════════════════════════════════════════════════
+// EVENTS (localStorage based - shared with frontend)
+// ═══════════════════════════════════════════════════════
+const DEFAULT_EVENTS = [
+  {id:'ev1',title:'Parent-Teacher Meeting',desc:'10:00 AM – School Premises',date:'2024-09-30'},
+  {id:'ev2',title:'Half-Yearly Examinations',desc:'All Classes',date:'2024-10-10'},
+  {id:'ev3',title:'Annual Prize Distribution',desc:'4:00 PM – School Auditorium',date:'2024-11-25'},
+];
+ 
+function getEvents(){
+  return JSON.parse(localStorage.getItem('ba_events') || JSON.stringify(DEFAULT_EVENTS));
+}
+function saveEvents(events){
+  localStorage.setItem('ba_events', JSON.stringify(events));
+}
+ 
+function loadEvents(){
+  const events = getEvents();
+  const body = document.getElementById('evBody');
+  if(!events.length){
+    body.innerHTML='<tr class="empty-row"><td colspan="5">No events found.</td></tr>'; return;
+  }
+  body.innerHTML = events.map((e,i)=>{
+    const d = new Date(e.date);
+    const day = d.getDate();
+    const mon = d.toLocaleString('en-IN',{month:'short'});
+    return `<tr>
+      <td>${i+1}</td>
+      <td><strong>${day} ${mon}</strong></td>
+      <td>${e.title}</td>
+      <td style="color:var(--muted)">${e.desc||'—'}</td>
+      <td>
+        <button class="btn btn-p btn-xs" onclick="editEvent('${e.id}')">✏️</button>
+        <button class="btn btn-err btn-xs" onclick="deleteEvent('${e.id}')">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+ 
+function editEvent(id){
+  const events = getEvents();
+  const ev = events.find(e=>e.id===id);
+  if(!ev) return;
+  document.getElementById('evId').value = ev.id;
+  document.getElementById('evModalTitle').textContent = 'Edit Event';
+  document.getElementById('ev-title').value = ev.title;
+  document.getElementById('ev-desc').value = ev.desc||'';
+  document.getElementById('ev-date').value = ev.date;
+  openModal('eventModal');
+}
+ 
+function saveEvent(){
+  const id = document.getElementById('evId').value;
+  const title = document.getElementById('ev-title').value.trim();
+  const desc = document.getElementById('ev-desc').value.trim();
+  const date = document.getElementById('ev-date').value;
+  if(!title||!date){ toast('Title and date are required.','error'); return; }
+  const events = getEvents();
+  if(id){
+    const idx = events.findIndex(e=>e.id===id);
+    if(idx>-1) events[idx]={...events[idx],title,desc,date};
+  } else {
+    events.push({id:'ev'+Date.now(),title,desc,date});
+  }
+  // Sort by date
+  events.sort((a,b)=>new Date(a.date)-new Date(b.date));
+  saveEvents(events);
+  toast(id?'Event updated.':'Event added.');
+  closeModal('eventModal');
+  loadEvents();
+}
+ 
+function deleteEvent(id){
+  if(!confirm('Delete this event?')) return;
+  const events = getEvents().filter(e=>e.id!==id);
+  saveEvents(events);
+  toast('Event deleted.');
+  loadEvents();
 }
  
 // ═══════════════════════════════════════════════════════
