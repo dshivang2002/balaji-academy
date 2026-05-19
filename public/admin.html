@@ -22,7 +22,7 @@ input,select,textarea{font-family:'Inter',sans-serif}
 table{border-collapse:collapse;width:100%}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-thumb{background:#94a3b8;border-radius:3px}
-
+ 
 /* ── LOGIN SCREEN ── */
 #loginScreen{
   display:flex;align-items:center;justify-content:center;
@@ -67,7 +67,7 @@ table{border-collapse:collapse;width:100%}
 .btn-xs{padding:3px 9px;font-size:11px}
 .login-hint{background:#f0f4fa;border-radius:8px;padding:12px;margin-top:16px;font-size:12px;color:var(--muted);line-height:1.8}
 .login-hint strong{color:var(--p)}
-
+ 
 /* ── APP SHELL ── */
 #app{display:none}
 .sidebar{
@@ -92,7 +92,7 @@ table{border-collapse:collapse;width:100%}
 .u-role{font-size:10px;color:rgba(255,255,255,.4);text-transform:capitalize}
 .logout-btn{width:100%;padding:7px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:7px;color:rgba(255,255,255,.75);font-size:12px;cursor:pointer;transition:.15s}
 .logout-btn:hover{background:rgba(220,38,38,.3);color:#fff;border-color:transparent}
-
+ 
 /* ── TOPBAR ── */
 .topbar{position:fixed;top:0;left:var(--sw);right:0;height:var(--th);background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:90;box-shadow:0 1px 6px rgba(0,0,0,.05)}
 .tb-left{display:flex;align-items:center;gap:14px}
@@ -103,23 +103,23 @@ table{border-collapse:collapse;width:100%}
 .time-chip{font-size:12px;color:var(--muted);background:var(--bg);padding:5px 10px;border-radius:6px}
 .api-dot{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block;margin-right:4px;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-
+ 
 /* ── MAIN ── */
 .main{margin-left:var(--sw);padding-top:var(--th);min-height:100vh}
 .sec{display:none;padding:24px 24px 40px;animation:fadeIn .25s ease}
 .sec.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-
+ 
 /* ── SECTION HEADER ── */
 .sh{margin-bottom:20px}
 .sh h2{font-size:21px;font-weight:700;color:var(--p);margin-bottom:3px}
 .sh p{font-size:13px;color:var(--muted)}
 .shr{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px}
-
+ 
 /* ── CARDS ── */
 .card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:20px;transition:.2s}
 .card:hover{box-shadow:var(--shl)}
-
+ 
 /* ── STAT GRID ── */
 .sg{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
 .sc{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:18px;display:flex;align-items:center;gap:14px;transition:.2s;overflow:hidden;position:relative}
@@ -128,7 +128,7 @@ table{border-collapse:collapse;width:100%}
 .si{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
 .sv h3{font-size:24px;font-weight:800;color:var(--p);line-height:1}
 .sv p{font-size:11.5px;color:var(--muted);margin-top:3px;font-weight:500}
-
+ 
 /* ── BADGES ── */
 .bk{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11.5px;font-weight:600}
 .bk-ok{background:#dcfce7;color:#16a34a}
@@ -136,7 +136,7 @@ table{border-collapse:collapse;width:100%}
 .bk-warn{background:#fef3c7;color:#d97706}
 .bk-p{background:#dbeafe;color:#1d4ed8}
 .bk-mu{background:#f1f5f9;color:#64748b}
-
+ 
 /* ── TABLE ── */
 .tw{overflow-x:auto;border-radius:var(--r);background:#fff;box-shadow:var(--sh)}
 .tbl{width:100%;border-collapse:collapse}
@@ -147,7 +147,7 @@ table{border-collapse:collapse;width:100%}
 .tbl tr:last-child td{border-bottom:none}
 .tbl tr:hover td{background:#f8fafc}
 .empty-row td{text-align:center;color:var(--muted);padding:32px;font-size:13px}
-
+ 
 /* ── FORM ── */
 .fg2{margin-bottom:14px}
 .fl2{display:block;font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px}
@@ -158,7 +158,7 @@ table{border-collapse:collapse;width:100%}
 .ferr.show{display:block}
 .fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .fg-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-
+ 
 /* ── MODAL ── */
 .mo{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:none;align-items:center;justify-content:center;padding:16px}
 .mo.open{display:flex}
@@ -168,7 +168,7 @@ table{border-collapse:collapse;width:100%}
 .md-x{background:none;border:none;font-size:20px;color:var(--muted);cursor:pointer;line-height:1}
 .md-b{padding:22px}
 .md-f{padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
-
+ 
 /* ── TOAST ── */
 #toast{
   position:fixed;bottom:24px;right:24px;z-index:999;
@@ -187,22 +187,22 @@ table{border-collapse:collapse;width:100%}
 .toast-msg{font-size:13px;flex:1}
 .toast-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:0 2px}
 @keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:none}}
-
+ 
 /* ── FILTERS BAR ── */
 .fb{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
 .fb input,.fb select{padding:7px 11px;border:1.5px solid var(--border);border-radius:7px;font-size:12.5px;color:var(--text);background:#fff}
 .fb input:focus,.fb select:focus{outline:none;border-color:var(--p)}
-
+ 
 /* ── PRIORITY ── */
 .pri-high{color:var(--err);font-weight:600}
 .pri-med{color:var(--warn);font-weight:600}
 .pri-low{color:var(--ok);font-weight:600}
-
+ 
 /* ── LOADING ── */
 .loading{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--muted);gap:10px;font-size:13px}
 .spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--p);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-
+ 
 /* ── API CONFIG ── */
 .api-bar{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .api-bar label{font-size:12px;font-weight:600;color:var(--muted)}
@@ -211,7 +211,7 @@ table{border-collapse:collapse;width:100%}
 .api-status{font-size:12px;font-weight:600;padding:4px 12px;border-radius:12px}
 .api-status.ok{background:#dcfce7;color:#16a34a}
 .api-status.err{background:#fee2e2;color:var(--err)}
-
+ 
 /* ── AUDIT LOG ── */
 .audit-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:12.5px}
 .audit-item:last-child{border-bottom:none}
@@ -220,10 +220,10 @@ table{border-collapse:collapse;width:100%}
 .audit-entity{min-width:70px}
 .audit-detail{color:var(--text);flex:1}
 .audit-by{color:var(--muted)}
-
+ 
 /* ── OVERLAY ── */
 .sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}
-
+ 
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){.sg{grid-template-columns:repeat(2,1fr)}.fg-row3{grid-template-columns:1fr 1fr}}
 @media(max-width:768px){
@@ -236,7 +236,7 @@ table{border-collapse:collapse;width:100%}
 </style>
 </head>
 <body>
-
+ 
 <!-- ═══ LOGIN ═══════════════════════════════════════════════ -->
 <div id="loginScreen">
   <div class="login-box">
@@ -262,7 +262,7 @@ table{border-collapse:collapse;width:100%}
     </div>
   </div>
 </div>
-
+ 
 <!-- ═══ APP ══════════════════════════════════════════════════ -->
 <div id="app">
   <!-- SIDEBAR -->
@@ -299,7 +299,7 @@ table{border-collapse:collapse;width:100%}
     </div>
   </aside>
   <div class="sb-overlay" id="sbOverlay"></div>
-
+ 
   <!-- TOPBAR -->
   <header class="topbar">
     <div class="tb-left">
@@ -311,10 +311,10 @@ table{border-collapse:collapse;width:100%}
       <span class="time-chip" id="clockDisplay">--:--</span>
     </div>
   </header>
-
+ 
   <!-- MAIN -->
   <main class="main">
-
+ 
     <!-- ── DASHBOARD ── -->
     <section class="sec active" id="dashboard">
       <div class="sh"><h2>Dashboard Overview</h2><p>Welcome back! Here's what's happening at Balaji Academy today.</p></div>
@@ -339,7 +339,7 @@ table{border-collapse:collapse;width:100%}
         </div>
       </div>
     </section>
-
+ 
     <!-- ── STUDENTS ── -->
     <section class="sec" id="students">
       <div class="shr">
@@ -362,7 +362,7 @@ table{border-collapse:collapse;width:100%}
         <tbody id="stuBody"></tbody>
       </table></div>
     </section>
-
+ 
     <!-- ── FEES ── -->
     <section class="sec" id="fees">
       <div class="shr">
@@ -389,7 +389,7 @@ table{border-collapse:collapse;width:100%}
         <tbody id="feeBody"></tbody>
       </table></div>
     </section>
-
+ 
     <!-- ── RESULTS ── -->
     <section class="sec" id="results">
       <div class="shr">
@@ -411,7 +411,7 @@ table{border-collapse:collapse;width:100%}
         <tbody id="resBody"></tbody>
       </table></div>
     </section>
-
+ 
     <!-- ── ADMISSIONS ── -->
     <section class="sec" id="admissions">
       <div class="shr">
@@ -429,7 +429,7 @@ table{border-collapse:collapse;width:100%}
         <tbody id="admBody"></tbody>
       </table></div>
     </section>
-
+ 
     <!-- ── CLASSES ── -->
     <section class="sec" id="classes">
       <div class="shr">
@@ -441,7 +441,7 @@ table{border-collapse:collapse;width:100%}
         <tbody id="clsBody"></tbody>
       </table></div>
     </section>
-
+ 
     <!-- ── NOTICES ── -->
     <section class="sec" id="notices">
       <div class="shr">
@@ -450,7 +450,7 @@ table{border-collapse:collapse;width:100%}
       </div>
       <div id="noticesList"></div>
     </section>
-
+ 
     <!-- ── ADMINS ── -->
     <section class="sec" id="admins">
       <div class="shr">
@@ -462,13 +462,13 @@ table{border-collapse:collapse;width:100%}
         <tbody id="adminBody"></tbody>
       </table></div>
     </section>
-
+ 
     <!-- ── AUDIT ── -->
     <section class="sec" id="audit">
       <div class="sh"><h2>Audit Log</h2><p>System activity log (last 100 actions)</p></div>
       <div class="card" id="auditContent"><div class="loading"><div class="spinner"></div>Loading...</div></div>
     </section>
-
+ 
     <!-- ── SETTINGS ── -->
     <section class="sec" id="settings">
       <div class="sh"><h2>API Settings</h2><p>Configure backend server connection</p></div>
@@ -476,7 +476,7 @@ table{border-collapse:collapse;width:100%}
         <h3 style="font-size:14px;font-weight:700;color:var(--p);margin-bottom:16px">🔗 Backend API Configuration</h3>
         <div class="fg2">
           <label class="fl2">API Base URL</label>
-          <input class="fc2" id="apiUrlInput" type="text" value="http://localhost:3001/api">
+          <input class="fc2" id="apiUrlInput" type="text" value="https://balaji-academy-backend.onrender.com/api">
         </div>
         <div style="display:flex;gap:8px;margin-bottom:16px">
           <button class="btn btn-p btn-sm" onclick="saveApiUrl()">💾 Save URL</button>
@@ -493,12 +493,12 @@ table{border-collapse:collapse;width:100%}
         </div>
       </div>
     </section>
-
+ 
   </main>
 </div>
-
+ 
 <!-- ═══ MODALS ═══════════════════════════════════════════════ -->
-
+ 
 <!-- Student Modal -->
 <div class="mo" id="studentModal">
   <div class="md">
@@ -536,7 +536,7 @@ table{border-collapse:collapse;width:100%}
     </div>
   </div>
 </div>
-
+ 
 <!-- Fee Modal -->
 <div class="mo" id="feeModal">
   <div class="md">
@@ -567,7 +567,7 @@ table{border-collapse:collapse;width:100%}
     </div>
   </div>
 </div>
-
+ 
 <!-- Result Modal -->
 <div class="mo" id="resultModal">
   <div class="md" style="max-width:600px">
@@ -613,7 +613,7 @@ table{border-collapse:collapse;width:100%}
     </div>
   </div>
 </div>
-
+ 
 <!-- Class Modal -->
 <div class="mo" id="classModal">
   <div class="md">
@@ -634,7 +634,7 @@ table{border-collapse:collapse;width:100%}
     </div>
   </div>
 </div>
-
+ 
 <!-- Notice Modal -->
 <div class="mo" id="noticeModal">
   <div class="md">
@@ -653,7 +653,7 @@ table{border-collapse:collapse;width:100%}
     </div>
   </div>
 </div>
-
+ 
 <!-- Admin Modal -->
 <div class="mo" id="adminModal">
   <div class="md">
@@ -675,20 +675,20 @@ table{border-collapse:collapse;width:100%}
     </div>
   </div>
 </div>
-
+ 
 <!-- Toast -->
 <div id="toast"></div>
-
+ 
 <script>
 // ═══════════════════════════════════════════════════════
 // CONFIG & STATE
 // ═══════════════════════════════════════════════════════
-let API = localStorage.getItem('ba_api') || 'http://localhost:3001/api';
+let API = localStorage.getItem('ba_api') || 'https://balaji-academy-backend.onrender.com/api';
 let TOKEN = localStorage.getItem('ba_token') || '';
 let CURRENT_USER = JSON.parse(localStorage.getItem('ba_user') || 'null');
-
+ 
 document.getElementById('apiUrlInput').value = API;
-
+ 
 // ═══════════════════════════════════════════════════════
 // CLOCK
 // ═══════════════════════════════════════════════════════
@@ -699,7 +699,7 @@ function updateClock(){
 }
 setInterval(updateClock, 1000);
 updateClock();
-
+ 
 // ═══════════════════════════════════════════════════════
 // API HELPER
 // ═══════════════════════════════════════════════════════
@@ -724,14 +724,14 @@ async function api(method, path, data, isForm=false){
     return null;
   }
 }
-
+ 
 function setApiStatus(ok){
   const dot = document.querySelector('.api-dot');
   const txt = document.getElementById('apiStatusText');
   if(dot) dot.style.background = ok ? '#16a34a' : '#dc2626';
   if(txt) txt.textContent = ok ? 'API Connected' : 'API Offline';
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // TOAST
 // ═══════════════════════════════════════════════════════
@@ -743,7 +743,7 @@ function toast(msg, type='success'){
   t.appendChild(el);
   setTimeout(()=>el.remove(), 4000);
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // AUTH
 // ═══════════════════════════════════════════════════════
@@ -767,10 +767,10 @@ async function doLogin(){
   localStorage.setItem('ba_user', JSON.stringify(CURRENT_USER));
   initApp();
 }
-
+ 
 document.getElementById('lPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 document.getElementById('lUser').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('lPass').focus(); });
-
+ 
 function doLogout(){
   api('POST','/auth/logout');
   TOKEN=''; CURRENT_USER=null;
@@ -779,7 +779,7 @@ function doLogout(){
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('lPass').value='';
 }
-
+ 
 function initApp(){
   document.getElementById('loginScreen').style.display='none';
   document.getElementById('app').style.display='block';
@@ -792,13 +792,13 @@ function initApp(){
   loadDashboard();
   setApiStatus(true);
 }
-
+ 
 // Auto-login if token exists
 if(TOKEN && CURRENT_USER){
   document.getElementById('loginScreen').style.display='none';
   initApp();
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // NAVIGATION
 // ═══════════════════════════════════════════════════════
@@ -812,7 +812,7 @@ const loaders = {
   results:loadResults,admissions:loadAdmissions,classes:loadClasses,
   notices:loadNotices,admins:loadAdmins,audit:loadAudit,settings:()=>{}
 };
-
+ 
 document.querySelectorAll('.ni').forEach(item=>{
   item.addEventListener('click',()=>{
     const sec = item.dataset.sec;
@@ -825,14 +825,14 @@ document.querySelectorAll('.ni').forEach(item=>{
     closeSb();
   });
 });
-
+ 
 document.getElementById('hb').addEventListener('click',()=>{
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('sbOverlay').classList.toggle('open');
 });
 document.getElementById('sbOverlay').addEventListener('click',closeSb);
 function closeSb(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('sbOverlay').classList.remove('open'); }
-
+ 
 // ═══════════════════════════════════════════════════════
 // MODAL
 // ═══════════════════════════════════════════════════════
@@ -841,7 +841,7 @@ function closeModal(id){ document.getElementById(id).classList.remove('open'); }
 document.querySelectorAll('.mo').forEach(m=>{
   m.addEventListener('click',e=>{ if(e.target===m) closeModal(m.id); });
 });
-
+ 
 // ═══════════════════════════════════════════════════════
 // DASHBOARD
 // ═══════════════════════════════════════════════════════
@@ -857,7 +857,7 @@ async function loadDashboard(){
   document.getElementById('ds-pending').textContent = d.pendingAdmissions;
   document.getElementById('ds-feesPending').textContent = '₹'+Number(d.feesPending).toLocaleString('en-IN');
   document.getElementById('ds-notices').textContent = d.notices;
-
+ 
   // Recent admissions
   const adm = await api('GET','/admissions?status=Pending');
   document.getElementById('recentAdmissions').innerHTML = adm?.data?.length
@@ -865,7 +865,7 @@ async function loadDashboard(){
         <div><strong>${a.studentName}</strong><br><span style="color:var(--muted)">${a.id} • ${a.cls}</span></div>
         <span class="bk bk-warn">Pending</span></div>`).join('')
     : '<p style="font-size:13px;color:var(--muted);text-align:center;padding:20px">No pending admissions</p>';
-
+ 
   // Recent fees
   const fees = await api('GET','/fees?status=Pending');
   document.getElementById('recentFees').innerHTML = fees?.data?.length
@@ -874,7 +874,7 @@ async function loadDashboard(){
         <span style="font-weight:700;color:var(--err)">₹${f.amount.toLocaleString('en-IN')}</span></div>`).join('')
     : '<p style="font-size:13px;color:var(--muted);text-align:center;padding:20px">No pending fees</p>';
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // STUDENTS
 // ═══════════════════════════════════════════════════════
@@ -896,7 +896,7 @@ async function loadStudents(){
     </tr>`).join('')
   : '<tr class="empty-row"><td colspan="8">No students found.</td></tr>';
 }
-
+ 
 function editStudent(id){ openModal('studentModal');
   api('GET',`/students/${id}`).then(r=>{
     if(!r) return;
@@ -915,7 +915,7 @@ function editStudent(id){ openModal('studentModal');
     document.getElementById('stu-addr').value=s.address||'';
   });
 }
-
+ 
 async function saveStudent(){
   const id = document.getElementById('stuId').value;
   const data = {
@@ -936,14 +936,14 @@ async function saveStudent(){
     document.getElementById('stuId').value=''; document.getElementById('stuModalTitle').textContent='Add Student';
   } else toast(res?.message||'Failed.','error');
 }
-
+ 
 async function delStudent(id,name){
   if(!confirm(`Delete student: ${name}?`)) return;
   const res = await api('DELETE',`/students/${id}`);
   if(res?.success){ toast('Student deleted.'); loadStudents(); }
   else toast(res?.message||'Failed.','error');
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // FEES
 // ═══════════════════════════════════════════════════════
@@ -974,7 +974,7 @@ async function loadFees(){
     </tr>`).join('')
   : '<tr class="empty-row"><td colspan="10">No fee records found.</td></tr>';
 }
-
+ 
 async function saveFee(){
   const data = {
     studentName:document.getElementById('fee-name').value.trim(),
@@ -990,20 +990,20 @@ async function saveFee(){
     ['fee-name','fee-amount','fee-month','fee-due'].forEach(id=>document.getElementById(id).value='');
   } else toast(res?.message||'Failed.','error');
 }
-
+ 
 async function markPaid(id){
   const res = await api('PATCH',`/fees/${id}/pay`);
   if(res?.success){ toast(`Fee marked as Paid! Receipt: ${res.data.receiptNo}`); loadFees(); }
   else toast(res?.message||'Failed.','error');
 }
-
+ 
 async function delFee(id){
   if(!confirm('Delete this fee record?')) return;
   const res = await api('DELETE',`/fees/${id}`);
   if(res?.success){ toast('Record deleted.'); loadFees(); }
   else toast(res?.message||'Failed.','error');
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // RESULTS
 // ═══════════════════════════════════════════════════════
@@ -1020,7 +1020,7 @@ function calcModalResult(){
   document.getElementById('resPass').innerHTML=`<span class="bk ${pass?'bk-ok':'bk-err'}">${pass?'Pass':'Fail'}</span>`;
   document.getElementById('resSummary').style.display='flex';
 }
-
+ 
 async function loadResults(){
   const q = document.getElementById('resSearch').value;
   const cls = document.getElementById('resClass').value;
@@ -1042,7 +1042,7 @@ async function loadResults(){
     </tr>`).join('')
   : '<tr class="empty-row"><td colspan="10">No results found.</td></tr>';
 }
-
+ 
 async function saveResult(){
   const data = {
     studentName:document.getElementById('res-name').value.trim(),
@@ -1065,14 +1065,14 @@ async function saveResult(){
     document.getElementById('resSummary').style.display='none';
   } else toast(res?.message||'Failed.','error');
 }
-
+ 
 async function delResult(id){
   if(!confirm('Delete this result?')) return;
   const res = await api('DELETE',`/results/${id}`);
   if(res?.success){ toast('Deleted.'); loadResults(); }
   else toast(res?.message||'Failed.','error');
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // ADMISSIONS
 // ═══════════════════════════════════════════════════════
@@ -1102,20 +1102,20 @@ async function loadAdmissions(){
     </tr>`).join('')
   : '<tr class="empty-row"><td colspan="10">No applications found.</td></tr>';
 }
-
+ 
 async function changeAdmStatus(id,status){
   const res = await api('PATCH',`/admissions/${id}/status`,{status});
   if(res?.success) toast(`Status changed to ${status}.`);
   else toast('Failed.','error');
 }
-
+ 
 async function delAdm(id){
   if(!confirm('Delete this application?')) return;
   const res = await api('DELETE',`/admissions/${id}`);
   if(res?.success){ toast('Deleted.'); loadAdmissions(); }
   else toast(res?.message||'Failed.','error');
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // CLASSES
 // ═══════════════════════════════════════════════════════
@@ -1134,7 +1134,7 @@ async function loadClasses(){
     </tr>`).join('')
   : '<tr class="empty-row"><td colspan="7">No classes found.</td></tr>';
 }
-
+ 
 function editClass(id){
   openModal('classModal');
   api('GET','/classes').then(r=>{
@@ -1149,7 +1149,7 @@ function editClass(id){
     document.getElementById('cls-stu').value=c.students||'';
   });
 }
-
+ 
 async function saveClass(){
   const id = document.getElementById('clsId').value;
   const data = {
@@ -1165,14 +1165,14 @@ async function saveClass(){
     document.getElementById('clsId').value=''; document.getElementById('clsModalTitle').textContent='Add Class';
   } else toast(res?.message||'Failed.','error');
 }
-
+ 
 async function delClass(id,name){
   if(!confirm(`Delete class: ${name}?`)) return;
   const res = await api('DELETE',`/classes/${id}`);
   if(res?.success){ toast('Class deleted.'); loadClasses(); }
   else toast(res?.message||'Failed.','error');
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // NOTICES
 // ═══════════════════════════════════════════════════════
@@ -1202,7 +1202,7 @@ async function loadNotices(){
     </div>`).join('')
   : '<div style="text-align:center;color:var(--muted);padding:40px">No notices found.</div>';
 }
-
+ 
 function editNotice(id){
   openModal('noticeModal');
   api('GET','/notices/all').then(r=>{
@@ -1215,7 +1215,7 @@ function editNotice(id){
     document.getElementById('n-priority').value=n.priority||'medium';
   });
 }
-
+ 
 async function saveNotice(){
   const id = document.getElementById('noticeId').value;
   const data = {
@@ -1230,20 +1230,20 @@ async function saveNotice(){
     ['n-title','n-body'].forEach(id=>document.getElementById(id).value='');
   } else toast(res?.message||'Failed.','error');
 }
-
+ 
 async function toggleNotice(id,active){
   const res = await api('PATCH',`/notices/${id}`,{active});
   if(res?.success){ toast(active?'Notice shown.':'Notice hidden.'); loadNotices(); }
   else toast('Failed.','error');
 }
-
+ 
 async function delNotice(id){
   if(!confirm('Delete this notice?')) return;
   const res = await api('DELETE',`/notices/${id}`);
   if(res?.success){ toast('Notice deleted.'); loadNotices(); }
   else toast('Failed.','error');
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // ADMIN USERS
 // ═══════════════════════════════════════════════════════
@@ -1261,7 +1261,7 @@ async function loadAdmins(){
       <td>${a.id!=='admin-1'?`<button class="btn btn-err btn-xs" onclick="delAdmin('${a.id}','${a.name}')">🗑️ Delete</button>`:'<span style="font-size:11px;color:var(--muted)">Protected</span>'}</td>
     </tr>`).join('');
 }
-
+ 
 async function saveAdmin(){
   const data = {
     name:document.getElementById('adm-name').value.trim(),
@@ -1276,14 +1276,14 @@ async function saveAdmin(){
     ['adm-name','adm-user','adm-pass','adm-email'].forEach(id=>document.getElementById(id).value='');
   } else toast(res?.message||'Failed.','error');
 }
-
+ 
 async function delAdmin(id,name){
   if(!confirm(`Delete admin: ${name}?`)) return;
   const res = await api('DELETE',`/admins/${id}`);
   if(res?.success){ toast('Admin deleted.'); loadAdmins(); }
   else toast(res?.message||'Failed.','error');
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // AUDIT LOG
 // ═══════════════════════════════════════════════════════
@@ -1302,7 +1302,7 @@ async function loadAudit(){
     </div>`).join('')
   : '<div style="text-align:center;color:var(--muted);padding:40px">No audit logs yet.</div>';
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // SETTINGS
 // ═══════════════════════════════════════════════════════
@@ -1311,7 +1311,7 @@ function saveApiUrl(){
   localStorage.setItem('ba_api', API);
   toast('API URL saved.');
 }
-
+ 
 async function testConnection(){
   const url = document.getElementById('apiUrlInput').value.trim();
   const el = document.getElementById('connResult');
