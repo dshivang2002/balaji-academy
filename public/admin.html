@@ -224,6 +224,59 @@ table{border-collapse:collapse;width:100%}
 /* ── OVERLAY ── */
 .sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}
  
+/* ── GALLERY ADMIN ── */
+.gallery-upload-zone{
+  border:2.5px dashed var(--border);border-radius:var(--r);
+  padding:36px 20px;text-align:center;cursor:pointer;
+  transition:.2s;background:#fafbff;position:relative;
+  margin-bottom:20px;
+}
+.gallery-upload-zone:hover,.gallery-upload-zone.dragover{
+  border-color:var(--p);background:#eef2ff;
+}
+.gallery-upload-zone input[type=file]{
+  position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
+}
+.gallery-upload-zone .uz-icon{font-size:40px;margin-bottom:10px}
+.gallery-upload-zone h4{font-size:15px;font-weight:700;color:var(--p);margin-bottom:4px}
+.gallery-upload-zone p{font-size:12.5px;color:var(--muted)}
+.gallery-upload-meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.gallery-preview-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:12px;margin-bottom:20px;
+}
+.gallery-preview-item{
+  position:relative;border-radius:8px;overflow:hidden;
+  aspect-ratio:4/3;background:#e2e8f0;box-shadow:var(--sh);
+}
+.gallery-preview-item img{width:100%;height:100%;object-fit:cover}
+.gallery-preview-item .del-btn{
+  position:absolute;top:6px;right:6px;
+  width:24px;height:24px;border-radius:50%;
+  background:rgba(220,38,38,.85);color:#fff;border:none;
+  font-size:13px;line-height:1;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:.15s;
+}
+.gallery-preview-item .del-btn:hover{background:var(--err)}
+.gallery-preview-item .img-label{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(to top,rgba(26,60,110,.85),transparent);
+  padding:8px 8px 6px;font-size:11px;color:#fff;font-weight:500;
+}
+.gallery-cat-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.gallery-cat-btn{
+  padding:5px 14px;border-radius:16px;border:1.5px solid var(--border);
+  background:#fff;font-size:12px;font-weight:600;color:var(--muted);
+  cursor:pointer;transition:.15s;
+}
+.gallery-cat-btn:hover,.gallery-cat-btn.active{background:var(--p);color:#fff;border-color:var(--p)}
+.gallery-count-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:#dbeafe;color:#1d4ed8;padding:4px 12px;
+  border-radius:20px;font-size:12px;font-weight:600;
+}
+ 
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){.sg{grid-template-columns:repeat(2,1fr)}.fg-row3{grid-template-columns:1fr 1fr}}
 @media(max-width:768px){
@@ -231,6 +284,7 @@ table{border-collapse:collapse;width:100%}
   .sb-overlay.open{display:block}.topbar{left:0}.main{margin-left:0}
   .hb{display:flex}.sec{padding:16px 14px 32px}.sg{grid-template-columns:repeat(2,1fr);gap:10px}
   .fg-row,.fg-row3{grid-template-columns:1fr}
+  .gallery-upload-meta{grid-template-columns:1fr}
 }
 @media(max-width:480px){.sg{grid-template-columns:1fr 1fr}}
 </style>
@@ -282,6 +336,7 @@ table{border-collapse:collapse;width:100%}
       <div class="ni" data-sec="results"><span class="ni-icon">📈</span> Results</div>
       <div class="ni" data-sec="admissions"><span class="ni-icon">📝</span> Admissions</div>
       <div class="ni" data-sec="classes"><span class="ni-icon">🏫</span> Classes</div>
+      <div class="ni" data-sec="gallery"><span class="ni-icon">🖼️</span> Gallery</div>
       <div class="ni" data-sec="notices"><span class="ni-icon">📢</span> Notices</div>
       <div class="ni" data-sec="events"><span class="ni-icon">📅</span> Upcoming Events</div>
     </nav>
@@ -441,6 +496,82 @@ table{border-collapse:collapse;width:100%}
         <thead><tr><th>#</th><th>Class</th><th>Section</th><th>Class Teacher</th><th>Students</th><th>Room No</th><th>Actions</th></tr></thead>
         <tbody id="clsBody"></tbody>
       </table></div>
+    </section>
+ 
+    <!-- ── GALLERY (Admin Upload) ── -->
+    <section class="sec" id="gallery">
+      <div class="shr">
+        <div class="sh">
+          <h2>Gallery Management</h2>
+          <p>Upload and manage photos shown on the public website — only admins can upload images</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="gallery-count-badge">🖼️ <span id="galleryCount">0</span> Photos</span>
+          <button class="btn btn-err btn-sm" onclick="clearAllGallery()">🗑️ Clear All</button>
+        </div>
+      </div>
+ 
+      <!-- Upload Zone -->
+      <div class="card" style="margin-bottom:20px">
+        <h3 style="font-size:14px;font-weight:700;color:var(--p);margin-bottom:16px">📤 Upload New Photos</h3>
+ 
+        <!-- Meta inputs -->
+        <div class="gallery-upload-meta">
+          <div class="fg2">
+            <label class="fl2">Photo Title / Caption *</label>
+            <input class="fc2" id="gal-title" placeholder="e.g. Annual Day 2024 – Cultural Programme">
+          </div>
+          <div class="fg2">
+            <label class="fl2">Category *</label>
+            <select class="fc2" id="gal-cat">
+              <option value="events">🎉 Events</option>
+              <option value="sports">⚽ Sports</option>
+              <option value="classrooms">📚 Classrooms</option>
+              <option value="functions">🎭 Functions</option>
+              <option value="annualday">🏆 Annual Day</option>
+            </select>
+          </div>
+        </div>
+ 
+        <!-- Drop zone -->
+        <div class="gallery-upload-zone" id="uploadZone">
+          <input type="file" id="galFileInput" accept="image/*" multiple onchange="handleGalleryFiles(this.files)">
+          <div class="uz-icon">📷</div>
+          <h4>Click to select or drag & drop images here</h4>
+          <p>Supports JPG, PNG, GIF, WebP — multiple files allowed</p>
+        </div>
+ 
+        <!-- Upload progress -->
+        <div id="uploadProgress" style="display:none;margin-top:8px">
+          <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden">
+            <div id="uploadProgressBar" style="height:100%;background:var(--p);width:0%;transition:.3s"></div>
+          </div>
+          <p style="font-size:12px;color:var(--muted);margin-top:6px" id="uploadProgressText">Uploading...</p>
+        </div>
+      </div>
+ 
+      <!-- Category filter for existing photos -->
+      <div style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+        <div class="gallery-cat-filter">
+          <button class="gallery-cat-btn active" data-gcat="all" onclick="filterAdminGallery('all',this)">🌟 All</button>
+          <button class="gallery-cat-btn" data-gcat="events" onclick="filterAdminGallery('events',this)">🎉 Events</button>
+          <button class="gallery-cat-btn" data-gcat="sports" onclick="filterAdminGallery('sports',this)">⚽ Sports</button>
+          <button class="gallery-cat-btn" data-gcat="classrooms" onclick="filterAdminGallery('classrooms',this)">📚 Classrooms</button>
+          <button class="gallery-cat-btn" data-gcat="functions" onclick="filterAdminGallery('functions',this)">🎭 Functions</button>
+          <button class="gallery-cat-btn" data-gcat="annualday" onclick="filterAdminGallery('annualday',this)">🏆 Annual Day</button>
+        </div>
+        <p style="font-size:12px;color:var(--muted)">🔒 Only admins can upload/delete — public site shows these photos</p>
+      </div>
+ 
+      <!-- Uploaded images grid -->
+      <div class="gallery-preview-grid" id="adminGalleryGrid"></div>
+ 
+      <!-- Empty state -->
+      <div id="adminGalleryEmpty" style="display:none;text-align:center;padding:48px;background:#fff;border-radius:var(--r);box-shadow:var(--sh)">
+        <div style="font-size:48px;margin-bottom:12px">🖼️</div>
+        <h3 style="font-size:16px;font-weight:700;color:var(--p);margin-bottom:6px">No photos uploaded yet</h3>
+        <p style="font-size:13px;color:var(--muted)">Upload photos above — they will appear in this category on the public website.</p>
+      </div>
     </section>
  
     <!-- ── NOTICES ── -->
@@ -823,7 +954,6 @@ function initApp(){
   setApiStatus(true);
 }
  
-// Auto-login if token exists
 if(TOKEN && CURRENT_USER){
   document.getElementById('loginScreen').style.display='none';
   initApp();
@@ -835,11 +965,13 @@ if(TOKEN && CURRENT_USER){
 const pgTitles = {
   dashboard:'📊 Dashboard',students:'👩‍🎓 Students',fees:'💰 Fee Management',
   results:'📈 Results',admissions:'📝 Admissions',classes:'🏫 Classes',
+  gallery:'🖼️ Gallery Management',
   notices:'📢 Notices',events:'📅 Upcoming Events',admins:'👤 Admin Users',audit:'🗒️ Audit Log',settings:'⚙️ API Settings'
 };
 const loaders = {
   dashboard:loadDashboard,students:loadStudents,fees:loadFees,
   results:loadResults,admissions:loadAdmissions,classes:loadClasses,
+  gallery:loadAdminGallery,
   notices:loadNotices,events:loadEvents,admins:loadAdmins,audit:loadAudit,settings:()=>{}
 };
  
@@ -888,7 +1020,6 @@ async function loadDashboard(){
   document.getElementById('ds-feesPending').textContent = '₹'+Number(d.feesPending).toLocaleString('en-IN');
   document.getElementById('ds-notices').textContent = d.notices;
  
-  // Recent admissions
   const adm = await api('GET','/admissions?status=Pending');
   document.getElementById('recentAdmissions').innerHTML = adm?.data?.length
     ? adm.data.slice(0,5).map(a=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12.5px">
@@ -896,7 +1027,6 @@ async function loadDashboard(){
         <span class="bk bk-warn">Pending</span></div>`).join('')
     : '<p style="font-size:13px;color:var(--muted);text-align:center;padding:20px">No pending admissions</p>';
  
-  // Recent fees
   const fees = await api('GET','/fees?status=Pending');
   document.getElementById('recentFees').innerHTML = fees?.data?.length
     ? fees.data.slice(0,5).map(f=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12.5px">
@@ -1204,6 +1334,142 @@ async function delClass(id,name){
 }
  
 // ═══════════════════════════════════════════════════════
+// GALLERY MANAGEMENT (Admin Only — localStorage based)
+// ═══════════════════════════════════════════════════════
+let adminGalleryCat = 'all';
+ 
+function getGalleryStore(){
+  try{ return JSON.parse(localStorage.getItem('ba_gallery') || '[]'); }
+  catch(e){ return []; }
+}
+function saveGalleryStore(arr){
+  localStorage.setItem('ba_gallery', JSON.stringify(arr));
+}
+ 
+function loadAdminGallery(){
+  renderAdminGallery(adminGalleryCat);
+}
+ 
+function filterAdminGallery(cat, btn){
+  adminGalleryCat = cat;
+  document.querySelectorAll('.gallery-cat-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderAdminGallery(cat);
+}
+ 
+function renderAdminGallery(cat='all'){
+  const all = getGalleryStore();
+  const items = cat==='all' ? all : all.filter(i=>i.cat===cat);
+  const grid = document.getElementById('adminGalleryGrid');
+  const empty = document.getElementById('adminGalleryEmpty');
+  const countEl = document.getElementById('galleryCount');
+ 
+  countEl.textContent = all.length;
+ 
+  if(!items.length){
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+ 
+  grid.innerHTML = items.map(item=>`
+    <div class="gallery-preview-item">
+      <img src="${item.src}" alt="${item.title||''}" loading="lazy">
+      <button class="del-btn" onclick="deleteGalleryPhoto('${item.id}')" title="Delete photo">✕</button>
+      <div class="img-label">${item.title||''}${item.cat?` <span style="opacity:.7;font-size:10px">[${item.cat}]</span>`:''}</div>
+    </div>
+  `).join('');
+}
+ 
+function handleGalleryFiles(files){
+  const title = document.getElementById('gal-title').value.trim();
+  const cat = document.getElementById('gal-cat').value;
+ 
+  if(!title){ toast('Please enter a photo title/caption before uploading.','error'); return; }
+  if(!files || !files.length){ toast('No files selected.','error'); return; }
+ 
+  const allowedTypes = ['image/jpeg','image/png','image/gif','image/webp'];
+  const fileArr = Array.from(files);
+  const invalid = fileArr.filter(f=>!allowedTypes.includes(f.type));
+  if(invalid.length){ toast(`${invalid.length} file(s) skipped — only images allowed.`,'warn'); }
+ 
+  const valid = fileArr.filter(f=>allowedTypes.includes(f.type));
+  if(!valid.length){ toast('No valid image files selected.','error'); return; }
+ 
+  // Show progress
+  const progWrap = document.getElementById('uploadProgress');
+  const progBar = document.getElementById('uploadProgressBar');
+  const progText = document.getElementById('uploadProgressText');
+  progWrap.style.display = 'block';
+ 
+  let processed = 0;
+  const gallery = getGalleryStore();
+ 
+  valid.forEach((file, idx) => {
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const src = e.target.result; // base64 data URL
+      const id = 'gal_' + Date.now() + '_' + Math.random().toString(36).substr(2,6);
+      const photoTitle = valid.length === 1 ? title : `${title} (${idx+1})`;
+ 
+      gallery.push({
+        id,
+        cat,
+        title: photoTitle,
+        src,          // thumbnail & full (same base64 for now)
+        fullSrc: src,
+        uploadedAt: new Date().toISOString(),
+        uploadedBy: CURRENT_USER?.name || 'Admin'
+      });
+ 
+      processed++;
+      const pct = Math.round((processed/valid.length)*100);
+      progBar.style.width = pct + '%';
+      progText.textContent = `Uploaded ${processed} of ${valid.length} photo(s)...`;
+ 
+      if(processed === valid.length){
+        saveGalleryStore(gallery);
+        setTimeout(()=>{
+          progWrap.style.display = 'none';
+          progBar.style.width = '0%';
+        }, 800);
+        toast(`✅ ${processed} photo(s) uploaded successfully!`);
+        document.getElementById('gal-title').value = '';
+        document.getElementById('galFileInput').value = '';
+        renderAdminGallery(adminGalleryCat);
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+ 
+function deleteGalleryPhoto(id){
+  if(!confirm('Delete this photo from the gallery?')) return;
+  const gallery = getGalleryStore().filter(item=>item.id!==id);
+  saveGalleryStore(gallery);
+  toast('Photo deleted.');
+  renderAdminGallery(adminGalleryCat);
+}
+ 
+function clearAllGallery(){
+  if(!confirm('Clear ALL gallery photos? This cannot be undone.')) return;
+  localStorage.removeItem('ba_gallery');
+  toast('All gallery photos cleared.','warn');
+  renderAdminGallery(adminGalleryCat);
+}
+ 
+// Drag & drop support
+const uploadZone = document.getElementById('uploadZone');
+uploadZone.addEventListener('dragover', e=>{ e.preventDefault(); uploadZone.classList.add('dragover'); });
+uploadZone.addEventListener('dragleave', ()=>uploadZone.classList.remove('dragover'));
+uploadZone.addEventListener('drop', e=>{
+  e.preventDefault();
+  uploadZone.classList.remove('dragover');
+  handleGalleryFiles(e.dataTransfer.files);
+});
+ 
+// ═══════════════════════════════════════════════════════
 // NOTICES
 // ═══════════════════════════════════════════════════════
 async function loadNotices(){
@@ -1397,7 +1663,6 @@ function saveEvent(){
   } else {
     events.push({id:'ev'+Date.now(),title,desc,date});
   }
-  // Sort by date
   events.sort((a,b)=>new Date(a.date)-new Date(b.date));
   saveEvents(events);
   toast(id?'Event updated.':'Event added.');

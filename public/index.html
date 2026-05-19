@@ -274,6 +274,25 @@ img{max-width:100%}
 .gallery-item:hover .gallery-overlay{opacity:1}
 .gallery-overlay span{color:#fff;font-size:12.5px;font-weight:600}
  
+/* Gallery admin notice */
+.gallery-admin-notice{
+  display:flex;align-items:center;gap:10px;
+  background:#fff;border:1.5px solid var(--border);border-radius:10px;
+  padding:10px 16px;font-size:12.5px;color:var(--text-muted);
+}
+.gallery-admin-notice .lock-icon{font-size:18px}
+.gallery-admin-notice strong{color:var(--primary)}
+.gallery-admin-notice a{color:var(--primary);font-weight:600;cursor:pointer;text-decoration:underline}
+ 
+/* Gallery empty state */
+.gallery-empty{
+  grid-column:1/-1;text-align:center;padding:48px 20px;
+  background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);
+}
+.gallery-empty .empty-icon{font-size:48px;margin-bottom:12px}
+.gallery-empty h3{font-size:16px;font-weight:700;color:var(--primary);margin-bottom:6px}
+.gallery-empty p{font-size:13px;color:var(--text-muted)}
+ 
 /* ===== LIGHTBOX ===== */
 .lightbox{
   position:fixed;inset:0;background:rgba(0,0,0,.88);
@@ -296,38 +315,61 @@ img{max-width:100%}
   border-bottom:2px solid var(--accent);display:inline-block;
 }
  
-/* ===== RESULT – STUDENT SEARCH ===== */
-.result-search-wrap{
-  background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);
-  padding:28px 28px 24px;margin-bottom:24px;
+/* ===== RESULT SEARCH ===== */
+.result-search-hero{
+  background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);
+  border-radius:16px;padding:32px 32px 28px;
+  margin-bottom:24px;color:#fff;position:relative;overflow:hidden;
 }
-.result-search-wrap h3{
-  font-size:17px;font-weight:700;color:var(--primary);
-  margin-bottom:6px;
+.result-search-hero::before{
+  content:'';position:absolute;right:-40px;top:-40px;
+  width:180px;height:180px;border-radius:50%;
+  border:40px solid rgba(255,255,255,.06);
 }
-.result-search-wrap p{font-size:13px;color:var(--text-muted);margin-bottom:20px}
-.result-search-bar{
+.result-search-hero h3{
+  font-size:20px;font-weight:800;margin-bottom:6px;
+  display:flex;align-items:center;gap:10px;
+}
+.result-search-hero p{
+  font-size:13px;opacity:.8;margin-bottom:20px;
+}
+.result-search-bar-wrap{
   display:flex;gap:10px;flex-wrap:wrap;
 }
-.result-search-bar input{
-  flex:1;min-width:200px;padding:11px 16px;
-  border:1.5px solid var(--border);border-radius:8px;
-  font-size:14px;color:var(--text);
+.result-search-bar-wrap input{
+  flex:1;min-width:200px;padding:12px 16px;
+  border:2px solid rgba(255,255,255,.3);border-radius:10px;
+  font-size:14px;color:#fff;background:rgba(255,255,255,.15);
   transition:.2s;
 }
-.result-search-bar input:focus{
-  outline:none;border-color:var(--primary);
-  box-shadow:0 0 0 3px rgba(26,60,110,.1);
+.result-search-bar-wrap input::placeholder{color:rgba(255,255,255,.6)}
+.result-search-bar-wrap input:focus{
+  outline:none;border-color:rgba(255,255,255,.7);
+  background:rgba(255,255,255,.2);
 }
-.result-search-bar select{
-  padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;
-  font-size:13.5px;color:var(--text);background:#fff;min-width:160px;
-  transition:.2s;
+.result-search-bar-wrap select{
+  padding:12px 14px;border:2px solid rgba(255,255,255,.3);border-radius:10px;
+  font-size:13.5px;color:#fff;background:rgba(255,255,255,.15);
+  min-width:160px;transition:.2s;-webkit-appearance:none;
 }
-.result-search-bar select:focus{outline:none;border-color:var(--primary)}
+.result-search-bar-wrap select option{color:var(--text);background:#fff}
+.result-search-bar-wrap select:focus{outline:none;border-color:rgba(255,255,255,.7)}
+.result-search-bar-wrap .btn-search{
+  padding:12px 22px;background:var(--accent);color:#fff;
+  border:none;border-radius:10px;font-size:14px;font-weight:700;
+  cursor:pointer;transition:.2s;white-space:nowrap;
+  display:flex;align-items:center;gap:6px;
+}
+.result-search-bar-wrap .btn-search:hover{background:var(--accent-light);color:var(--primary)}
+.result-search-bar-wrap .btn-clear{
+  padding:12px 18px;background:rgba(255,255,255,.15);color:#fff;
+  border:2px solid rgba(255,255,255,.3);border-radius:10px;
+  font-size:13px;font-weight:600;cursor:pointer;transition:.2s;white-space:nowrap;
+}
+.result-search-bar-wrap .btn-clear:hover{background:rgba(255,255,255,.25)}
  
-/* ===== RESULT CARD (printable) ===== */
-#resultCardArea{display:none;margin-top:20px}
+/* ===== RESULT CARD ===== */
+#resultCardArea{display:none;margin-top:0}
 #resultCardArea.show{display:block}
  
 .result-card{
@@ -401,15 +443,22 @@ img{max-width:100%}
 .result-card-footer{
   padding:16px 28px;border-top:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;
-  flex-wrap:wrap;gap:10px;
+  flex-wrap:wrap;gap:10px;background:#fafbfc;
 }
 .result-card-footer p{font-size:12px;color:var(--text-muted)}
+.print-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 22px;background:var(--primary);color:#fff;
+  border:none;border-radius:8px;font-size:13px;font-weight:700;
+  cursor:pointer;transition:.2s;
+}
+.print-btn:hover{background:var(--primary-light)}
  
-/* No result found state */
+/* Not found state */
 .result-not-found{
-  text-align:center;padding:40px 20px;
+  text-align:center;padding:48px 20px;
   background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);
-  margin-top:20px;display:none;
+  margin-top:0;display:none;
 }
 .result-not-found.show{display:block}
  
@@ -466,6 +515,7 @@ img{max-width:100%}
   .result-card-header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .result-marks-table th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   #resultSearchSection{display:none!important}
+  .result-search-hero{display:none!important}
 }
  
 /* ===== RESPONSIVE ===== */
@@ -493,7 +543,8 @@ img{max-width:100%}
   .footer-grid{grid-template-columns:1fr}
   .result-student-info{grid-template-columns:1fr}
   .result-summary-row{grid-template-columns:1fr 1fr}
-  .result-search-bar{flex-direction:column}
+  .result-search-bar-wrap{flex-direction:column}
+  .result-search-hero{padding:22px 18px 20px}
 }
 @media(max-width:480px){
   .stat-grid{grid-template-columns:1fr 1fr}
@@ -639,16 +690,17 @@ img{max-width:100%}
 </section>
  
 <!-- ===== GALLERY SECTION ===== -->
-<!-- NOTE: Upload button removed — only Admin can upload via admin.html -->
+<!-- ADMIN-ONLY UPLOAD: Photos are managed exclusively via the Admin Panel -->
 <section class="section" id="gallery">
   <div class="section-header-row">
     <div class="section-header">
       <h2>School Gallery</h2>
       <p>Memories, milestones and moments from Balaji Academy</p>
     </div>
-    <!-- Upload removed from public view. Admins can upload via the Admin Panel. -->
-    <div style="display:flex;align-items:center;gap:8px;background:#f0f4fa;padding:8px 14px;border-radius:8px;font-size:12.5px;color:var(--text-muted)">
-      🔒 <span>Photo uploads are managed by <strong style="color:var(--primary);cursor:pointer" onclick="window.location.href='admin.html'">Admin Panel</strong></span>
+    <!-- Upload is RESTRICTED to Admin Panel only — no upload visible here -->
+    <div class="gallery-admin-notice no-print">
+      <span class="lock-icon">🔒</span>
+      <span>Photo uploads are managed by <a onclick="window.location.href='admin.html'">Admin Panel</a> only</span>
     </div>
   </div>
  
@@ -706,15 +758,21 @@ img{max-width:100%}
 <section class="section" id="result">
   <div class="section-header">
     <h2>Result Management</h2>
-    <p>Search your result by entering your name or roll number</p>
+    <p>Search your exam result by name or roll number and download your result card</p>
   </div>
  
-  <!-- Search Bar -->
-  <div class="result-search-wrap" id="resultSearchSection">
+  <!-- Enhanced Search Bar -->
+  <div class="result-search-hero no-print" id="resultSearchSection">
     <h3>🔍 Search Your Result</h3>
-    <p>Enter your name or roll number and select your class to find your result card.</p>
-    <div class="result-search-bar">
-      <input type="text" id="studentSearchInput" placeholder="Enter student name or roll number..." oninput="searchResult()">
+    <p>Enter your full name or roll number and select your class to view your result card instantly.</p>
+    <div class="result-search-bar-wrap">
+      <input
+        type="text"
+        id="studentSearchInput"
+        placeholder="Enter student name or roll number..."
+        oninput="searchResult()"
+        autocomplete="off"
+      >
       <select id="studentClassFilter" onchange="searchResult()">
         <option value="">All Classes</option>
         <option>Class 1</option><option>Class 2</option><option>Class 3</option>
@@ -722,15 +780,13 @@ img{max-width:100%}
         <option>Class 7</option><option>Class 8</option><option>Class 9</option>
         <option>Class 10</option><option>Class 11</option><option>Class 12</option>
       </select>
-      <button class="btn btn-primary" onclick="searchResult()">🔍 Search</button>
-      <button class="btn btn-outline" onclick="clearResultSearch()">✕ Clear</button>
+      <button class="btn-search" onclick="searchResult()">🔍 Search</button>
+      <button class="btn-clear" onclick="clearResultSearch()">✕ Clear</button>
     </div>
   </div>
  
   <!-- Result Card (shown after search) -->
-  <div id="resultCardArea">
-    <!-- Filled by JS -->
-  </div>
+  <div id="resultCardArea"></div>
  
   <!-- Not Found State -->
   <div class="result-not-found" id="resultNotFound">
@@ -741,7 +797,7 @@ img{max-width:100%}
   </div>
  
   <!-- Admin note -->
-  <div style="margin-top:20px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 20px;display:flex;align-items:center;gap:12px">
+  <div style="margin-top:20px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 20px;display:flex;align-items:center;gap:12px" class="no-print">
     <span style="font-size:20px">🔐</span>
     <div>
       <p style="font-size:13px;font-weight:600;color:var(--primary)">Are you an administrator?</p>
@@ -921,36 +977,63 @@ function closeSidebar(){
 }
  
 // =====================================================
-// GALLERY
+// GALLERY — reads from localStorage (admin-uploaded images)
+// Default placeholder images shown if no admin uploads exist
 // =====================================================
-const galleryData = [
-  {cat:'annualday',title:'Annual Day 2024 – Cultural Programme',seed:10},
-  {cat:'annualday',title:'Prize Distribution Ceremony',seed:20},
-  {cat:'annualday',title:'Chief Guest Felicitation',seed:30},
-  {cat:'events',title:'Independence Day Celebration',seed:40},
-  {cat:'events',title:'Republic Day Flag Hoisting',seed:50},
-  {cat:'events',title:'Diwali Mela – School Campus',seed:60},
-  {cat:'sports',title:'District Cricket Championship',seed:70},
-  {cat:'sports',title:'Inter-School Football Match',seed:80},
-  {cat:'sports',title:'Sports Day – 100m Race',seed:90},
-  {cat:'classrooms',title:'Science Lab – Class 10',seed:100},
-  {cat:'classrooms',title:'Computer Lab Session',seed:110},
-  {cat:'classrooms',title:'Library Reading Hour',seed:120},
-  {cat:'functions',title:"Teacher's Day Celebration",seed:130},
-  {cat:'functions',title:"Children's Day Programme",seed:140},
-  {cat:'functions',title:'Farewell Ceremony – Class 12',seed:150},
-  {cat:'events',title:'Science Exhibition 2024',seed:160},
-  {cat:'sports',title:'Kho-Kho Finals – Girls Team',seed:170},
-  {cat:'classrooms',title:'Art & Craft Workshop',seed:180},
+const DEFAULT_GALLERY = [
+  {id:'g1',cat:'annualday',title:'Annual Day 2024 – Cultural Programme',src:'https://picsum.photos/seed/10/400/300',fullSrc:'https://picsum.photos/seed/10/800/600'},
+  {id:'g2',cat:'annualday',title:'Prize Distribution Ceremony',src:'https://picsum.photos/seed/20/400/300',fullSrc:'https://picsum.photos/seed/20/800/600'},
+  {id:'g3',cat:'annualday',title:'Chief Guest Felicitation',src:'https://picsum.photos/seed/30/400/300',fullSrc:'https://picsum.photos/seed/30/800/600'},
+  {id:'g4',cat:'events',title:'Independence Day Celebration',src:'https://picsum.photos/seed/40/400/300',fullSrc:'https://picsum.photos/seed/40/800/600'},
+  {id:'g5',cat:'events',title:'Republic Day Flag Hoisting',src:'https://picsum.photos/seed/50/400/300',fullSrc:'https://picsum.photos/seed/50/800/600'},
+  {id:'g6',cat:'events',title:'Diwali Mela – School Campus',src:'https://picsum.photos/seed/60/400/300',fullSrc:'https://picsum.photos/seed/60/800/600'},
+  {id:'g7',cat:'sports',title:'District Cricket Championship',src:'https://picsum.photos/seed/70/400/300',fullSrc:'https://picsum.photos/seed/70/800/600'},
+  {id:'g8',cat:'sports',title:'Inter-School Football Match',src:'https://picsum.photos/seed/80/400/300',fullSrc:'https://picsum.photos/seed/80/800/600'},
+  {id:'g9',cat:'sports',title:'Sports Day – 100m Race',src:'https://picsum.photos/seed/90/400/300',fullSrc:'https://picsum.photos/seed/90/800/600'},
+  {id:'g10',cat:'classrooms',title:'Science Lab – Class 10',src:'https://picsum.photos/seed/100/400/300',fullSrc:'https://picsum.photos/seed/100/800/600'},
+  {id:'g11',cat:'classrooms',title:'Computer Lab Session',src:'https://picsum.photos/seed/110/400/300',fullSrc:'https://picsum.photos/seed/110/800/600'},
+  {id:'g12',cat:'classrooms',title:'Library Reading Hour',src:'https://picsum.photos/seed/120/400/300',fullSrc:'https://picsum.photos/seed/120/800/600'},
+  {id:'g13',cat:'functions',title:"Teacher's Day Celebration",src:'https://picsum.photos/seed/130/400/300',fullSrc:'https://picsum.photos/seed/130/800/600'},
+  {id:'g14',cat:'functions',title:"Children's Day Programme",src:'https://picsum.photos/seed/140/400/300',fullSrc:'https://picsum.photos/seed/140/800/600'},
+  {id:'g15',cat:'functions',title:'Farewell Ceremony – Class 12',src:'https://picsum.photos/seed/150/400/300',fullSrc:'https://picsum.photos/seed/150/800/600'},
+  {id:'g16',cat:'events',title:'Science Exhibition 2024',src:'https://picsum.photos/seed/160/400/300',fullSrc:'https://picsum.photos/seed/160/800/600'},
+  {id:'g17',cat:'sports',title:'Kho-Kho Finals – Girls Team',src:'https://picsum.photos/seed/170/400/300',fullSrc:'https://picsum.photos/seed/170/800/600'},
+  {id:'g18',cat:'classrooms',title:'Art & Craft Workshop',src:'https://picsum.photos/seed/180/400/300',fullSrc:'https://picsum.photos/seed/180/800/600'},
 ];
  
+function getGalleryData(){
+  // Admin-uploaded images from localStorage, fallback to defaults
+  const stored = localStorage.getItem('ba_gallery');
+  if(stored){
+    try{
+      const arr = JSON.parse(stored);
+      if(arr && arr.length) return arr;
+    }catch(e){}
+  }
+  return DEFAULT_GALLERY;
+}
+ 
+let currentGalleryCat = 'all';
+ 
 function renderGallery(cat='all'){
+  currentGalleryCat = cat;
   const grid = document.getElementById('galleryGrid');
-  const items = cat==='all'?galleryData:galleryData.filter(i=>i.cat===cat);
+  const allItems = getGalleryData();
+  const items = cat==='all' ? allItems : allItems.filter(i=>i.cat===cat);
+ 
+  if(!items.length){
+    grid.innerHTML = `<div class="gallery-empty">
+      <div class="empty-icon">🖼️</div>
+      <h3>No photos yet</h3>
+      <p>Photos in this category will appear here once uploaded by the admin.</p>
+    </div>`;
+    return;
+  }
+ 
   grid.innerHTML = items.map(item=>`
-    <div class="gallery-item" onclick="openLightbox('https://picsum.photos/seed/${item.seed}/800/600','${item.title.replace(/'/g,"\\'")}')">
-      <img src="https://picsum.photos/seed/${item.seed}/400/300" alt="${item.title}" loading="lazy">
-      <div class="gallery-overlay"><span>${item.title}</span></div>
+    <div class="gallery-item" onclick="openLightbox('${item.fullSrc || item.src}','${(item.title||'').replace(/'/g,"\\'")}')">
+      <img src="${item.src}" alt="${item.title||''}" loading="lazy">
+      <div class="gallery-overlay"><span>${item.title||''}</span></div>
     </div>
   `).join('');
 }
@@ -998,7 +1081,6 @@ document.getElementById('feeStructureBody').innerHTML = feeStructure.map(r=>`
 // =====================================================
 // RESULT MANAGEMENT – STUDENT SEARCH
 // =====================================================
-// Default mock data (same as admin panel)
 const defaultResults = [
   {name:'Rahul Kumar Gupta',cls:'Class 10',roll:'2024-10-01',exam:'Half-Yearly Exam 2024',marks:{Hindi:78,English:82,Maths:91,Science:85,SST:74,Comp:88}},
   {name:'Priya Dubey',cls:'Class 8',roll:'2024-08-12',exam:'Half-Yearly Exam 2024',marks:{Hindi:88,English:90,Maths:76,Science:84,SST:91,Comp:95}},
@@ -1049,7 +1131,6 @@ function searchResult(){
     return;
   }
  
-  // Render all matched results
   cardArea.innerHTML = matched.map((r,idx) => buildResultCard(r, idx)).join('');
   cardArea.classList.add('show');
 }
@@ -1068,12 +1149,13 @@ function buildResultCard(r, idx){
   const marksRows = subjects.map(s => {
     const m = r.marks[s.key] || 0;
     const pass = m >= 33;
-    const pctSubj = m;
     return `<tr>
       <td>${s.name}</td>
       <td>${maxMarks}</td>
       <td class="${pass?'marks-pass':'marks-fail'}">${m}</td>
-      <td>${pass?'<span class="badge badge-success" style="font-size:11px">Pass</span>':'<span class="badge badge-danger" style="font-size:11px">Fail</span>'}</td>
+      <td>${pass
+        ? '<span class="badge badge-success" style="font-size:11px">Pass</span>'
+        : '<span class="badge badge-danger" style="font-size:11px">Fail</span>'}</td>
     </tr>`;
   }).join('');
  
@@ -1094,9 +1176,7 @@ function buildResultCard(r, idx){
         <p>Gursahaiganj, Kannauj, Uttar Pradesh – 209721</p>
         <p style="margin-top:2px;font-size:11px;opacity:.65">Academic Year 2024–25</p>
       </div>
-      <div class="result-card-exam-tag">
-        📄 ${r.exam}
-      </div>
+      <div class="result-card-exam-tag">📄 ${r.exam}</div>
     </div>
     <div class="result-card-body">
       <div class="result-student-info">
@@ -1138,26 +1218,25 @@ function buildResultCard(r, idx){
       </div>
     </div>
     <div class="result-card-footer no-print">
-      <p>🖨️ Use the print button to save or print this result card.</p>
-      <button class="btn btn-primary btn-sm" onclick="printResultCard(${idx})">🖨️ Print Result</button>
+      <p>🖨️ Print or save this result card as PDF using your browser's print function.</p>
+      <button class="print-btn" onclick="printResultCard()">🖨️ Print / Download Result</button>
     </div>
   </div>`;
 }
  
-function printResultCard(idx){
-  // Hide search area, show only the card, print, restore
+function printResultCard(){
   const searchSec = document.getElementById('resultSearchSection');
   const notFound = document.getElementById('resultNotFound');
-  const adminNote = document.querySelector('#result > div:last-child');
+  const adminNote = document.querySelector('#result > div:last-of-type');
  
-  searchSec.style.display='none';
-  notFound.style.display='none';
+  if(searchSec) searchSec.style.display='none';
+  if(notFound) notFound.style.display='none';
   if(adminNote) adminNote.style.display='none';
  
   window.print();
  
-  searchSec.style.display='';
-  notFound.style.display='';
+  if(searchSec) searchSec.style.display='';
+  if(notFound) notFound.style.display='';
   if(adminNote) adminNote.style.display='';
 }
  
@@ -1169,7 +1248,6 @@ function clearResultSearch(){
   document.getElementById('resultNotFound').classList.remove('show');
 }
  
-// Allow pressing Enter in search bar
 document.getElementById('studentSearchInput').addEventListener('keydown', function(e){
   if(e.key==='Enter') searchResult();
 });
