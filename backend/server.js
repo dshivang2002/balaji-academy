@@ -184,7 +184,11 @@ app.post('/api/students', authMiddleware, async (req, res) => {
 app.put('/api/students/:id', authMiddleware, async (req, res) => {
   const { data: existing } = await supabase.from('students').select('id').eq('id', req.params.id).limit(1);
   if (!existing?.[0]) return res.status(404).json({ success: false, message: 'Student not found.' });
-  const { data, error } = await supabase.from('students').update(req.body).eq('id', req.params.id).select().single();
+  // Normalize camelCase to snake_case for Supabase
+  const body = { ...req.body };
+  if (body.fatherName !== undefined) { body.father_name = body.fatherName; delete body.fatherName; }
+  if (body.createdAt !== undefined) { body.created_at = body.createdAt; delete body.createdAt; }
+  const { data, error } = await supabase.from('students').update(body).eq('id', req.params.id).select().single();
   if (error) return res.status(500).json({ success: false, message: error.message });
   await auditLog('UPDATE', 'Student', `Updated student ID: ${req.params.id}`, req.user);
   res.json({ success: true, message: 'Student updated successfully.', data });
@@ -210,7 +214,11 @@ app.get('/api/fees', authMiddleware, async (req, res) => {
 });
  
 app.post('/api/fees', authMiddleware, async (req, res) => {
-  const { studentId, studentName, cls, feeType, amount, dueDate, month } = req.body;
+  const studentName = req.body.studentName || req.body.student_name;
+  const studentId   = req.body.studentId   || req.body.student_id;
+  const feeType     = req.body.feeType     || req.body.fee_type;
+  const dueDate     = req.body.dueDate     || req.body.due_date;
+  const { cls, amount, month } = req.body;
   if (!studentName || !cls || !amount) return res.status(400).json({ success: false, message: 'Missing required fields.' });
   const newFee = {
     id: 'F' + uuidv4().slice(0, 6).toUpperCase(),
@@ -296,7 +304,9 @@ app.post('/api/results/lookup', async (req, res) => {
 });
  
 app.post('/api/results', authMiddleware, async (req, res) => {
-  const { studentName, studentId, cls, roll, exam, marks } = req.body;
+  const studentName = req.body.studentName || req.body.student_name;
+  const studentId   = req.body.studentId   || req.body.student_id;
+  const { cls, roll, exam, marks } = req.body;
   if (!studentName || !cls || !marks) return res.status(400).json({ success: false, message: 'Missing required fields.' });
   const vals = Object.values(marks).map(Number);
   const total = vals.reduce((a, b) => a + b, 0);
@@ -317,14 +327,17 @@ app.post('/api/results', authMiddleware, async (req, res) => {
 });
  
 app.put('/api/results/:id', authMiddleware, async (req, res) => {
-  if (req.body.marks) {
-    const vals = Object.values(req.body.marks).map(Number);
-    req.body.total = vals.reduce((a, b) => a + b, 0);
-    req.body.percentage = parseFloat(((req.body.total / (vals.length * 100)) * 100).toFixed(1));
-    req.body.grade = req.body.percentage >= 90 ? 'A+' : req.body.percentage >= 80 ? 'A' : req.body.percentage >= 70 ? 'B' : req.body.percentage >= 60 ? 'C' : req.body.percentage >= 33 ? 'D' : 'F';
-    req.body.status = vals.every(v => v >= 33) && req.body.percentage >= 33 ? 'Pass' : 'Fail';
+  const body = { ...req.body };
+  if (body.studentName !== undefined) { body.student_name = body.studentName; delete body.studentName; }
+  if (body.studentId   !== undefined) { body.student_id   = body.studentId;   delete body.studentId; }
+  if (body.marks) {
+    const vals = Object.values(body.marks).map(Number);
+    body.total = vals.reduce((a, b) => a + b, 0);
+    body.percentage = parseFloat(((body.total / (vals.length * 100)) * 100).toFixed(1));
+    body.grade = body.percentage >= 90 ? 'A+' : body.percentage >= 80 ? 'A' : body.percentage >= 70 ? 'B' : body.percentage >= 60 ? 'C' : body.percentage >= 33 ? 'D' : 'F';
+    body.status = vals.every(v => v >= 33) && body.percentage >= 33 ? 'Pass' : 'Fail';
   }
-  const { data, error } = await supabase.from('results').update(req.body).eq('id', req.params.id).select().single();
+  const { data, error } = await supabase.from('results').update(body).eq('id', req.params.id).select().single();
   if (error) return res.status(500).json({ success: false, message: error.message });
   res.json({ success: true, message: 'Result updated.', data });
 });
@@ -391,7 +404,9 @@ app.post('/api/classes', authMiddleware, async (req, res) => {
 });
  
 app.put('/api/classes/:id', authMiddleware, async (req, res) => {
-  const { data, error } = await supabase.from('classes').update(req.body).eq('id', req.params.id).select().single();
+  const body = { ...req.body };
+  // Remove any camelCase duplicates that might conflict
+  const { data, error } = await supabase.from('classes').update(body).eq('id', req.params.id).select().single();
   if (error) return res.status(500).json({ success: false, message: error.message });
   res.json({ success: true, message: 'Class updated.', data });
 });
