@@ -394,7 +394,12 @@ table{border-collapse:collapse;width:100%}
     <section class="sec" id="students">
       <div class="shr">
         <div class="sh"><h2>Students</h2><p>Manage all student records</p></div>
-        <button class="btn btn-p" onclick="openModal('studentModal','','add')">➕ Add Student</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-out btn-sm" onclick="exportData('students','csv')">⬇️ CSV</button>
+          <button class="btn btn-out btn-sm" onclick="exportData('students','json')">⬇️ JSON</button>
+          <button class="btn btn-acc btn-sm" onclick="openImportModal('students')">⬆️ Import</button>
+          <button class="btn btn-p" onclick="openModal('studentModal','','add')">➕ Add Student</button>
+        </div>
       </div>
       <div class="fb">
         <input id="stuSearch" placeholder="🔍 Search by name or roll..." oninput="loadStudents()">
@@ -417,7 +422,12 @@ table{border-collapse:collapse;width:100%}
     <section class="sec" id="fees">
       <div class="shr">
         <div class="sh"><h2>Fee Management</h2><p>Track and manage all fee payments</p></div>
-        <button class="btn btn-p" onclick="openModal('feeModal','','add')">➕ Add Fee Record</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-out btn-sm" onclick="exportData('fees','csv')">⬇️ CSV</button>
+          <button class="btn btn-out btn-sm" onclick="exportData('fees','json')">⬇️ JSON</button>
+          <button class="btn btn-acc btn-sm" onclick="openImportModal('fees')">⬆️ Import</button>
+          <button class="btn btn-p" onclick="openModal('feeModal','','add')">➕ Add Fee Record</button>
+        </div>
       </div>
       <div class="fb">
         <input id="feeSearch" placeholder="🔍 Search student..." oninput="loadFees()">
@@ -444,7 +454,12 @@ table{border-collapse:collapse;width:100%}
     <section class="sec" id="results">
       <div class="shr">
         <div class="sh"><h2>Results</h2><p>Manage student exam results</p></div>
-        <button class="btn btn-p" onclick="openModal('resultModal','','add')">➕ Add Result</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-out btn-sm" onclick="exportData('results','csv')">⬇️ CSV</button>
+          <button class="btn btn-out btn-sm" onclick="exportData('results','json')">⬇️ JSON</button>
+          <button class="btn btn-acc btn-sm" onclick="openImportModal('results')">⬆️ Import</button>
+          <button class="btn btn-p" onclick="openModal('resultModal','','add')">➕ Add Result</button>
+        </div>
       </div>
       <div class="fb">
         <input id="resSearch" placeholder="🔍 Search by student name..." oninput="loadResults()">
@@ -623,11 +638,11 @@ table{border-collapse:collapse;width:100%}
         <div id="connResult" style="font-size:13px;padding:10px 14px;border-radius:8px;display:none"></div>
         <div style="margin-top:20px;padding:14px;background:var(--bg);border-radius:8px;font-size:12.5px;line-height:2;color:var(--muted)">
           <strong style="color:var(--p)">📋 Setup Instructions:</strong><br>
-          1. Install Node.js (v16+) on your server<br>
-          2. Run <code style="background:#e2e8f0;padding:1px 5px;border-radius:3px">npm install</code> in the project folder<br>
-          3. Start with <code style="background:#e2e8f0;padding:1px 5px;border-radius:3px">npm start</code> (runs on port 3001)<br>
-          4. Update the API URL above if hosting remotely<br>
-          5. Default login: <strong>admin / admin@123</strong>
+          1. Create a free project at <a href="https://supabase.com" target="_blank" style="color:var(--p)">supabase.com</a><br>
+          2. Run <code style="background:#e2e8f0;padding:1px 5px;border-radius:3px">supabase_schema.sql</code> in Supabase SQL Editor<br>
+          3. Set <code style="background:#e2e8f0;padding:1px 5px;border-radius:3px">SUPABASE_URL</code> and <code style="background:#e2e8f0;padding:1px 5px;border-radius:3px">SUPABASE_SERVICE_KEY</code> env vars<br>
+          4. Run <code style="background:#e2e8f0;padding:1px 5px;border-radius:3px">npm install @supabase/supabase-js</code>, then <code style="background:#e2e8f0;padding:1px 5px;border-radius:3px">npm start</code><br>
+          5. Default login: <strong>admin / admin@123</strong> &nbsp;|&nbsp; <strong>accountant / fees@123</strong>
         </div>
       </div>
     </section>
@@ -831,6 +846,35 @@ table{border-collapse:collapse;width:100%}
   </div>
 </div>
  
+
+<!-- Import Modal -->
+<div class="mo" id="importModal">
+  <div class="md" style="max-width:560px">
+    <div class="md-h"><h3 id="importModalTitle">Import Data</h3><button class="md-x" onclick="closeModal('importModal')">✕</button></div>
+    <div class="md-b">
+      <div style="background:#fef3c7;border-left:4px solid var(--warn);border-radius:8px;padding:12px 14px;margin-bottom:16px;font-size:12.5px;color:var(--text)">
+        <strong>⚠️ Import Rules:</strong><br>
+        • Upload a JSON file exported from this system<br>
+        • Records with existing IDs will be <strong>updated</strong>; new IDs will be <strong>inserted</strong><br>
+        • Maximum 500 records per import<br>
+        • Only Superadmin can import data
+      </div>
+      <div class="fg2">
+        <label class="fl2">Select JSON File *</label>
+        <input type="file" class="fc2" id="importFile" accept=".json" style="padding:6px">
+      </div>
+      <div id="importPreview" style="display:none;margin-top:12px;background:var(--bg);border-radius:8px;padding:12px;font-size:12.5px">
+        <strong id="importPreviewText"></strong>
+      </div>
+      <div id="importError" style="display:none;background:#fee2e2;color:var(--err);border-radius:8px;padding:10px 14px;font-size:13px;margin-top:10px"></div>
+    </div>
+    <div class="md-f">
+      <button class="btn btn-out btn-sm" onclick="closeModal('importModal')">Cancel</button>
+      <button class="btn btn-p btn-sm" onclick="runImport()" id="importRunBtn">⬆️ Import Now</button>
+    </div>
+  </div>
+</div>
+
 <!-- Toast -->
 <div id="toast"></div>
  
@@ -1696,6 +1740,88 @@ async function testConnection(){
     setApiStatus(false);
   }
 }
+
+// ═══════════════════════════════════════════════════════
+// IMPORT / EXPORT
+// ═══════════════════════════════════════════════════════
+let importCollection = '';
+
+function openImportModal(collection){
+  importCollection = collection;
+  document.getElementById('importModalTitle').textContent = 'Import ' + collection.charAt(0).toUpperCase() + collection.slice(1);
+  document.getElementById('importFile').value = '';
+  document.getElementById('importPreview').style.display = 'none';
+  document.getElementById('importError').style.display = 'none';
+  openModal('importModal');
+
+  document.getElementById('importFile').onchange = function(){
+    const file = this.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e){
+      try {
+        const parsed = JSON.parse(e.target.result);
+        const arr = parsed.data || (Array.isArray(parsed) ? parsed : null);
+        if(!arr) throw new Error('Invalid format. Expected { "data": [...] } or plain array.');
+        document.getElementById('importPreviewText').textContent =
+          '✅ File ready: ' + arr.length + ' record(s) found in "' + file.name + '"';
+        document.getElementById('importPreview').style.display = 'block';
+        document.getElementById('importError').style.display = 'none';
+        document.getElementById('importRunBtn').dataset.records = JSON.stringify(arr);
+      } catch(err) {
+        document.getElementById('importError').textContent = '❌ ' + err.message;
+        document.getElementById('importError').style.display = 'block';
+        document.getElementById('importPreview').style.display = 'none';
+        document.getElementById('importRunBtn').dataset.records = '';
+      }
+    };
+    reader.readAsText(file);
+  };
+}
+
+async function runImport(){
+  const records = document.getElementById('importRunBtn').dataset.records;
+  if(!records){ toast('Please select a valid JSON file first.','error'); return; }
+  const parsed = JSON.parse(records);
+  const btn = document.getElementById('importRunBtn');
+  btn.disabled = true; btn.textContent = '⏳ Importing...';
+  const res = await api('POST', '/import/' + importCollection, { data: parsed });
+  btn.disabled = false; btn.textContent = '⬆️ Import Now';
+  if(res?.success){
+    toast('✅ ' + res.message);
+    closeModal('importModal');
+    // Reload the relevant section
+    const reload = {students:loadStudents,results:loadResults,fees:loadFees,admissions:loadAdmissions,classes:loadClasses};
+    if(reload[importCollection]) reload[importCollection]();
+  } else {
+    document.getElementById('importError').textContent = '❌ ' + (res?.message || 'Import failed.');
+    document.getElementById('importError').style.display = 'block';
+  }
+}
+
+function exportData(collection, format){
+  const cls = document.getElementById(
+    collection === 'students' ? 'stuClass' :
+    collection === 'fees'     ? 'feeClass' :
+    collection === 'results'  ? 'resClass' : ''
+  )?.value || '';
+  const clsParam = cls ? 'cls=' + encodeURIComponent(cls) : '';
+
+  fetch(API + '/export/' + collection + (format === 'csv' ? '/csv' : '') + (clsParam ? '?' + clsParam : ''), {
+    headers: { Authorization: 'Bearer ' + TOKEN }
+  })
+  .then(async r => {
+    if(!r.ok){ const j = await r.json(); toast(j.message || 'Export failed.','error'); return; }
+    const blob = await r.blob();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = collection + '_export.' + format;
+    a.click();
+    toast('✅ Export started!');
+  })
+  .catch(()=>toast('Export failed. Check connection.','error'));
+}
+
 </script>
 </body>
 </html>
