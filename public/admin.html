@@ -1061,15 +1061,15 @@ async function loadDashboard(){
   const adm = await api('GET','/admissions?status=Pending');
   document.getElementById('recentAdmissions').innerHTML = adm?.data?.length
     ? adm.data.slice(0,5).map(a=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12.5px">
-        <div><strong>${a.studentName}</strong><br><span style="color:var(--muted)">${a.id} • ${a.cls}</span></div>
+        <div><strong>${a.student_name||a.studentName}</strong><br><span style="color:var(--muted)">${a.id} • ${a.cls}</span></div>
         <span class="bk bk-warn">Pending</span></div>`).join('')
     : '<p style="font-size:13px;color:var(--muted);text-align:center;padding:20px">No pending admissions</p>';
- 
+
   const fees = await api('GET','/fees?status=Pending');
   document.getElementById('recentFees').innerHTML = fees?.data?.length
     ? fees.data.slice(0,5).map(f=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12.5px">
-        <div><strong>${f.studentName}</strong><br><span style="color:var(--muted)">${f.cls} • ${f.feeType}</span></div>
-        <span style="font-weight:700;color:var(--err)">₹${f.amount.toLocaleString('en-IN')}</span></div>`).join('')
+        <div><strong>${f.student_name||f.studentName}</strong><br><span style="color:var(--muted)">${f.cls} • ${f.fee_type||f.feeType}</span></div>
+        <span style="font-weight:700;color:var(--err)">₹${Number(f.amount).toLocaleString('en-IN')}</span></div>`).join('')
     : '<p style="font-size:13px;color:var(--muted);text-align:center;padding:20px">No pending fees</p>';
 }
  
@@ -1088,7 +1088,7 @@ async function loadStudents(){
   body.innerHTML = res.data.length ? res.data.map((s,i)=>`
     <tr>
       <td>${i+1}</td><td><strong>${s.name}</strong></td><td>${s.cls}</td>
-      <td>${s.roll}</td><td>${s.fatherName||'—'}</td><td>${s.mobile||'—'}</td>
+      <td>${s.roll}</td><td>${s.father_name||s.fatherName||'—'}</td><td>${s.mobile||'—'}</td>
       <td><span class="bk bk-mu">${s.category||'General'}</span></td>
       <td><button class="btn btn-p btn-xs" onclick="editStudent('${s.id}')">✏️</button> <button class="btn btn-err btn-xs" onclick="delStudent('${s.id}','${s.name}')">🗑️</button></td>
     </tr>`).join('')
@@ -1105,7 +1105,7 @@ function editStudent(id){ openModal('studentModal');
     document.getElementById('stu-roll').value=s.roll||'';
     document.getElementById('stu-cls').value=s.cls||'';
     document.getElementById('stu-sec').value=s.section||'';
-    document.getElementById('stu-father').value=s.fatherName||'';
+    document.getElementById('stu-father').value=s.father_name||s.fatherName||'';
     document.getElementById('stu-mobile').value=s.mobile||'';
     document.getElementById('stu-dob').value=s.dob||'';
     document.getElementById('stu-gender').value=s.gender||'';
@@ -1122,6 +1122,7 @@ async function saveStudent(){
     cls:document.getElementById('stu-cls').value,
     section:document.getElementById('stu-sec').value||'A',
     fatherName:document.getElementById('stu-father').value.trim(),
+    father_name:document.getElementById('stu-father').value.trim(),
     mobile:document.getElementById('stu-mobile').value.trim(),
     dob:document.getElementById('stu-dob').value,
     gender:document.getElementById('stu-gender').value,
@@ -1159,12 +1160,12 @@ async function loadFees(){
   const stMap = {Paid:'bk-ok',Pending:'bk-err',Partial:'bk-warn'};
   body.innerHTML = res.data.length ? res.data.map((f,i)=>`
     <tr>
-      <td>${i+1}</td><td><strong>${f.studentName}</strong></td><td>${f.cls}</td>
-      <td>${f.feeType}</td><td>₹${f.amount.toLocaleString('en-IN')}</td>
+      <td>${i+1}</td><td><strong>${f.student_name||f.studentName}</strong></td><td>${f.cls}</td>
+      <td>${f.fee_type||f.feeType}</td><td>₹${Number(f.amount).toLocaleString('en-IN')}</td>
       <td>${f.month||'—'}</td>
       <td><span class="bk ${stMap[f.status]||'bk-mu'}">${f.status}</span></td>
-      <td>${f.dueDate||'—'}</td>
-      <td>${f.receiptNo?`<span style="font-size:11px;color:var(--ok)">${f.receiptNo}</span>`:'—'}</td>
+      <td>${f.due_date||f.dueDate||'—'}</td>
+      <td>${(f.receipt_no||f.receiptNo)?`<span style="font-size:11px;color:var(--ok)">${f.receipt_no||f.receiptNo}</span>`:'—'}</td>
       <td>
         ${f.status!=='Paid'?`<button class="btn btn-ok btn-xs" onclick="markPaid('${f.id}')">✓ Pay</button> `:''}
         <button class="btn btn-err btn-xs" onclick="delFee('${f.id}')">🗑️</button>
@@ -1176,11 +1177,14 @@ async function loadFees(){
 async function saveFee(){
   const data = {
     studentName:document.getElementById('fee-name').value.trim(),
+    student_name:document.getElementById('fee-name').value.trim(),
     cls:document.getElementById('fee-cls').value,
     feeType:document.getElementById('fee-type').value,
+    fee_type:document.getElementById('fee-type').value,
     amount:document.getElementById('fee-amount').value,
     month:document.getElementById('fee-month').value,
-    dueDate:document.getElementById('fee-due').value
+    dueDate:document.getElementById('fee-due').value,
+    due_date:document.getElementById('fee-due').value
   };
   if(!data.studentName||!data.cls||!data.amount){ toast('Student, class and amount are required.','error'); return; }
   const res = await api('POST','/fees',data);
@@ -1191,7 +1195,7 @@ async function saveFee(){
  
 async function markPaid(id){
   const res = await api('PATCH',`/fees/${id}/pay`);
-  if(res?.success){ toast(`Fee marked as Paid! Receipt: ${res.data.receiptNo}`); loadFees(); }
+  if(res?.success){ toast(`Fee marked as Paid! Receipt: ${res.data.receipt_no||res.data.receiptNo}`); loadFees(); }
   else toast(res?.message||'Failed.','error');
 }
  
@@ -1231,7 +1235,7 @@ async function loadResults(){
   const gb = g => g==='A+'||g==='A'?'bk-ok':g==='F'?'bk-err':'bk-p';
   body.innerHTML = res.data.length ? res.data.map((r,i)=>`
     <tr>
-      <td>${i+1}</td><td><strong>${r.studentName}</strong></td><td>${r.cls}</td>
+      <td>${i+1}</td><td><strong>${r.student_name||r.studentName}</strong></td><td>${r.cls}</td>
       <td>${r.roll||'—'}</td><td style="font-size:11.5px">${r.exam}</td>
       <td>${r.total}/600</td><td>${r.percentage}%</td>
       <td><span class="bk ${gb(r.grade)}">${r.grade}</span></td>
@@ -1244,6 +1248,7 @@ async function loadResults(){
 async function saveResult(){
   const data = {
     studentName:document.getElementById('res-name').value.trim(),
+    student_name:document.getElementById('res-name').value.trim(),
     roll:document.getElementById('res-roll').value.trim(),
     cls:document.getElementById('res-cls').value,
     exam:document.getElementById('res-exam').value,
@@ -1287,10 +1292,10 @@ async function loadAdmissions(){
   body.innerHTML = res.data.length ? res.data.map(a=>`
     <tr>
       <td><strong style="color:var(--p)">${a.id}</strong></td>
-      <td>${a.studentName}</td><td>${a.cls}</td><td>${a.fatherName}</td>
+      <td>${a.student_name||a.studentName}</td><td>${a.cls}</td><td>${a.father_name||a.fatherName}</td>
       <td>${a.mobile}</td><td>${a.dob||'—'}</td>
       <td><span class="bk bk-mu">${a.category||'General'}</span></td>
-      <td>${a.appliedDate}</td>
+      <td>${a.applied_date||a.appliedDate}</td>
       <td>
         <select class="fc2" style="padding:3px 7px;font-size:11.5px" onchange="changeAdmStatus('${a.id}',this.value)">
           ${['Pending','Approved','Rejected'].map(s=>`<option ${a.status===s?'selected':''}>${s}</option>`).join('')}
