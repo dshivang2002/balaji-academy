@@ -10,7 +10,7 @@
  * Run SQL in Supabase SQL Editor once (see supabase_schema.sql)
  */
 
-console.log('🔥 NEW SERVER CODE LOADED');
+console.log('🔥NEW SERVER CODE LOADED');
 
  require('dotenv').config();
  
