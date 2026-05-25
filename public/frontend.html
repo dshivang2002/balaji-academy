@@ -655,96 +655,66 @@ img{max-width:100%}
 <!-- ===== RESULT SECTION ===== -->
 <section class="section" id="result">
   <div class="section-header">
-    <h2>Result Management</h2>
-    <p>Enter marks, auto-calculate grades and print result cards</p>
+    <h2>Result Portal</h2>
+    <p>Check your result by entering your details below. Results are private — only you can see your own result.</p>
   </div>
- 
-  <div class="result-form-card no-print">
-    <h3 style="font-size:16px;font-weight:700;color:var(--primary);margin-bottom:16px">✏️ Enter Student Result</h3>
-    <div class="form-grid">
+
+  <!-- ── PRIVATE LOOKUP FORM ── -->
+  <div class="result-form-card no-print" id="resultLookupCard">
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:40px">🔍</div>
+      <h3 style="font-size:17px;font-weight:700;color:var(--primary);margin:8px 0 4px">Check Your Result</h3>
+      <p style="font-size:13px;color:var(--text-muted)">Enter your exact details to view your result. All three fields are required.</p>
+    </div>
+    <div class="form-grid-3">
       <div class="form-group">
-        <label class="form-label">Student Name *</label>
-        <input class="form-control" id="rName" placeholder="e.g. Rahul Kumar Gupta">
-        <div class="form-error" id="rNameErr">Please enter student name</div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Roll Number *</label>
-        <input class="form-control" id="rRoll" placeholder="e.g. 2024-08-15">
-        <div class="form-error" id="rRollErr">Please enter roll number</div>
+        <label class="form-label">Student Full Name *</label>
+        <input class="form-control" id="lu-name" placeholder="e.g. Rahul Kumar Gupta">
+        <div class="form-error" id="lu-nameErr">Please enter your name</div>
       </div>
       <div class="form-group">
         <label class="form-label">Class *</label>
-        <select class="form-control" id="rClass">
+        <select class="form-control" id="lu-class">
           <option value="">Select Class</option>
           <option>Class 1</option><option>Class 2</option><option>Class 3</option>
           <option>Class 4</option><option>Class 5</option><option>Class 6</option>
           <option>Class 7</option><option>Class 8</option><option>Class 9</option>
           <option>Class 10</option><option>Class 11</option><option>Class 12</option>
         </select>
-        <div class="form-error" id="rClassErr">Please select class</div>
+        <div class="form-error" id="lu-classErr">Please select your class</div>
       </div>
       <div class="form-group">
-        <label class="form-label">Exam Type</label>
-        <select class="form-control" id="rExam">
-          <option>Half-Yearly Exam 2024</option>
-          <option>Annual Exam 2024</option>
-          <option>Unit Test – I</option>
-          <option>Unit Test – II</option>
-        </select>
+        <label class="form-label">Date of Birth *</label>
+        <input class="form-control" id="lu-dob" type="date">
+        <div class="form-error" id="lu-dobErr">Please enter your date of birth</div>
       </div>
     </div>
-    <div class="form-label" style="margin-bottom:10px">📚 Subject Marks (out of 100 each)</div>
-    <div class="subjects-grid" id="subjectsGrid">
-      <div class="subject-input-group">
-        <label>Hindi</label>
-        <input class="form-control sub-mark" id="mHindi" type="number" min="0" max="100" placeholder="0–100" oninput="calcResult()">
-      </div>
-      <div class="subject-input-group">
-        <label>English</label>
-        <input class="form-control sub-mark" id="mEnglish" type="number" min="0" max="100" placeholder="0–100" oninput="calcResult()">
-      </div>
-      <div class="subject-input-group">
-        <label>Mathematics</label>
-        <input class="form-control sub-mark" id="mMaths" type="number" min="0" max="100" placeholder="0–100" oninput="calcResult()">
-      </div>
-      <div class="subject-input-group">
-        <label>Science</label>
-        <input class="form-control sub-mark" id="mScience" type="number" min="0" max="100" placeholder="0–100" oninput="calcResult()">
-      </div>
-      <div class="subject-input-group">
-        <label>Social Science</label>
-        <input class="form-control sub-mark" id="mSST" type="number" min="0" max="100" placeholder="0–100" oninput="calcResult()">
-      </div>
-      <div class="subject-input-group">
-        <label>Computer</label>
-        <input class="form-control sub-mark" id="mComp" type="number" min="0" max="100" placeholder="0–100" oninput="calcResult()">
-      </div>
-    </div>
-    <div class="result-summary" id="resultSummary">
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
-        <div><p style="font-size:11px;opacity:.7">TOTAL MARKS</p><h3 id="rTotal" style="font-size:24px;font-weight:800">—</h3><p style="font-size:11px;opacity:.7">out of 600</p></div>
-        <div><p style="font-size:11px;opacity:.7">PERCENTAGE</p><h3 id="rPercent" style="font-size:24px;font-weight:800">—</h3></div>
-        <div style="text-align:right"><p style="font-size:11px;opacity:.7">GRADE</p><div class="grade-badge" id="rGrade">—</div><br><span id="rPassFail" style="font-size:12px;font-weight:600;margin-top:8px;display:inline-block"></span></div>
-      </div>
-    </div>
-    <div class="flex gap-8 mt-16">
-      <button class="btn btn-primary" onclick="submitResult()">💾 Save Result</button>
-      <button class="btn btn-outline no-print" onclick="printResult()">🖨️ Print Result</button>
-      <button class="btn btn-outline" onclick="clearResultForm()">🔄 Clear</button>
+    <div id="lu-error" style="display:none;background:#fee2e2;color:#dc2626;border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:12px"></div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <button class="btn btn-primary" onclick="lookupResult()" id="lu-btn">🔍 Find My Result</button>
+      <button class="btn btn-outline" onclick="resetLookup()">🔄 Clear</button>
+      <span id="lu-loading" style="display:none;color:var(--text-muted);font-size:13px">⏳ Searching...</span>
     </div>
   </div>
- 
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:10px">
-    <h3 style="font-size:15px;font-weight:700;color:var(--primary)">📊 Student Results</h3>
-    <input class="form-control no-print" style="max-width:240px" id="resultSearch" placeholder="🔍 Search by name or class..." oninput="filterResults()">
-  </div>
-  <div class="table-wrap">
-    <table class="tbl">
-      <thead><tr>
-        <th>#</th><th>Student Name</th><th>Class</th><th>Roll No</th><th>Exam</th><th>Total</th><th>%</th><th>Grade</th><th>Status</th>
-      </tr></thead>
-      <tbody id="resultTableBody"></tbody>
-    </table>
+
+  <!-- ── RESULT OUTPUT ── -->
+  <div id="resultOutputCard" style="display:none">
+    <div class="card" style="margin-bottom:20px;background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);color:#fff;position:relative">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+        <div>
+          <div style="font-size:11px;opacity:.7;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">RESULT CARD</div>
+          <h2 id="rc-name" style="font-size:20px;font-weight:800;margin-bottom:2px"></h2>
+          <p id="rc-class" style="opacity:.8;font-size:13px"></p>
+          <p id="rc-father" style="opacity:.7;font-size:12px;margin-top:2px"></p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3)" onclick="printResult()">🖨️ Print</button>
+          <button class="btn" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3)" onclick="resetLookup()">🔍 Search Again</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="resultsContainer"></div>
   </div>
 </section>
  
@@ -1110,106 +1080,117 @@ function filterFees(){
 }
  
 // =====================================================
-// RESULT MANAGEMENT
+// RESULT PORTAL – Private Lookup (API-backed)
+// Students must enter Name + Class + DOB to view their result.
+// No results are shown without verification.
 // =====================================================
-let mockResults = [
-  {name:'Rahul Kumar Gupta',cls:'Class 10',roll:'2024-10-01',exam:'Half-Yearly Exam 2024',marks:{Hindi:78,English:82,Maths:91,Science:85,SST:74,Comp:88}},
-  {name:'Priya Dubey',cls:'Class 8',roll:'2024-08-12',exam:'Half-Yearly Exam 2024',marks:{Hindi:88,English:90,Maths:76,Science:84,SST:91,Comp:95}},
-  {name:'Amit Singh Yadav',cls:'Class 12',roll:'2024-12-03',exam:'Unit Test – II',marks:{Hindi:55,English:62,Maths:48,Science:58,SST:60,Comp:70}},
-  {name:'Sunita Kushwaha',cls:'Class 9',roll:'2024-09-07',exam:'Half-Yearly Exam 2024',marks:{Hindi:92,English:88,Maths:95,Science:90,SST:85,Comp:98}},
-  {name:'Deepak Vishwakarma',cls:'Class 6',roll:'2024-06-04',exam:'Unit Test – I',marks:{Hindi:35,English:28,Maths:40,Science:32,SST:38,Comp:45}},
-  {name:'Kavita Prajapati',cls:'Class 7',roll:'2024-07-09',exam:'Half-Yearly Exam 2024',marks:{Hindi:70,English:75,Maths:68,Science:72,SST:66,Comp:80}},
-  {name:'Rohit Nishad',cls:'Class 5',roll:'2024-05-11',exam:'Half-Yearly Exam 2024',marks:{Hindi:82,English:79,Maths:85,Science:81,SST:77,Comp:88}},
-  {name:'Anita Maurya',cls:'Class 11',roll:'2024-11-06',exam:'Unit Test – II',marks:{Hindi:65,English:70,Maths:58,Science:62,SST:68,Comp:72}},
-];
- 
-if(localStorage.getItem('results')) mockResults = JSON.parse(localStorage.getItem('results'));
- 
-function getGrade(pct){
-  if(pct>=90) return 'A+';
-  if(pct>=80) return 'A';
-  if(pct>=70) return 'B';
-  if(pct>=60) return 'C';
-  if(pct>=33) return 'D';
-  return 'F';
-}
- 
-function calcResultRow(marks){
-  const total = Object.values(marks).reduce((a,b)=>a+(+b||0),0);
-  const pct = ((total/600)*100).toFixed(1);
-  const grade = getGrade(parseFloat(pct));
-  const pass = Object.values(marks).every(m=>(+m||0)>=33) && parseFloat(pct)>=33;
-  return {total,pct,grade,pass};
-}
- 
-function calcResult(){
-  const fields=['mHindi','mEnglish','mMaths','mScience','mSST','mComp'];
-  const marks={};
-  fields.forEach((f,i)=>{
-    const keys=['Hindi','English','Maths','Science','SST','Comp'];
-    marks[keys[i]]=parseInt(document.getElementById(f).value)||0;
-  });
-  const filled = fields.some(f=>document.getElementById(f).value!=='');
-  if(!filled){document.getElementById('resultSummary').classList.remove('show');return;}
-  const {total,pct,grade,pass} = calcResultRow(marks);
-  document.getElementById('rTotal').textContent = total;
-  document.getElementById('rPercent').textContent = pct+'%';
-  document.getElementById('rGrade').textContent = grade;
-  document.getElementById('rPassFail').textContent = pass?'✅ PASS':'❌ FAIL';
-  document.getElementById('resultSummary').classList.add('show');
-}
- 
-function submitResult(){
-  const name=document.getElementById('rName').value.trim();
-  const roll=document.getElementById('rRoll').value.trim();
-  const cls=document.getElementById('rClass').value;
-  let ok=true;
-  [['rName','rNameErr'],['rRoll','rRollErr'],['rClass','rClassErr']].forEach(([f,e])=>{
-    const v=document.getElementById(f).value.trim();
-    if(!v){document.getElementById(e).classList.add('show');ok=false;}
-    else document.getElementById(e).classList.remove('show');
+const API_BASE = localStorage.getItem('ba_api') || 'http://localhost:3001/api';
+
+async function lookupResult(){
+  const name = document.getElementById('lu-name').value.trim();
+  const cls  = document.getElementById('lu-class').value;
+  const dob  = document.getElementById('lu-dob').value;
+  let ok = true;
+
+  [['lu-name','lu-nameErr',name],['lu-class','lu-classErr',cls],['lu-dob','lu-dobErr',dob]].forEach(([f,e,v])=>{
+    const errEl = document.getElementById(e);
+    if(!v){ errEl.classList.add('show'); ok=false; }
+    else errEl.classList.remove('show');
   });
   if(!ok) return;
-  const fields=['mHindi','mEnglish','mMaths','mScience','mSST','mComp'];
-  const marks={};
-  ['Hindi','English','Maths','Science','SST','Comp'].forEach((k,i)=>marks[k]=parseInt(document.getElementById(fields[i]).value)||0);
-  const exam = document.getElementById('rExam').value;
-  mockResults.unshift({name,cls,roll,exam,marks});
-  localStorage.setItem('results',JSON.stringify(mockResults));
-  renderResultTable(mockResults);
-  alert(`✅ Result saved for ${name}!`);
-  clearResultForm();
+
+  const errDiv = document.getElementById('lu-error');
+  errDiv.style.display = 'none';
+  document.getElementById('lu-btn').disabled = true;
+  document.getElementById('lu-loading').style.display = 'inline';
+  document.getElementById('resultOutputCard').style.display = 'none';
+
+  try {
+    const resp = await fetch(API_BASE + '/results/lookup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, cls, dob })
+    });
+    const json = await resp.json();
+
+    if(!json.success){
+      errDiv.textContent = json.message || 'No result found. Please check your details.';
+      errDiv.style.display = 'block';
+    } else {
+      document.getElementById('rc-name').textContent = json.student.name;
+      document.getElementById('rc-class').textContent = json.student.cls;
+      document.getElementById('rc-father').textContent = json.student.fatherName ? 'Father: ' + json.student.fatherName : '';
+
+      const container = document.getElementById('resultsContainer');
+      container.innerHTML = json.data.map(r => {
+        const marks = r.marks || {};
+        const subjectRows = Object.entries(marks).map(([sub,score])=>`
+          <tr>
+            <td style="font-weight:500">${sub}</td>
+            <td style="text-align:center">${score}</td>
+            <td style="text-align:center">100</td>
+            <td style="text-align:center">
+              <span class="badge ${score>=33?'badge-success':'badge-danger'}">${score>=33?'Pass':'Fail'}</span>
+            </td>
+          </tr>`).join('');
+
+        const gradeColor = r.grade==='A+'||r.grade==='A'?'badge-success':r.grade==='F'?'badge-danger':'badge-primary';
+        return `
+          <div class="card" style="margin-bottom:20px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)">
+              <div>
+                <h3 style="font-size:14px;font-weight:700;color:var(--primary)">${r.exam}</h3>
+                <p style="font-size:12px;color:var(--text-muted)">Roll No: ${r.roll || '—'} &nbsp;|&nbsp; Date: ${r.created_at || ''}</p>
+              </div>
+              <div style="display:flex;gap:16px;flex-wrap:wrap">
+                <div style="text-align:center">
+                  <div style="font-size:11px;color:var(--text-muted)">TOTAL</div>
+                  <div style="font-size:22px;font-weight:800;color:var(--primary)">${r.total}/${Object.keys(marks).length*100}</div>
+                </div>
+                <div style="text-align:center">
+                  <div style="font-size:11px;color:var(--text-muted)">PERCENTAGE</div>
+                  <div style="font-size:22px;font-weight:800;color:var(--primary)">${r.percentage}%</div>
+                </div>
+                <div style="text-align:center">
+                  <div style="font-size:11px;color:var(--text-muted)">GRADE</div>
+                  <div style="margin-top:4px"><span class="badge ${gradeColor}" style="font-size:16px;padding:4px 14px">${r.grade}</span></div>
+                </div>
+                <div style="text-align:center">
+                  <div style="font-size:11px;color:var(--text-muted)">RESULT</div>
+                  <div style="margin-top:4px"><span class="badge ${r.status==='Pass'?'badge-success':'badge-danger'}" style="font-size:14px;padding:4px 14px">${r.status}</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="tbl">
+                <thead><tr><th>Subject</th><th style="text-align:center">Marks Obtained</th><th style="text-align:center">Max Marks</th><th style="text-align:center">Status</th></tr></thead>
+                <tbody>${subjectRows}</tbody>
+              </table>
+            </div>
+          </div>`;
+      }).join('');
+
+      document.getElementById('resultLookupCard').style.display = 'none';
+      document.getElementById('resultOutputCard').style.display = 'block';
+    }
+  } catch(e) {
+    errDiv.textContent = 'Cannot connect to server. Please check your connection.';
+    errDiv.style.display = 'block';
+  } finally {
+    document.getElementById('lu-btn').disabled = false;
+    document.getElementById('lu-loading').style.display = 'none';
+  }
 }
- 
-function clearResultForm(){
-  ['rName','rRoll','mHindi','mEnglish','mMaths','mScience','mSST','mComp'].forEach(id=>{
-    document.getElementById(id).value='';
-  });
-  document.getElementById('rClass').selectedIndex=0;
-  document.getElementById('resultSummary').classList.remove('show');
+
+function resetLookup(){
+  ['lu-name','lu-dob'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('lu-class').selectedIndex=0;
+  document.getElementById('lu-error').style.display='none';
+  document.getElementById('resultLookupCard').style.display='block';
+  document.getElementById('resultOutputCard').style.display='none';
+  ['lu-nameErr','lu-classErr','lu-dobErr'].forEach(id=>document.getElementById(id).classList.remove('show'));
 }
- 
-function renderResultTable(data){
-  document.getElementById('resultTableBody').innerHTML = data.map((r,i)=>{
-    const {total,pct,grade,pass} = calcResultRow(r.marks);
-    const gb = grade==='A+'||grade==='A'?'badge-success':grade==='F'?'badge-danger':'badge-primary';
-    return `<tr>
-      <td>${i+1}</td><td><strong>${r.name}</strong></td><td>${r.cls}</td><td>${r.roll}</td>
-      <td style="font-size:11.5px">${r.exam}</td>
-      <td>${total}/600</td><td>${pct}%</td>
-      <td><span class="badge ${gb}">${grade}</span></td>
-      <td><span class="badge ${pass?'badge-success':'badge-danger'}">${pass?'Pass':'Fail'}</span></td>
-    </tr>`;
-  }).join('');
-}
-renderResultTable(mockResults);
- 
-function filterResults(){
-  const q=document.getElementById('resultSearch').value.toLowerCase();
-  const filtered=mockResults.filter(r=>r.name.toLowerCase().includes(q)||r.cls.toLowerCase().includes(q));
-  renderResultTable(filtered);
-}
- 
+
 function printResult(){
   window.print();
 }
@@ -1250,7 +1231,7 @@ function changeAdmStatus(i,val){
   renderAdmissions();
 }
  
-function submitAdmission(){
+async function submitAdmission(){
   const fields=[
     ['aName','aNameErr'],['aDob','aDobErr'],['aFather','aFatherErr'],['aMother','aMotherErr'],
     ['aGender','aGenderErr'],['aClass','aClassErr'],['aCategory','aCategoryErr'],['aAddress','aAddressErr']
@@ -1265,21 +1246,39 @@ function submitAdmission(){
   if(!/^\d{10}$/.test(mob)){document.getElementById('aMobileErr').classList.add('show');ok=false;}
   else document.getElementById('aMobileErr').classList.remove('show');
   if(!ok) return;
-  const id='BA-'+Math.floor(1000+Math.random()*9000);
-  const today=new Date();
-  const dateStr=today.getDate()+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][today.getMonth()]+' '+today.getFullYear();
-  const newAdm={
-    id,name:document.getElementById('aName').value,
-    cls:document.getElementById('aClass').value,
-    father:document.getElementById('aFather').value,
-    mobile:mob,date:dateStr,status:'Pending'
-  };
-  admissions.unshift(newAdm);
-  localStorage.setItem('admissions',JSON.stringify(admissions));
-  renderAdmissions();
-  document.getElementById('appIdDisplay').textContent=id;
-  document.getElementById('admissionFormCard').style.display='none';
-  document.getElementById('admissionSuccess').classList.add('show');
+
+  const formData = new FormData();
+  formData.append('studentName', document.getElementById('aName').value.trim());
+  formData.append('fatherName', document.getElementById('aFather').value.trim());
+  formData.append('motherName', document.getElementById('aMother').value.trim());
+  formData.append('cls', document.getElementById('aClass').value);
+  formData.append('mobile', mob);
+  formData.append('dob', document.getElementById('aDob').value);
+  formData.append('gender', document.getElementById('aGender').value);
+  formData.append('address', document.getElementById('aAddress').value.trim());
+  formData.append('category', document.getElementById('aCategory').value);
+  formData.append('aadhaar', document.getElementById('aAadhaar')?.value || '');
+  formData.append('prevSchool', document.getElementById('aPrevSchool')?.value || '');
+  const photoFile = document.getElementById('aPhoto')?.files?.[0];
+  if(photoFile) formData.append('photo', photoFile);
+
+  try {
+    const resp = await fetch(API_BASE + '/admissions', {
+      method: 'POST',
+      body: formData
+    });
+    const result = await resp.json();
+    if(result.success){
+      document.getElementById('appIdDisplay').textContent = result.data.id;
+      document.getElementById('admissionFormCard').style.display='none';
+      document.getElementById('admissionSuccess').classList.add('show');
+    } else {
+      alert('Submission failed: ' + result.message);
+    }
+  } catch(err) {
+    alert('Server error. Please make sure the backend server is running.');
+    console.error('Admission submit error:', err);
+  }
 }
  
 function resetAdmission(){
@@ -1339,10 +1338,6 @@ function renderClasses(){
             <span class="badge badge-muted" style="margin-left:auto;font-size:10px">Roll ${si+1}</span>
           </div>
         `).join('')}
-      </div>
-      <div class="class-card-actions no-print">
-        <button class="btn btn-outline btn-xs" onclick="toggleStudents(${i})">👁️ View Students</button>
-      </div>
       </div>
     </div>
   `).join('');
