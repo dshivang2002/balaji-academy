@@ -9,6 +9,9 @@
  *
  * Run SQL in Supabase SQL Editor once (see supabase_schema.sql)
  */
+
+console.log('🔥 NEW SERVER CODE LOADED');
+
  require('dotenv').config();
  
 const express = require('express');
@@ -39,7 +42,31 @@ if (!SUPABASE_URL || !SUPABASE_KEY) {
   process.exit(1);
 }
  
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false
+  }
+});
+
+async function testSupabase() {
+  try {
+    const { error } = await supabase
+      .from('students')
+      .select('id')
+      .limit(1);
+
+    if (error) {
+      console.error('❌ Supabase connection failed:', error.message);
+    } else {
+      console.log('✅ Supabase connected successfully');
+    }
+  } catch (err) {
+    console.error('❌ Supabase connection error:', err.message);
+  }
+}
+
+testSupabase();
  
 // ─── Middleware ──────────────────────────────────────────
 app.use(cors({ origin: '*', credentials: true }));
@@ -168,17 +195,75 @@ app.get('/api/students/:id', authMiddleware, async (req, res) => {
 });
  
 app.post('/api/students', authMiddleware, async (req, res) => {
-  const { name, cls, section, roll, fatherName, mobile, address, category, dob, gender } = req.body;
-  if (!name || !cls || !roll) return res.status(400).json({ success: false, message: 'Name, class and roll number are required.' });
-  const newStudent = {
-    id: 'S' + uuidv4().slice(0, 6).toUpperCase(), name, cls,
-    section: section || 'A', roll, father_name: fatherName, mobile, address,
-    category, dob, gender, created_at: new Date().toISOString().split('T')[0]
-  };
-  const { data, error } = await supabase.from('students').insert(newStudent).select().single();
-  if (error) return res.status(500).json({ success: false, message: error.message });
-  await auditLog('CREATE', 'Student', `Added student: ${name}`, req.user);
-  res.status(201).json({ success: true, message: 'Student added successfully.', data });
+  try {
+    const {
+      name,
+      cls,
+      section,
+      roll,
+      fatherName,
+      mobile,
+      address,
+      category,
+      dob,
+      gender
+    } = req.body;
+
+    if (!name || !cls || !roll) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name, class and roll number are required.'
+      });
+    }
+
+    const newStudent = {
+      id: 'S' + uuidv4().slice(0, 6).toUpperCase(),
+      name,
+      cls,
+      section: section || 'A',
+      roll,
+      father_name: fatherName || '',
+      mobile: mobile || '',
+      address: address || '',
+      category: category || '',
+      dob: dob || null,
+      gender: gender || '',
+      created_at: new Date().toISOString()
+    };
+
+    console.log('Saving student:', newStudent);
+
+    const { data, error } = await supabase
+      .from('students')
+      .insert([newStudent])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('SUPABASE INSERT ERROR:', error);
+
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+        error
+      });
+    }
+
+    console.log('Student saved successfully');
+
+    return res.status(201).json({
+      success: true,
+      message: 'Student added successfully.',
+      data
+    });
+  } catch (err) {
+    console.error('SERVER ERROR:', err);
+
+    return res.status(500).json({
+      success: false,
+      message: err.message
+    });
+  }
 });
  
 app.put('/api/students/:id', authMiddleware, async (req, res) => {
@@ -358,21 +443,79 @@ app.get('/api/admissions', authMiddleware, async (req, res) => {
 });
  
 app.post('/api/admissions', upload.single('photo'), async (req, res) => {
-  const { studentName, fatherName, motherName, cls, mobile, dob, gender, address, category, aadhaar, prevSchool } = req.body;
-  if (!studentName || !fatherName || !cls || !mobile)
-    return res.status(400).json({ success: false, message: 'Please fill all required fields.' });
-  if (!/^\d{10}$/.test(mobile))
-    return res.status(400).json({ success: false, message: 'Invalid mobile number.' });
-  const id = 'BA-' + Math.floor(1000 + Math.random() * 9000);
-  const newAdm = {
-    id, student_name: studentName, father_name: fatherName, mother_name: motherName,
-    cls, mobile, dob, gender, address, category, aadhaar, prev_school: prevSchool,
-    status: 'Pending', applied_date: new Date().toISOString().split('T')[0],
-    photo: req.file ? req.file.filename : null
-  };
-  const { data, error } = await supabase.from('admissions').insert(newAdm).select().single();
-  if (error) return res.status(500).json({ success: false, message: error.message });
-  res.status(201).json({ success: true, message: 'Application submitted successfully!', data });
+  try {
+    const {
+      studentName,
+      fatherName,
+      motherName,
+      cls,
+      mobile,
+      dob,
+      gender,
+      address,
+      category,
+      aadhaar,
+      prevSchool
+    } = req.body;
+
+    if (!studentName || !fatherName || !cls || !mobile) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please fill all required fields.'
+      });
+    }
+
+    const newAdm = {
+      id: 'BA-' + Math.floor(1000 + Math.random() * 9000),
+      student_name: studentName,
+      father_name: fatherName,
+      mother_name: motherName || '',
+      cls,
+      mobile,
+      dob: dob || null,
+      gender: gender || '',
+      address: address || '',
+      category: category || '',
+      aadhaar: aadhaar || '',
+      prev_school: prevSchool || '',
+      status: 'Pending',
+      applied_date: new Date().toISOString(),
+      photo: req.file ? req.file.filename : null
+    };
+
+    console.log('Saving admission:', newAdm);
+
+    const { data, error } = await supabase
+      .from('admissions')
+      .insert([newAdm])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('ADMISSION INSERT ERROR:', error);
+
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+        error
+      });
+    }
+
+    console.log('Admission saved successfully');
+
+    return res.status(201).json({
+      success: true,
+      message: 'Application submitted successfully!',
+      data
+    });
+  } catch (err) {
+    console.error('SERVER ERROR:', err);
+
+    return res.status(500).json({
+      success: false,
+      message: err.message
+    });
+  }
 });
  
 app.patch('/api/admissions/:id/status', authMiddleware, async (req, res) => {
@@ -606,6 +749,14 @@ app.post('/api/import/:collection', authMiddleware, roleMiddleware('superadmin')
   res.json({ success: true, message: `${data.length} records imported successfully.`, count: data.length });
 });
  
+app.use((err, req, res, next) => {
+  console.error('UNHANDLED ERROR:', err);
+
+  res.status(500).json({
+    success: false,
+    message: err.message || 'Internal server error'
+  });
+});
 // ─── Start Server ─────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`\n🏫 Balaji Academy Backend Server (Supabase Edition)`);
