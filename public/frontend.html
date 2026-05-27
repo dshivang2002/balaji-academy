@@ -998,36 +998,8 @@ function closeSidebar(){
 // GALLERY
 // =====================================================
 
-// Fallback seed-based placeholder data (shown until API loads)
-const galleryFallback = [
-  {cat:'annualday',title:'Annual Day 2024 – Cultural Programme',seed:10},
-  {cat:'annualday',title:'Prize Distribution Ceremony',seed:20},
-  {cat:'annualday',title:'Chief Guest Felicitation',seed:30},
-  {cat:'events',title:'Independence Day Celebration',seed:40},
-  {cat:'events',title:'Republic Day Flag Hoisting',seed:50},
-  {cat:'events',title:'Diwali Mela – School Campus',seed:60},
-  {cat:'sports',title:'District Cricket Championship',seed:70},
-  {cat:'sports',title:'Inter-School Football Match',seed:80},
-  {cat:'sports',title:'Sports Day – 100m Race',seed:90},
-  {cat:'classrooms',title:'Science Lab – Class 10',seed:100},
-  {cat:'classrooms',title:'Computer Lab Session',seed:110},
-  {cat:'classrooms',title:'Library Reading Hour',seed:120},
-  {cat:'functions',title:'Teacher\'s Day Celebration',seed:130},
-  {cat:'functions',title:'Children\'s Day Programme',seed:140},
-  {cat:'functions',title:'Farewell Ceremony – Class 12',seed:150},
-  {cat:'events',title:'Science Exhibition 2024',seed:160},
-  {cat:'sports',title:'Kho-Kho Finals – Girls Team',seed:170},
-  {cat:'classrooms',title:'Art & Craft Workshop',seed:180},
-];
-
-// All gallery items: starts with fallback, gets replaced/extended by API items
-let allGalleryItems = galleryFallback.map(i=>({
-  cat: i.cat,
-  title: i.title,
-  imageUrl: `https://picsum.photos/seed/${i.seed}/400/300`,
-  fullUrl: `https://picsum.photos/seed/${i.seed}/800/600`,
-  fromApi: false
-}));
+// Only show images uploaded to the database
+let allGalleryItems = [];
 
 let currentGalleryCat = 'all';
 
@@ -1056,31 +1028,21 @@ renderGallery();
 async function fetchGalleryFromApi(){
   try {
     const resp = await fetch(API_BASE + '/gallery');
-    if(!resp.ok) return; // silently keep fallback on error
+    if(!resp.ok) return;
     const result = await resp.json();
-    if(result.success && Array.isArray(result.data) && result.data.length > 0){
-      // Replace fallback items with real API items, keep fallback as base
-      const apiItems = result.data.map(item=>({
+    if(result.success && Array.isArray(result.data)){
+      allGalleryItems = result.data.map(item=>({
         cat: item.category || item.cat || 'events',
         title: item.title,
-        imageUrl: item.image_url || item.imageUrl || item.url || item.thumbnail,
-        fullUrl:  item.image_url || item.imageUrl || item.url,
+        imageUrl: item.image_url || item.imageUrl,
+        fullUrl:  item.image_url || item.imageUrl,
         fromApi: true,
         id: item.id
       }));
-      // Merge: keep fallback only if no api items, otherwise show api items first
-      allGalleryItems = [...apiItems, ...galleryFallback.map(i=>({
-        cat: i.cat,
-        title: i.title,
-        imageUrl: `https://picsum.photos/seed/${i.seed}/400/300`,
-        fullUrl: `https://picsum.photos/seed/${i.seed}/800/600`,
-        fromApi: false
-      }))];
       renderGallery();
     }
   } catch(err){
-    // Network error — keep showing fallback silently
-    console.warn('Gallery API unavailable, showing placeholder images.', err);
+    console.warn('Gallery API unavailable.', err);
   }
 }
 fetchGalleryFromApi();
