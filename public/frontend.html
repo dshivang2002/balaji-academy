@@ -1232,8 +1232,9 @@ function changeAdmStatus(i,val){
 }
  
 async function submitAdmission(){
+  // Only truly required fields — motherName is optional
   const fields=[
-    ['aName','aNameErr'],['aDob','aDobErr'],['aFather','aFatherErr'],['aMother','aMotherErr'],
+    ['aName','aNameErr'],['aDob','aDobErr'],['aFather','aFatherErr'],
     ['aGender','aGenderErr'],['aClass','aClassErr'],['aCategory','aCategoryErr'],['aAddress','aAddressErr']
   ];
   let ok=true;
@@ -1276,7 +1277,7 @@ async function submitAdmission(){
       alert('Submission failed: ' + result.message);
     }
   } catch(err) {
-    alert('Server error. Please make sure the backend server is running.');
+    alert('Could not reach server. The backend may be starting up (Render free tier sleeps after inactivity). Please wait 30 seconds and try again.');
     console.error('Admission submit error:', err);
   }
 }

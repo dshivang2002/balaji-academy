@@ -9,9 +9,9 @@
  *
  * Run SQL in Supabase SQL Editor once (see supabase_schema.sql)
  */
-
+ 
 console.log('🔥NEW SERVER CODE LOADED');
-
+ 
  require('dotenv').config();
  
 const express = require('express');
@@ -48,14 +48,14 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
     persistSession: false
   }
 });
-
+ 
 async function testSupabase() {
   try {
     const { error } = await supabase
       .from('students')
       .select('id')
       .limit(1);
-
+ 
     if (error) {
       console.error('❌ Supabase connection failed:', error.message);
     } else {
@@ -65,7 +65,7 @@ async function testSupabase() {
     console.error('❌ Supabase connection error:', err.message);
   }
 }
-
+ 
 testSupabase();
  
 // ─── Middleware ──────────────────────────────────────────
@@ -75,12 +75,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(UPLOAD_DIR));
 app.use(express.static(path.join(__dirname, '../public')));
  
-// Multer for photo uploads
-const storage = multer.diskStorage({
-  destination: UPLOAD_DIR,
-  filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname.replace(/\s/g, '_'))
+// Multer – memory storage (Render has ephemeral filesystem; disk files vanish on restart)
+// Photos are accepted but not persisted to disk. Store in Supabase Storage later if needed.
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 2 * 1024 * 1024 }
 });
-const upload = multer({ storage, limits: { fileSize: 2 * 1024 * 1024 } });
  
 // ─── Auth Middleware ─────────────────────────────────────
 function authMiddleware(req, res, next) {
@@ -208,14 +208,14 @@ app.post('/api/students', authMiddleware, async (req, res) => {
       dob,
       gender
     } = req.body;
-
+ 
     if (!name || !cls || !roll) {
       return res.status(400).json({
         success: false,
         message: 'Name, class and roll number are required.'
       });
     }
-
+ 
     const newStudent = {
       id: 'S' + uuidv4().slice(0, 6).toUpperCase(),
       name,
@@ -230,27 +230,27 @@ app.post('/api/students', authMiddleware, async (req, res) => {
       gender: gender || '',
       created_at: new Date().toISOString()
     };
-
+ 
     console.log('Saving student:', newStudent);
-
+ 
     const { data, error } = await supabase
       .from('students')
       .insert([newStudent])
       .select()
       .single();
-
+ 
     if (error) {
       console.error('SUPABASE INSERT ERROR:', error);
-
+ 
       return res.status(500).json({
         success: false,
         message: error.message,
         error
       });
     }
-
+ 
     console.log('Student saved successfully');
-
+ 
     return res.status(201).json({
       success: true,
       message: 'Student added successfully.',
@@ -258,7 +258,7 @@ app.post('/api/students', authMiddleware, async (req, res) => {
     });
   } catch (err) {
     console.error('SERVER ERROR:', err);
-
+ 
     return res.status(500).json({
       success: false,
       message: err.message
@@ -444,32 +444,28 @@ app.get('/api/admissions', authMiddleware, async (req, res) => {
  
 app.post('/api/admissions', upload.single('photo'), async (req, res) => {
   try {
-    const {
-      studentName,
-      fatherName,
-      motherName,
-      cls,
-      mobile,
-      dob,
-      gender,
-      address,
-      category,
-      aadhaar,
-      prevSchool
-    } = req.body;
-
+    // Accept both camelCase (from frontend form) and snake_case (from admin / imports)
+    const studentName = req.body.studentName || req.body.student_name || '';
+    const fatherName  = req.body.fatherName  || req.body.father_name  || '';
+    const motherName  = req.body.motherName  || req.body.mother_name  || '';
+    const prevSchool  = req.body.prevSchool  || req.body.prev_school  || '';
+    const { cls, mobile, dob, gender, address, category, aadhaar } = req.body;
+ 
+    console.log('ADMISSION REQUEST BODY:', req.body);
+ 
     if (!studentName || !fatherName || !cls || !mobile) {
       return res.status(400).json({
         success: false,
-        message: 'Please fill all required fields.'
+        message: 'Please fill all required fields: Student Name, Father Name, Class, Mobile.'
       });
     }
-
+ 
+    // Use timestamp + uuid fragment for unique ID (avoids random collision on primary key)
     const newAdm = {
-      id: 'BA-' + Math.floor(1000 + Math.random() * 9000),
+      id: 'BA-' + Date.now() + '-' + uuidv4().slice(0, 4).toUpperCase(),
       student_name: studentName,
       father_name: fatherName,
-      mother_name: motherName || '',
+      mother_name: motherName,
       cls,
       mobile,
       dob: dob || null,
@@ -477,40 +473,39 @@ app.post('/api/admissions', upload.single('photo'), async (req, res) => {
       address: address || '',
       category: category || '',
       aadhaar: aadhaar || '',
-      prev_school: prevSchool || '',
+      prev_school: prevSchool,
       status: 'Pending',
       applied_date: new Date().toISOString(),
-      photo: req.file ? req.file.filename : null
+      // Photo stored in memory only; set to null (use Supabase Storage to persist later)
+      photo: null
     };
-
-    console.log('Saving admission:', newAdm);
-
+ 
+    console.log('INSERTING ADMISSION:', newAdm);
+ 
     const { data, error } = await supabase
       .from('admissions')
       .insert([newAdm])
       .select()
       .single();
-
+ 
     if (error) {
       console.error('ADMISSION INSERT ERROR:', error);
-
       return res.status(500).json({
         success: false,
         message: error.message,
-        error
+        detail: error
       });
     }
-
-    console.log('Admission saved successfully');
-
+ 
+    console.log('Admission saved successfully:', data.id);
+ 
     return res.status(201).json({
       success: true,
       message: 'Application submitted successfully!',
       data
     });
   } catch (err) {
-    console.error('SERVER ERROR:', err);
-
+    console.error('SERVER ERROR in /api/admissions:', err);
     return res.status(500).json({
       success: false,
       message: err.message
@@ -751,7 +746,7 @@ app.post('/api/import/:collection', authMiddleware, roleMiddleware('superadmin')
  
 app.use((err, req, res, next) => {
   console.error('UNHANDLED ERROR:', err);
-
+ 
   res.status(500).json({
     success: false,
     message: err.message || 'Internal server error'
