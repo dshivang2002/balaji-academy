@@ -574,7 +574,7 @@ img{max-width:100%}
       <h2>School Gallery</h2>
       <p>Memories, milestones and moments from Balaji Academy</p>
     </div>
-    <button class="btn btn-primary no-print">📤 Upload Photo</button>
+    <button class="btn btn-primary no-print" onclick="openUploadModal()">📤 Upload Photo</button>
   </div>
  
   <div class="gallery-filters">
@@ -913,6 +913,49 @@ img{max-width:100%}
   </div>
 </div>
  
+<!-- ===== GALLERY UPLOAD MODAL ===== -->
+<div class="modal-overlay" id="galleryUploadModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>📤 Upload Photo to Gallery</h3>
+      <button class="modal-close" onclick="closeModal('galleryUploadModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Photo Title *</label>
+        <input class="form-control" id="gTitle" placeholder="e.g. Annual Day 2025 – Cultural Programme">
+        <div class="form-error" id="gTitleErr">Please enter a title</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category *</label>
+        <select class="form-control" id="gCat">
+          <option value="">Select Category</option>
+          <option value="events">🎉 Events</option>
+          <option value="sports">⚽ Sports</option>
+          <option value="classrooms">📚 Classrooms</option>
+          <option value="functions">🎭 Functions</option>
+          <option value="annualday">🏆 Annual Day</option>
+        </select>
+        <div class="form-error" id="gCatErr">Please select a category</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Photo *</label>
+        <input class="form-control" id="gFile" type="file" accept="image/*" onchange="previewGalleryImage(this)">
+        <div class="form-error" id="gFileErr">Please select an image</div>
+        <div class="form-note">Accepted: JPG, PNG, WEBP — max 5 MB</div>
+      </div>
+      <div id="gPreviewWrap" style="display:none;margin-top:12px;border-radius:8px;overflow:hidden;max-height:220px;background:#f1f5f9;text-align:center">
+        <img id="gPreview" src="" alt="Preview" style="max-height:220px;max-width:100%;object-fit:contain">
+      </div>
+      <div id="gUploadStatus" style="display:none;margin-top:12px;padding:10px 14px;border-radius:8px;font-size:13px"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('galleryUploadModal')">Cancel</button>
+      <button class="btn btn-primary" id="gSubmitBtn" onclick="submitGalleryUpload()">📤 Upload</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // =====================================================
 // NAVIGATION
@@ -954,7 +997,9 @@ function closeSidebar(){
 // =====================================================
 // GALLERY
 // =====================================================
-const galleryData = [
+
+// Fallback seed-based placeholder data (shown until API loads)
+const galleryFallback = [
   {cat:'annualday',title:'Annual Day 2024 – Cultural Programme',seed:10},
   {cat:'annualday',title:'Prize Distribution Ceremony',seed:20},
   {cat:'annualday',title:'Chief Guest Felicitation',seed:30},
@@ -974,19 +1019,72 @@ const galleryData = [
   {cat:'sports',title:'Kho-Kho Finals – Girls Team',seed:170},
   {cat:'classrooms',title:'Art & Craft Workshop',seed:180},
 ];
- 
-function renderGallery(cat='all'){
+
+// All gallery items: starts with fallback, gets replaced/extended by API items
+let allGalleryItems = galleryFallback.map(i=>({
+  cat: i.cat,
+  title: i.title,
+  imageUrl: `https://picsum.photos/seed/${i.seed}/400/300`,
+  fullUrl: `https://picsum.photos/seed/${i.seed}/800/600`,
+  fromApi: false
+}));
+
+let currentGalleryCat = 'all';
+
+function renderGallery(cat){
+  if(cat !== undefined) currentGalleryCat = cat;
   const grid = document.getElementById('galleryGrid');
-  const items = cat==='all'?galleryData:galleryData.filter(i=>i.cat===cat);
-  grid.innerHTML = items.map((item,idx)=>`
-    <div class="gallery-item" onclick="openLightbox('https://picsum.photos/seed/${item.seed}/800/600','${item.title.replace(/'/,"\\'")}')">
-      <img src="https://picsum.photos/seed/${item.seed}/400/300" alt="${item.title}" loading="lazy">
+  const items = currentGalleryCat==='all'
+    ? allGalleryItems
+    : allGalleryItems.filter(i=>i.cat===currentGalleryCat);
+
+  if(items.length === 0){
+    grid.innerHTML = '<p style="color:var(--text-muted);font-size:13.5px;padding:20px 0">No photos in this category yet. Upload one!</p>';
+    return;
+  }
+
+  grid.innerHTML = items.map(item=>`
+    <div class="gallery-item" onclick="openLightbox('${item.fullUrl || item.imageUrl}','${item.title.replace(/'/,"\\'")}')">
+      <img src="${item.imageUrl}" alt="${item.title}" loading="lazy">
       <div class="gallery-overlay"><span>${item.title}</span></div>
     </div>
   `).join('');
 }
 renderGallery();
- 
+
+// Fetch gallery images from the database/API
+async function fetchGalleryFromApi(){
+  try {
+    const resp = await fetch(API_BASE + '/gallery');
+    if(!resp.ok) return; // silently keep fallback on error
+    const result = await resp.json();
+    if(result.success && Array.isArray(result.data) && result.data.length > 0){
+      // Replace fallback items with real API items, keep fallback as base
+      const apiItems = result.data.map(item=>({
+        cat: item.category || item.cat || 'events',
+        title: item.title,
+        imageUrl: item.image_url || item.imageUrl || item.url || item.thumbnail,
+        fullUrl:  item.image_url || item.imageUrl || item.url,
+        fromApi: true,
+        id: item.id
+      }));
+      // Merge: keep fallback only if no api items, otherwise show api items first
+      allGalleryItems = [...apiItems, ...galleryFallback.map(i=>({
+        cat: i.cat,
+        title: i.title,
+        imageUrl: `https://picsum.photos/seed/${i.seed}/400/300`,
+        fullUrl: `https://picsum.photos/seed/${i.seed}/800/600`,
+        fromApi: false
+      }))];
+      renderGallery();
+    }
+  } catch(err){
+    // Network error — keep showing fallback silently
+    console.warn('Gallery API unavailable, showing placeholder images.', err);
+  }
+}
+fetchGalleryFromApi();
+
 document.querySelectorAll('.filter-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
@@ -994,6 +1092,117 @@ document.querySelectorAll('.filter-btn').forEach(btn=>{
     renderGallery(btn.dataset.cat);
   });
 });
+
+// ---- Upload Modal ----
+function openUploadModal(){
+  document.getElementById('gTitle').value='';
+  document.getElementById('gCat').value='';
+  document.getElementById('gFile').value='';
+  document.getElementById('gPreviewWrap').style.display='none';
+  document.getElementById('gPreview').src='';
+  const st = document.getElementById('gUploadStatus');
+  st.style.display='none'; st.textContent='';
+  ['gTitleErr','gCatErr','gFileErr'].forEach(id=>document.getElementById(id).classList.remove('show'));
+  document.getElementById('gSubmitBtn').disabled=false;
+  document.getElementById('gSubmitBtn').textContent='📤 Upload';
+  document.getElementById('galleryUploadModal').classList.add('open');
+}
+
+function previewGalleryImage(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e=>{
+    document.getElementById('gPreview').src = e.target.result;
+    document.getElementById('gPreviewWrap').style.display='block';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function submitGalleryUpload(){
+  const title = document.getElementById('gTitle').value.trim();
+  const cat   = document.getElementById('gCat').value;
+  const file  = document.getElementById('gFile').files[0];
+  let ok = true;
+
+  if(!title){ document.getElementById('gTitleErr').classList.add('show'); ok=false; }
+  else document.getElementById('gTitleErr').classList.remove('show');
+
+  if(!cat){ document.getElementById('gCatErr').classList.add('show'); ok=false; }
+  else document.getElementById('gCatErr').classList.remove('show');
+
+  if(!file){ document.getElementById('gFileErr').classList.add('show'); ok=false; }
+  else document.getElementById('gFileErr').classList.remove('show');
+
+  if(!ok) return;
+
+  // 5 MB size guard
+  if(file.size > 5 * 1024 * 1024){
+    showGalleryStatus('error','Image too large. Please select a file under 5 MB.');
+    return;
+  }
+
+  const btn = document.getElementById('gSubmitBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Uploading…';
+  showGalleryStatus('info','Uploading image to server…');
+
+  const formData = new FormData();
+  formData.append('title', title);
+  formData.append('category', cat);
+  formData.append('image', file);
+
+  try {
+    const token = localStorage.getItem('token') || '';
+    const headers = {};
+    if(token) headers['Authorization'] = 'Bearer ' + token;
+
+    const resp = await fetch(API_BASE + '/gallery', {
+      method: 'POST',
+      headers,
+      body: formData
+    });
+    const result = await resp.json();
+
+    if(result.success){
+      showGalleryStatus('success','✅ Photo uploaded successfully!');
+      btn.textContent = '✅ Done';
+
+      // Add new item to gallery immediately without waiting for re-fetch
+      const newItem = {
+        cat: cat,
+        title: title,
+        imageUrl: result.data.image_url || result.data.imageUrl,
+        fullUrl:  result.data.image_url || result.data.imageUrl,
+        fromApi: true,
+        id: result.data.id
+      };
+      allGalleryItems.unshift(newItem);
+      renderGallery();
+
+      // Close modal after a short delay
+      setTimeout(()=>closeModal('galleryUploadModal'), 1400);
+    } else {
+      showGalleryStatus('error','Upload failed: ' + (result.message || 'Unknown error'));
+      btn.disabled = false;
+      btn.textContent = '📤 Upload';
+    }
+  } catch(err){
+    showGalleryStatus('error','Could not reach server. Please check your connection and try again.');
+    btn.disabled = false;
+    btn.textContent = '📤 Upload';
+    console.error('Gallery upload error:', err);
+  }
+}
+
+function showGalleryStatus(type, msg){
+  const el = document.getElementById('gUploadStatus');
+  el.style.display = 'block';
+  el.textContent = msg;
+  if(type==='success'){ el.style.background='#dcfce7'; el.style.color='#16a34a'; }
+  else if(type==='error'){ el.style.background='#fee2e2'; el.style.color='#dc2626'; }
+  else { el.style.background='#dbeafe'; el.style.color='#1d4ed8'; }
+}
  
 function openLightbox(src,caption){
   document.getElementById('lightboxImg').src = src;
@@ -1084,7 +1293,9 @@ function filterFees(){
 // Students must enter Name + Class + DOB to view their result.
 // No results are shown without verification.
 // =====================================================
-const API_BASE = localStorage.getItem('ba_api') || 'https://balaji-academy-academy.onrender.com/api';
+const API_BASE =
+import.meta.env.VITE_API_URL || 
+'https://balaji-academy-api.onrender.com/api';
 
 async function lookupResult(){
   const name = document.getElementById('lu-name').value.trim();

@@ -9,9 +9,9 @@
  *
  * Run SQL in Supabase SQL Editor once (see supabase_schema.sql)
  */
-
+ 
 console.log('🔥NEW SERVER CODE LOADED');
-
+ 
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -46,14 +46,14 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
     persistSession: false
   }
 });
-
+ 
 async function testSupabase() {
   try {
     const { error } = await supabase
       .from('students')
       .select('id')
       .limit(1);
-
+ 
     if (error) {
       console.error('❌ Supabase connection failed:', error.message);
     } else {
@@ -63,7 +63,7 @@ async function testSupabase() {
     console.error('❌ Supabase connection error:', err.message);
   }
 }
-
+ 
 testSupabase();
  
 // ─── Middleware ──────────────────────────────────────────
@@ -206,14 +206,14 @@ app.post('/api/students', authMiddleware, async (req, res) => {
       dob,
       gender
     } = req.body;
-
+ 
     if (!name || !cls || !roll) {
       return res.status(400).json({
         success: false,
         message: 'Name, class and roll number are required.'
       });
     }
-
+ 
     const newStudent = {
       id: 'S' + uuidv4().slice(0, 6).toUpperCase(),
       name,
@@ -228,27 +228,27 @@ app.post('/api/students', authMiddleware, async (req, res) => {
       gender: gender || '',
       created_at: new Date().toISOString()
     };
-
+ 
     console.log('Saving student:', newStudent);
-
+ 
     const { data, error } = await supabase
       .from('students')
       .insert([newStudent])
       .select()
       .single();
-
+ 
     if (error) {
       console.error('SUPABASE INSERT ERROR:', error);
-
+ 
       return res.status(500).json({
         success: false,
         message: error.message,
         error
       });
     }
-
+ 
     console.log('Student saved successfully');
-
+ 
     return res.status(201).json({
       success: true,
       message: 'Student added successfully.',
@@ -256,7 +256,7 @@ app.post('/api/students', authMiddleware, async (req, res) => {
     });
   } catch (err) {
     console.error('SERVER ERROR:', err);
-
+ 
     return res.status(500).json({
       success: false,
       message: err.message
@@ -448,16 +448,16 @@ app.post('/api/admissions', upload.single('photo'), async (req, res) => {
     const motherName  = req.body.motherName  || req.body.mother_name  || '';
     const prevSchool  = req.body.prevSchool  || req.body.prev_school  || '';
     const { cls, mobile, dob, gender, address, category, aadhaar } = req.body;
-
+ 
     console.log('ADMISSION REQUEST BODY:', req.body);
-
+ 
     if (!studentName || !fatherName || !cls || !mobile) {
       return res.status(400).json({
         success: false,
         message: 'Please fill all required fields: Student Name, Father Name, Class, Mobile.'
       });
     }
-
+ 
     // Use timestamp + uuid fragment for unique ID (avoids random collision on primary key)
     const newAdm = {
       id: 'BA-' + Date.now() + '-' + uuidv4().slice(0, 4).toUpperCase(),
@@ -477,15 +477,15 @@ app.post('/api/admissions', upload.single('photo'), async (req, res) => {
       // Photo stored in memory only; set to null (use Supabase Storage to persist later)
       photo: null
     };
-
+ 
     console.log('INSERTING ADMISSION:', newAdm);
-
+ 
     const { data, error } = await supabase
       .from('admissions')
       .insert([newAdm])
       .select()
       .single();
-
+ 
     if (error) {
       console.error('ADMISSION INSERT ERROR:', error);
       return res.status(500).json({
@@ -494,9 +494,9 @@ app.post('/api/admissions', upload.single('photo'), async (req, res) => {
         detail: error
       });
     }
-
+ 
     console.log('Admission saved successfully:', data.id);
-
+ 
     return res.status(201).json({
       success: true,
       message: 'Application submitted successfully!',
@@ -609,6 +609,140 @@ app.delete('/api/admins/:id', authMiddleware, roleMiddleware('superadmin'), asyn
 app.get('/api/audit', authMiddleware, roleMiddleware('superadmin'), async (req, res) => {
   const { data } = await supabase.from('audit_log').select('*').order('timestamp', { ascending: false }).limit(100);
   res.json({ success: true, data: data || [] });
+});
+ 
+// ═══════════════════════════════════════════════════════════
+// ── GALLERY ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+ 
+/**
+ * GET /api/gallery
+ * Public – returns all gallery photos ordered by newest first.
+ */
+app.get('/api/gallery', async (req, res) => {
+  try {
+    let query = supabase
+      .from('gallery')
+      .select('*')
+      .order('created_at', { ascending: false });
+ 
+    if (req.query.cat) query = query.eq('category', req.query.cat);
+ 
+    const { data, error } = await query;
+    if (error) return res.status(500).json({ success: false, message: error.message });
+ 
+    res.json({ success: true, data: data || [] });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+ 
+/**
+ * POST /api/gallery
+ * Protected (authMiddleware) – upload a photo to Supabase Storage
+ * and save metadata to the gallery table.
+ *
+ * Form fields:
+ *   title    {string}  – caption / photo title
+ *   category {string}  – events | sports | classrooms | functions | annualday
+ *   image    {file}    – the image file (multipart/form-data)
+ */
+app.post('/api/gallery', authMiddleware, upload.single('image'), async (req, res) => {
+  try {
+    const { title, category } = req.body;
+    const file = req.file;
+ 
+    if (!title || !category) {
+      return res.status(400).json({ success: false, message: 'Title and category are required.' });
+    }
+    if (!file) {
+      return res.status(400).json({ success: false, message: 'Image file is required.' });
+    }
+ 
+    // ── Upload to Supabase Storage ──────────────────────
+    const ext      = file.originalname.split('.').pop() || 'jpg';
+    const fileName = `gallery/${uuidv4()}.${ext}`;
+ 
+    const { error: storageError } = await supabase.storage
+      .from('school-media')          // bucket name — create this once in Supabase dashboard
+      .upload(fileName, file.buffer, {
+        contentType: file.mimetype,
+        upsert: false
+      });
+ 
+    if (storageError) {
+      console.error('Supabase Storage upload error:', storageError);
+      return res.status(500).json({ success: false, message: 'Image upload failed: ' + storageError.message });
+    }
+ 
+    // ── Get public URL ──────────────────────────────────
+    const { data: urlData } = supabase.storage
+      .from('school-media')
+      .getPublicUrl(fileName);
+ 
+    const imageUrl = urlData.publicUrl;
+ 
+    // ── Save metadata to gallery table ──────────────────
+    const newPhoto = {
+      id:         'G' + uuidv4().slice(0, 6).toUpperCase(),
+      title,
+      category,
+      image_url:  imageUrl,
+      file_name:  fileName,
+      uploaded_by: req.user.name,
+      created_at: new Date().toISOString()
+    };
+ 
+    const { data, error: dbError } = await supabase
+      .from('gallery')
+      .insert([newPhoto])
+      .select()
+      .single();
+ 
+    if (dbError) {
+      console.error('Gallery DB insert error:', dbError);
+      return res.status(500).json({ success: false, message: dbError.message });
+    }
+ 
+    await auditLog('CREATE', 'Gallery', `Uploaded photo: "${title}" [${category}]`, req.user);
+ 
+    return res.status(201).json({
+      success: true,
+      message: 'Photo uploaded successfully.',
+      data: {
+        ...data,
+        imageUrl: data.image_url   // alias so frontend works with both
+      }
+    });
+  } catch (err) {
+    console.error('Gallery upload error:', err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+ 
+/**
+ * DELETE /api/gallery/:id
+ * Protected (superadmin) – removes the DB record and the file from Storage.
+ */
+app.delete('/api/gallery/:id', authMiddleware, roleMiddleware('superadmin'), async (req, res) => {
+  try {
+    const { data: existing } = await supabase
+      .from('gallery').select('file_name, title').eq('id', req.params.id).limit(1);
+ 
+    if (!existing?.[0]) return res.status(404).json({ success: false, message: 'Photo not found.' });
+ 
+    // Remove from Supabase Storage
+    if (existing[0].file_name) {
+      await supabase.storage.from('school-media').remove([existing[0].file_name]);
+    }
+ 
+    await supabase.from('gallery').delete().eq('id', req.params.id);
+    await auditLog('DELETE', 'Gallery', `Deleted photo: "${existing[0].title}"`, req.user);
+ 
+    res.json({ success: true, message: 'Photo deleted.' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
 });
  
 // ═══════════════════════════════════════════════════════════
@@ -744,7 +878,7 @@ app.post('/api/import/:collection', authMiddleware, roleMiddleware('superadmin')
  
 app.use((err, req, res, next) => {
   console.error('UNHANDLED ERROR:', err);
-
+ 
   res.status(500).json({
     success: false,
     message: err.message || 'Internal server error'
