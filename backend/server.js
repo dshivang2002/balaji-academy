@@ -474,9 +474,27 @@ app.post('/api/admissions', upload.single('photo'), async (req, res) => {
       prev_school: prevSchool,
       status: 'Pending',
       applied_date: new Date().toISOString(),
-      // Photo stored in memory only; set to null (use Supabase Storage to persist later)
-      photo: null
+      photo: null // updated below if photo uploaded
     };
+ 
+    // Upload photo to Supabase Storage if provided
+    if (req.file) {
+      try {
+        const ext = req.file.originalname.split('.').pop() || 'jpg';
+        const fileName = `admissions/${newAdm.id}.${ext}`;
+        const { error: storageErr } = await supabase.storage
+          .from('school-media')
+          .upload(fileName, req.file.buffer, { contentType: req.file.mimetype, upsert: true });
+        if (!storageErr) {
+          const { data: urlData } = supabase.storage.from('school-media').getPublicUrl(fileName);
+          newAdm.photo = urlData.publicUrl;
+        } else {
+          console.warn('Photo upload warning:', storageErr.message);
+        }
+      } catch(photoErr) {
+        console.warn('Photo upload failed, continuing without photo:', photoErr.message);
+      }
+    }
  
     console.log('INSERTING ADMISSION:', newAdm);
  

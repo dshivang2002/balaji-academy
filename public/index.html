@@ -874,8 +874,8 @@ img{max-width:100%}
       <div class="form-error" id="aAddressErr">Required field</div>
     </div>
     <div class="form-group">
-      <label class="form-label">Upload Student Photo (UI only)</label>
-      <input type="file" class="form-control" accept="image/*" style="padding:6px">
+      <label class="form-label">Upload Student Photo</label>
+      <input type="file" class="form-control" id="aPhoto" accept="image/*" style="padding:6px">
       <div class="form-note">Accepted: JPG, PNG (max 2MB)</div>
     </div>
     <button class="btn btn-primary" onclick="submitAdmission()">📨 Submit Application</button>
@@ -1233,7 +1233,7 @@ let admissions = [
 ];
 if(localStorage.getItem('admissions')) admissions=JSON.parse(localStorage.getItem('admissions'));
  
-function submitAdmission(){
+async function submitAdmission(){
   const fields=[
     ['aName','aNameErr'],['aDob','aDobErr'],['aFather','aFatherErr'],['aMother','aMotherErr'],
     ['aGender','aGenderErr'],['aClass','aClassErr'],['aCategory','aCategoryErr'],['aAddress','aAddressErr']
@@ -1248,20 +1248,48 @@ function submitAdmission(){
   if(!/^\d{10}$/.test(mob)){document.getElementById('aMobileErr').classList.add('show');ok=false;}
   else document.getElementById('aMobileErr').classList.remove('show');
   if(!ok) return;
-  const id='BA-'+Math.floor(1000+Math.random()*9000);
-  const today=new Date();
-  const dateStr=today.getDate()+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][today.getMonth()]+' '+today.getFullYear();
-  const newAdm={
-    id,name:document.getElementById('aName').value,
-    cls:document.getElementById('aClass').value,
-    father:document.getElementById('aFather').value,
-    mobile:mob,date:dateStr,status:'Pending'
-  };
-  admissions.unshift(newAdm);
-  localStorage.setItem('admissions',JSON.stringify(admissions));
-  document.getElementById('appIdDisplay').textContent=id;
-  document.getElementById('admissionFormCard').style.display='none';
-  document.getElementById('admissionSuccess').classList.add('show');
+
+  const submitBtn = document.querySelector('#admissionFormCard .btn-primary');
+  submitBtn.disabled = true;
+  submitBtn.textContent = '⏳ Submitting...';
+
+  const formData = new FormData();
+  formData.append('studentName', document.getElementById('aName').value.trim());
+  formData.append('dob',         document.getElementById('aDob').value);
+  formData.append('fatherName',  document.getElementById('aFather').value.trim());
+  formData.append('motherName',  document.getElementById('aMother').value.trim());
+  formData.append('gender',      document.getElementById('aGender').value);
+  formData.append('cls',         document.getElementById('aClass').value);
+  formData.append('mobile',      mob);
+  formData.append('aadhaar',     document.getElementById('aAadhaar').value.trim());
+  formData.append('category',    document.getElementById('aCategory').value);
+  formData.append('address',     document.getElementById('aAddress').value.trim());
+  formData.append('prevSchool',  document.getElementById('aPrevSchool').value.trim());
+
+  const photoFile = document.getElementById('aPhoto').files[0];
+  if(photoFile) formData.append('photo', photoFile);
+
+  try {
+    const resp = await fetch('https://balaji-academy-academy.onrender.com/api/admissions', {
+      method: 'POST',
+      body: formData
+    });
+    const result = await resp.json();
+    if(result.success){
+      document.getElementById('appIdDisplay').textContent = result.data.id;
+      document.getElementById('admissionFormCard').style.display = 'none';
+      document.getElementById('admissionSuccess').classList.add('show');
+    } else {
+      alert('Submission failed: ' + (result.message || 'Please try again.'));
+      submitBtn.disabled = false;
+      submitBtn.textContent = '📨 Submit Application';
+    }
+  } catch(err){
+    alert('Could not reach server. Please check your internet and try again.');
+    console.error('Admission submit error:', err);
+    submitBtn.disabled = false;
+    submitBtn.textContent = '📨 Submit Application';
+  }
 }
  
 function resetAdmission(){
