@@ -957,68 +957,56 @@ function closeSidebar(){
 }
  
 // =====================================================
-// GALLERY — reads from localStorage (admin-uploaded images)
-// Default placeholder images shown if no admin uploads exist
+// GALLERY — loads from database API
 // =====================================================
-const DEFAULT_GALLERY = [
-  {id:'g1',cat:'annualday',title:'Annual Day 2024 – Cultural Programme',src:'https://picsum.photos/seed/10/400/300',fullSrc:'https://picsum.photos/seed/10/800/600'},
-  {id:'g2',cat:'annualday',title:'Prize Distribution Ceremony',src:'https://picsum.photos/seed/20/400/300',fullSrc:'https://picsum.photos/seed/20/800/600'},
-  {id:'g3',cat:'annualday',title:'Chief Guest Felicitation',src:'https://picsum.photos/seed/30/400/300',fullSrc:'https://picsum.photos/seed/30/800/600'},
-  {id:'g4',cat:'events',title:'Independence Day Celebration',src:'https://picsum.photos/seed/40/400/300',fullSrc:'https://picsum.photos/seed/40/800/600'},
-  {id:'g5',cat:'events',title:'Republic Day Flag Hoisting',src:'https://picsum.photos/seed/50/400/300',fullSrc:'https://picsum.photos/seed/50/800/600'},
-  {id:'g6',cat:'events',title:'Diwali Mela – School Campus',src:'https://picsum.photos/seed/60/400/300',fullSrc:'https://picsum.photos/seed/60/800/600'},
-  {id:'g7',cat:'sports',title:'District Cricket Championship',src:'https://picsum.photos/seed/70/400/300',fullSrc:'https://picsum.photos/seed/70/800/600'},
-  {id:'g8',cat:'sports',title:'Inter-School Football Match',src:'https://picsum.photos/seed/80/400/300',fullSrc:'https://picsum.photos/seed/80/800/600'},
-  {id:'g9',cat:'sports',title:'Sports Day – 100m Race',src:'https://picsum.photos/seed/90/400/300',fullSrc:'https://picsum.photos/seed/90/800/600'},
-  {id:'g10',cat:'classrooms',title:'Science Lab – Class 10',src:'https://picsum.photos/seed/100/400/300',fullSrc:'https://picsum.photos/seed/100/800/600'},
-  {id:'g11',cat:'classrooms',title:'Computer Lab Session',src:'https://picsum.photos/seed/110/400/300',fullSrc:'https://picsum.photos/seed/110/800/600'},
-  {id:'g12',cat:'classrooms',title:'Library Reading Hour',src:'https://picsum.photos/seed/120/400/300',fullSrc:'https://picsum.photos/seed/120/800/600'},
-  {id:'g13',cat:'functions',title:"Teacher's Day Celebration",src:'https://picsum.photos/seed/130/400/300',fullSrc:'https://picsum.photos/seed/130/800/600'},
-  {id:'g14',cat:'functions',title:"Children's Day Programme",src:'https://picsum.photos/seed/140/400/300',fullSrc:'https://picsum.photos/seed/140/800/600'},
-  {id:'g15',cat:'functions',title:'Farewell Ceremony – Class 12',src:'https://picsum.photos/seed/150/400/300',fullSrc:'https://picsum.photos/seed/150/800/600'},
-  {id:'g16',cat:'events',title:'Science Exhibition 2024',src:'https://picsum.photos/seed/160/400/300',fullSrc:'https://picsum.photos/seed/160/800/600'},
-  {id:'g17',cat:'sports',title:'Kho-Kho Finals – Girls Team',src:'https://picsum.photos/seed/170/400/300',fullSrc:'https://picsum.photos/seed/170/800/600'},
-  {id:'g18',cat:'classrooms',title:'Art & Craft Workshop',src:'https://picsum.photos/seed/180/400/300',fullSrc:'https://picsum.photos/seed/180/800/600'},
-];
- 
-function getGalleryData(){
-  // Admin-uploaded images from localStorage, fallback to defaults
-  const stored = localStorage.getItem('ba_gallery');
-  if(stored){
-    try{
-      const arr = JSON.parse(stored);
-      if(arr && arr.length) return arr;
-    }catch(e){}
-  }
-  return DEFAULT_GALLERY;
-}
- 
+const GALLERY_API = 'https://balaji-academy-academy.onrender.com/api';
+
+let allGalleryItems = [];
 let currentGalleryCat = 'all';
- 
+
+async function fetchGalleryFromApi(){
+  try {
+    const resp = await fetch(GALLERY_API + '/gallery');
+    if(!resp.ok) return;
+    const result = await resp.json();
+    if(result.success && Array.isArray(result.data)){
+      allGalleryItems = result.data.map(item=>({
+        id: item.id,
+        cat: item.category || 'events',
+        title: item.title,
+        src: item.image_url,
+        fullSrc: item.image_url
+      }));
+      renderGallery(currentGalleryCat);
+    }
+  } catch(err){
+    console.warn('Gallery API unavailable.', err);
+  }
+}
+
 function renderGallery(cat='all'){
   currentGalleryCat = cat;
   const grid = document.getElementById('galleryGrid');
-  const allItems = getGalleryData();
-  const items = cat==='all' ? allItems : allItems.filter(i=>i.cat===cat);
- 
+  const items = cat==='all' ? allGalleryItems : allGalleryItems.filter(i=>i.cat===cat);
+
   if(!items.length){
     grid.innerHTML = `<div class="gallery-empty">
       <div class="empty-icon">🖼️</div>
       <h3>No photos yet</h3>
-      <p>Photos in this category will appear here once uploaded by the admin.</p>
+      <p>Photos will appear here once uploaded by the admin.</p>
     </div>`;
     return;
   }
- 
+
   grid.innerHTML = items.map(item=>`
-    <div class="gallery-item" onclick="openLightbox('${item.fullSrc || item.src}','${(item.title||'').replace(/'/g,"\\'")}')">
+    <div class="gallery-item" onclick="openLightbox('${item.fullSrc}','${(item.title||'').replace(/'/g,"\\'")}')">
       <img src="${item.src}" alt="${item.title||''}" loading="lazy">
       <div class="gallery-overlay"><span>${item.title||''}</span></div>
     </div>
   `).join('');
 }
-renderGallery();
- 
+fetchGalleryFromApi();
+
 document.querySelectorAll('.filter-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
