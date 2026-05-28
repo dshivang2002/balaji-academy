@@ -664,9 +664,9 @@ img{max-width:100%}
     <div style="text-align:center;margin-bottom:20px">
       <div style="font-size:40px">🔍</div>
       <h3 style="font-size:17px;font-weight:700;color:var(--primary);margin:8px 0 4px">Check Your Result</h3>
-      <p style="font-size:13px;color:var(--text-muted)">Enter your exact details to view your result. All three fields are required.</p>
+      <p style="font-size:13px;color:var(--text-muted)">Enter your exact details to view your result. All four fields are required.</p>
     </div>
-    <div class="form-grid-3">
+    <div class="form-grid">
       <div class="form-group">
         <label class="form-label">Student Full Name *</label>
         <input class="form-control" id="lu-name" placeholder="e.g. Rahul Kumar Gupta">
@@ -682,6 +682,11 @@ img{max-width:100%}
           <option>Class 10</option><option>Class 11</option><option>Class 12</option>
         </select>
         <div class="form-error" id="lu-classErr">Please select your class</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Roll Number *</label>
+        <input class="form-control" id="lu-roll" placeholder="e.g. 2024-10-01">
+        <div class="form-error" id="lu-rollErr">Please enter your roll number</div>
       </div>
       <div class="form-group">
         <label class="form-label">Date of Birth *</label>
@@ -1262,10 +1267,11 @@ import.meta.env.VITE_API_URL ||
 async function lookupResult(){
   const name = document.getElementById('lu-name').value.trim();
   const cls  = document.getElementById('lu-class').value;
+  const roll = document.getElementById('lu-roll').value.trim();
   const dob  = document.getElementById('lu-dob').value;
   let ok = true;
 
-  [['lu-name','lu-nameErr',name],['lu-class','lu-classErr',cls],['lu-dob','lu-dobErr',dob]].forEach(([f,e,v])=>{
+  [['lu-name','lu-nameErr',name],['lu-class','lu-classErr',cls],['lu-roll','lu-rollErr',roll],['lu-dob','lu-dobErr',dob]].forEach(([f,e,v])=>{
     const errEl = document.getElementById(e);
     if(!v){ errEl.classList.add('show'); ok=false; }
     else errEl.classList.remove('show');
@@ -1282,7 +1288,7 @@ async function lookupResult(){
     const resp = await fetch(API_BASE + '/results/lookup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, cls, dob })
+      body: JSON.stringify({ name, cls, roll, dob })
     });
     const json = await resp.json();
 
@@ -1356,12 +1362,12 @@ async function lookupResult(){
 }
 
 function resetLookup(){
-  ['lu-name','lu-dob'].forEach(id=>document.getElementById(id).value='');
+  ['lu-name','lu-roll','lu-dob'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('lu-class').selectedIndex=0;
   document.getElementById('lu-error').style.display='none';
   document.getElementById('resultLookupCard').style.display='block';
   document.getElementById('resultOutputCard').style.display='none';
-  ['lu-nameErr','lu-classErr','lu-dobErr'].forEach(id=>document.getElementById(id).classList.remove('show'));
+  ['lu-nameErr','lu-classErr','lu-rollErr','lu-dobErr'].forEach(id=>document.getElementById(id).classList.remove('show'));
 }
 
 function printResult(){

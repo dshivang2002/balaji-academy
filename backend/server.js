@@ -210,7 +210,14 @@ app.post('/api/students', authMiddleware, async (req, res) => {
     if (!name || !cls || !roll) {
       return res.status(400).json({
         success: false,
-        message: 'Name, class and roll number are required.'
+        message: 'Name, class, roll number and date of birth are required.'
+      });
+    }
+ 
+    if (!dob) {
+      return res.status(400).json({
+        success: false,
+        message: 'Date of birth is required. It is used for result verification.'
       });
     }
  
@@ -349,32 +356,46 @@ app.get('/api/results', authMiddleware, async (req, res) => {
 });
  
 /**
- * PUBLIC result lookup – requires exact match of name + class + dob
+ * PUBLIC result lookup – requires exact match of name + class + roll + dob
  * Does NOT return data for everyone. Only the single verified student.
  */
 app.post('/api/results/lookup', async (req, res) => {
-  const { name, cls, dob } = req.body;
-  if (!name || !cls || !dob)
-    return res.status(400).json({ success: false, message: 'Name, class and date of birth are required.' });
+  const { name, cls, roll, dob } = req.body;
+  if (!name || !cls || !roll || !dob)
+    return res.status(400).json({ success: false, message: 'Name, class, roll number and date of birth are all required.' });
  
-  // First verify student exists with exact name+class+dob match
+  // First verify student exists with exact name + class + dob match
   const { data: students } = await supabase
-    .from('students').select('id,name,cls,dob,father_name')
+    .from('students').select('id,name,cls,dob,roll,father_name')
     .ilike('name', name.trim())
     .eq('cls', cls)
     .eq('dob', dob)
-    .limit(1);
+    .limit(5);
  
   if (!students?.length)
     return res.status(404).json({ success: false, message: 'No student found matching the provided details. Please check name, class and date of birth.' });
  
-  const student = students[0];
+  // Also verify roll number matches
+  const student = students.find(s => (s.roll || '').trim().toLowerCase() === roll.trim().toLowerCase());
+  if (!student)
+    return res.status(404).json({ success: false, message: 'Roll number does not match. Please check your details.' });
  
-  // Fetch results only for this verified student
-  const { data: results } = await supabase
+  // Fetch results for this verified student (match by student_id or by name+class+roll)
+  let { data: results } = await supabase
     .from('results').select('*')
     .eq('student_id', student.id)
     .order('created_at', { ascending: false });
+ 
+  // Fallback: match by student_name + cls + roll if student_id not linked
+  if (!results?.length) {
+    const { data: resultsByName } = await supabase
+      .from('results').select('*')
+      .ilike('student_name', name.trim())
+      .eq('cls', cls)
+      .eq('roll', roll.trim())
+      .order('created_at', { ascending: false });
+    results = resultsByName;
+  }
  
   if (!results?.length)
     return res.status(404).json({ success: false, message: `Results for ${student.name} have not been published yet.` });
