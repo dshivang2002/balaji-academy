@@ -741,28 +741,39 @@ img{max-width:100%}
     <p>Search your exam result by name or roll number and download your result card</p>
   </div>
  
-  <!-- Enhanced Search Bar -->
+  <!-- Secure 4-Field Search Form -->
   <div class="result-search-hero no-print" id="resultSearchSection">
     <h3>🔍 Search Your Result</h3>
-    <p>Enter your full name or roll number and select your class to view your result card instantly.</p>
-    <div class="result-search-bar-wrap">
-      <input
-        type="text"
-        id="studentSearchInput"
-        placeholder="Enter student name or roll number..."
-        oninput="searchResult()"
-        autocomplete="off"
-      >
-      <select id="studentClassFilter" onchange="searchResult()">
-        <option value="">All Classes</option>
-        <option>Class 1</option><option>Class 2</option><option>Class 3</option>
-        <option>Class 4</option><option>Class 5</option><option>Class 6</option>
-        <option>Class 7</option><option>Class 8</option><option>Class 9</option>
-        <option>Class 10</option><option>Class 11</option><option>Class 12</option>
-      </select>
-      <button class="btn-search" onclick="searchResult()">🔍 Search</button>
+    <p>Please fill in all four details exactly as registered to view your result card.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:600px;margin:20px auto 0">
+      <div>
+        <label style="display:block;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:5px">1. Student Full Name *</label>
+        <input type="text" id="studentSearchInput" class="form-control" placeholder="e.g. Rahul Kumar Gupta" autocomplete="off">
+      </div>
+      <div>
+        <label style="display:block;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:5px">2. Class *</label>
+        <select id="studentClassFilter" class="form-control">
+          <option value="">Select Class</option>
+          <option>Class 1</option><option>Class 2</option><option>Class 3</option>
+          <option>Class 4</option><option>Class 5</option><option>Class 6</option>
+          <option>Class 7</option><option>Class 8</option><option>Class 9</option>
+          <option>Class 10</option><option>Class 11</option><option>Class 12</option>
+        </select>
+      </div>
+      <div>
+        <label style="display:block;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:5px">3. Roll Number *</label>
+        <input type="text" id="studentRollInput" class="form-control" placeholder="e.g. 2024-10-01" autocomplete="off">
+      </div>
+      <div>
+        <label style="display:block;font-size:12px;font-weight:600;color:var(--primary);margin-bottom:5px">4. Date of Birth *</label>
+        <input type="date" id="studentDobInput" class="form-control">
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:18px">
+      <button class="btn-search" onclick="searchResult()">🔍 Search Result</button>
       <button class="btn-clear" onclick="clearResultSearch()">✕ Clear</button>
     </div>
+    <p style="font-size:11.5px;color:var(--text-muted);margin-top:12px">⚠️ All four fields must match your registered details exactly.</p>
   </div>
  
   <!-- Result Card (shown after search) -->
@@ -1050,14 +1061,14 @@ document.getElementById('feeStructureBody').innerHTML = feeStructure.map(r=>`
 // RESULT MANAGEMENT – STUDENT SEARCH
 // =====================================================
 const defaultResults = [
-  {name:'Rahul Kumar Gupta',cls:'Class 10',roll:'2024-10-01',exam:'Half-Yearly Exam 2024',marks:{Hindi:78,English:82,Maths:91,Science:85,SST:74,Comp:88}},
-  {name:'Priya Dubey',cls:'Class 8',roll:'2024-08-12',exam:'Half-Yearly Exam 2024',marks:{Hindi:88,English:90,Maths:76,Science:84,SST:91,Comp:95}},
-  {name:'Amit Singh Yadav',cls:'Class 12',roll:'2024-12-03',exam:'Unit Test – II',marks:{Hindi:55,English:62,Maths:48,Science:58,SST:60,Comp:70}},
-  {name:'Sunita Kushwaha',cls:'Class 9',roll:'2024-09-07',exam:'Half-Yearly Exam 2024',marks:{Hindi:92,English:88,Maths:95,Science:90,SST:85,Comp:98}},
-  {name:'Deepak Vishwakarma',cls:'Class 6',roll:'2024-06-04',exam:'Unit Test – I',marks:{Hindi:35,English:28,Maths:40,Science:32,SST:38,Comp:45}},
-  {name:'Kavita Prajapati',cls:'Class 7',roll:'2024-07-09',exam:'Half-Yearly Exam 2024',marks:{Hindi:70,English:75,Maths:68,Science:72,SST:66,Comp:80}},
-  {name:'Rohit Nishad',cls:'Class 5',roll:'2024-05-11',exam:'Half-Yearly Exam 2024',marks:{Hindi:82,English:79,Maths:85,Science:81,SST:77,Comp:88}},
-  {name:'Anita Maurya',cls:'Class 11',roll:'2024-11-06',exam:'Unit Test – II',marks:{Hindi:65,English:70,Maths:58,Science:62,SST:68,Comp:72}},
+  {name:'Rahul Kumar Gupta',cls:'Class 10',roll:'2024-10-01',dob:'2009-06-15',exam:'Half-Yearly Exam 2024',marks:{Hindi:78,English:82,Maths:91,Science:85,SST:74,Comp:88}},
+  {name:'Priya Dubey',cls:'Class 8',roll:'2024-08-12',dob:'2011-03-22',exam:'Half-Yearly Exam 2024',marks:{Hindi:88,English:90,Maths:76,Science:84,SST:91,Comp:95}},
+  {name:'Amit Singh Yadav',cls:'Class 12',roll:'2024-12-03',dob:'2007-11-08',exam:'Unit Test – II',marks:{Hindi:55,English:62,Maths:48,Science:58,SST:60,Comp:70}},
+  {name:'Sunita Kushwaha',cls:'Class 9',roll:'2024-09-07',dob:'2010-07-19',exam:'Half-Yearly Exam 2024',marks:{Hindi:92,English:88,Maths:95,Science:90,SST:85,Comp:98}},
+  {name:'Deepak Vishwakarma',cls:'Class 6',roll:'2024-06-04',dob:'2013-02-05',exam:'Unit Test – I',marks:{Hindi:35,English:28,Maths:40,Science:32,SST:38,Comp:45}},
+  {name:'Kavita Prajapati',cls:'Class 7',roll:'2024-07-09',dob:'2012-09-30',exam:'Half-Yearly Exam 2024',marks:{Hindi:70,English:75,Maths:68,Science:72,SST:66,Comp:80}},
+  {name:'Rohit Nishad',cls:'Class 5',roll:'2024-05-11',dob:'2014-04-17',exam:'Half-Yearly Exam 2024',marks:{Hindi:82,English:79,Maths:85,Science:81,SST:77,Comp:88}},
+  {name:'Anita Maurya',cls:'Class 11',roll:'2024-11-06',dob:'2008-12-01',exam:'Unit Test – II',marks:{Hindi:65,English:70,Maths:58,Science:62,SST:68,Comp:72}},
 ];
  
 function getResults(){
@@ -1075,30 +1086,37 @@ function getGrade(pct){
 }
  
 function searchResult(){
-  const query = document.getElementById('studentSearchInput').value.trim().toLowerCase();
-  const classFilter = document.getElementById('studentClassFilter').value;
+  const name = document.getElementById('studentSearchInput').value.trim().toLowerCase();
+  const cls  = document.getElementById('studentClassFilter').value.trim();
+  const roll = document.getElementById('studentRollInput').value.trim().toLowerCase();
+  const dob  = document.getElementById('studentDobInput').value.trim();
   const cardArea = document.getElementById('resultCardArea');
   const notFound = document.getElementById('resultNotFound');
- 
+
   cardArea.innerHTML = '';
   cardArea.classList.remove('show');
   notFound.classList.remove('show');
- 
-  if(!query && !classFilter) return;
- 
+
+  if(!name || !cls || !roll || !dob){
+    alert('⚠️ Please fill in all four fields: Name, Class, Roll Number, and Date of Birth.');
+    return;
+  }
+
   const allResults = getResults();
+  // All four fields must match exactly (name case-insensitive, dob exact)
   const matched = allResults.filter(r => {
-    const nameMatch = r.name.toLowerCase().includes(query);
-    const rollMatch = r.roll.toLowerCase().includes(query);
-    const classMatch = !classFilter || r.cls === classFilter;
-    return (nameMatch || rollMatch) && classMatch;
+    const nameMatch = r.name.trim().toLowerCase() === name;
+    const clsMatch  = r.cls === cls;
+    const rollMatch = (r.roll || '').trim().toLowerCase() === roll;
+    const dobMatch  = (r.dob || '') === dob;
+    return nameMatch && clsMatch && rollMatch && dobMatch;
   });
- 
+
   if(!matched.length){
     notFound.classList.add('show');
     return;
   }
- 
+
   cardArea.innerHTML = matched.map((r,idx) => buildResultCard(r, idx)).join('');
   cardArea.classList.add('show');
 }
@@ -1193,31 +1211,147 @@ function buildResultCard(r, idx){
 }
  
 function printResultCard(){
-  const searchSec = document.getElementById('resultSearchSection');
-  const notFound = document.getElementById('resultNotFound');
-  const adminNote = document.querySelector('#result > div:last-of-type');
- 
-  if(searchSec) searchSec.style.display='none';
-  if(notFound) notFound.style.display='none';
-  if(adminNote) adminNote.style.display='none';
- 
-  window.print();
- 
-  if(searchSec) searchSec.style.display='';
-  if(notFound) notFound.style.display='';
-  if(adminNote) adminNote.style.display='';
+  // Find the currently displayed result card data
+  const cardArea = document.getElementById('resultCardArea');
+  if(!cardArea || !cardArea.innerHTML.trim()) return;
+
+  // Get the current matched result (already rendered)
+  const name = document.getElementById('studentSearchInput').value.trim().toLowerCase();
+  const cls  = document.getElementById('studentClassFilter').value.trim();
+  const roll = document.getElementById('studentRollInput').value.trim().toLowerCase();
+  const dob  = document.getElementById('studentDobInput').value.trim();
+  const allResults = getResults();
+  const matched = allResults.filter(r =>
+    r.name.trim().toLowerCase() === name &&
+    r.cls === cls &&
+    (r.roll||'').trim().toLowerCase() === roll &&
+    (r.dob||'') === dob
+  );
+  if(!matched.length) return;
+
+  const r = matched[0];
+  const subjects = [
+    {name:'Hindi',key:'Hindi'},{name:'English',key:'English'},
+    {name:'Mathematics',key:'Maths'},{name:'Science',key:'Science'},
+    {name:'Social Science',key:'SST'},{name:'Computer',key:'Comp'}
+  ];
+  const total = Object.values(r.marks).reduce((a,b)=>a+(+b||0),0);
+  const pct = ((total/600)*100).toFixed(1);
+  const grade = getGrade(parseFloat(pct));
+  const pass = Object.values(r.marks).every(m=>(+m||0)>=33) && parseFloat(pct)>=33;
+
+  const marksRows = subjects.map(s => {
+    const m = r.marks[s.key]||0;
+    const p = m>=33;
+    return `<tr>
+      <td style="padding:8px 12px;border:1px solid #ddd">${s.name}</td>
+      <td style="padding:8px 12px;border:1px solid #ddd;text-align:center">100</td>
+      <td style="padding:8px 12px;border:1px solid #ddd;text-align:center;font-weight:700;color:${p?'#16a34a':'#dc2626'}">${m}</td>
+      <td style="padding:8px 12px;border:1px solid #ddd;text-align:center">${p?'Pass':'Fail'}</td>
+    </tr>`;
+  }).join('');
+
+  const dobFormatted = r.dob ? new Date(r.dob).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'}) : '';
+
+  const printHTML = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Result Card – ${r.name}</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Times New Roman',serif;background:#fff;color:#111;padding:30px}
+  .page{max-width:720px;margin:0 auto;border:2px solid #1a3c6e;border-radius:8px;padding:30px}
+  .school-header{text-align:center;border-bottom:2px solid #1a3c6e;padding-bottom:18px;margin-bottom:18px}
+  .school-logo-wrap{display:flex;justify-content:center;margin-bottom:12px}
+  .school-logo{width:90px;height:90px;border-radius:50%;border:3px solid #1a3c6e;object-fit:cover;background:#e8f0fe;display:flex;align-items:center;justify-content:center;font-size:36px}
+  .school-name{font-size:26px;font-weight:900;color:#1a3c6e;letter-spacing:1px;text-transform:uppercase}
+  .school-sub{font-size:13px;color:#444;margin-top:3px}
+  .school-address{font-size:12px;color:#666;margin-top:4px}
+  .exam-title{background:#1a3c6e;color:#fff;text-align:center;padding:8px;border-radius:5px;font-size:14px;font-weight:700;margin-bottom:18px}
+  .student-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;margin-bottom:20px;background:#f0f4fa;padding:14px;border-radius:6px;border:1px solid #c7d6ee}
+  .student-field label{font-size:11px;font-weight:700;color:#1a3c6e;text-transform:uppercase;letter-spacing:.5px;display:block}
+  .student-field span{font-size:14px;font-weight:600;color:#111}
+  table{width:100%;border-collapse:collapse;margin-bottom:18px}
+  th{background:#1a3c6e;color:#fff;padding:9px 12px;text-align:left;font-size:13px}
+  td{padding:8px 12px;border:1px solid #ddd;font-size:13px}
+  tr:nth-child(even) td{background:#f8fafc}
+  .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+  .sbox{border:2px solid #c7d6ee;border-radius:6px;padding:10px;text-align:center}
+  .sbox label{font-size:11px;color:#555;font-weight:700;display:block;margin-bottom:4px;text-transform:uppercase}
+  .sbox span{font-size:20px;font-weight:900;color:#1a3c6e}
+  .pass-sbox{border-color:#16a34a} .pass-sbox span{color:#16a34a}
+  .fail-sbox{border-color:#dc2626} .fail-sbox span{color:#dc2626}
+  .footer{text-align:center;margin-top:24px;font-size:11px;color:#888;border-top:1px solid #ddd;padding-top:12px}
+  .seal-row{display:flex;justify-content:space-between;margin-top:30px;font-size:12px}
+  .seal-item{text-align:center;min-width:120px}
+  .seal-line{border-top:1px solid #333;margin-bottom:4px;width:120px}
+  @media print{body{padding:0} .page{border:2px solid #1a3c6e;padding:20px}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="school-header">
+    <div class="school-logo-wrap">
+      <div class="school-logo">🏫</div>
+    </div>
+    <div class="school-name">Balaji Academy</div>
+    <div class="school-sub">Affiliated: CBSE Board &nbsp;|&nbsp; Est. 2005</div>
+    <div class="school-address">Near Balaji Temple, Main Road, Gursahaiganj, Kannauj, Uttar Pradesh – 209721</div>
+    <div class="school-address" style="margin-top:4px">📞 Contact School &nbsp;|&nbsp; Academic Year 2024–25</div>
+  </div>
+
+  <div class="exam-title">📄 RESULT CARD &nbsp;–&nbsp; ${r.exam}</div>
+
+  <div class="student-grid">
+    <div class="student-field"><label>Student Name</label><span>${r.name}</span></div>
+    <div class="student-field"><label>Class</label><span>${r.cls}</span></div>
+    <div class="student-field"><label>Roll Number</label><span>${r.roll}</span></div>
+    <div class="student-field"><label>Date of Birth</label><span>${dobFormatted || r.dob || '—'}</span></div>
+  </div>
+
+  <table>
+    <thead><tr><th>Subject</th><th style="text-align:center">Max Marks</th><th style="text-align:center">Marks Obtained</th><th style="text-align:center">Status</th></tr></thead>
+    <tbody>${marksRows}</tbody>
+  </table>
+
+  <div class="summary">
+    <div class="sbox"><label>Total Marks</label><span>${total}/600</span></div>
+    <div class="sbox"><label>Percentage</label><span>${pct}%</span></div>
+    <div class="sbox"><label>Grade</label><span>${grade}</span></div>
+    <div class="sbox ${pass?'pass-sbox':'fail-sbox'}"><label>Result</label><span>${pass?'PASS':'FAIL'}</span></div>
+  </div>
+
+  <div class="seal-row">
+    <div class="seal-item"><div class="seal-line"></div>Class Teacher</div>
+    <div class="seal-item"><div class="seal-line"></div>Principal</div>
+    <div class="seal-item"><div class="seal-line"></div>School Seal</div>
+  </div>
+
+  <div class="footer">This is a computer-generated result card. For any discrepancy, contact the school office.<br>Balaji Academy, Gursahaiganj, Kannauj – 209721</div>
+</div>
+<script>window.onload=function(){window.print();setTimeout(()=>window.close(),1000);}</script>
+</body>
+</html>`;
+
+  const win = window.open('','_blank','width=800,height=900');
+  win.document.write(printHTML);
+  win.document.close();
 }
  
 function clearResultSearch(){
   document.getElementById('studentSearchInput').value='';
   document.getElementById('studentClassFilter').value='';
+  document.getElementById('studentRollInput').value='';
+  document.getElementById('studentDobInput').value='';
   document.getElementById('resultCardArea').innerHTML='';
   document.getElementById('resultCardArea').classList.remove('show');
   document.getElementById('resultNotFound').classList.remove('show');
 }
  
-document.getElementById('studentSearchInput').addEventListener('keydown', function(e){
-  if(e.key==='Enter') searchResult();
+['studentSearchInput','studentRollInput','studentDobInput'].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el) el.addEventListener('keydown', function(e){ if(e.key==='Enter') searchResult(); });
 });
  
 // =====================================================
@@ -1318,15 +1452,15 @@ function renderUpcomingEvents(){
     container.innerHTML='<p style="font-size:13px;color:var(--text-muted);text-align:center">No upcoming events.</p>';
     return;
   }
-  container.innerHTML = events.map((ev,i)=>{
-    const d = new Date(ev.date);
-    const day = d.getDate();
-    const mon = d.toLocaleString('en-IN',{month:'short'});
-    const color = COLORS[i % COLORS.length];
-    return `<div style="display:flex;gap:12px;align-items:flex-start">
-      <div style="background:${color};color:#fff;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:700;text-align:center;min-width:44px;line-height:1.4">${day}<br>${mon}</div>
-      <div><p style="font-size:13px;font-weight:600">${ev.title}</p><p style="font-size:11.5px;color:var(--text-muted)">${ev.desc||''}</p></div>
-    </div>`;
+  container.innerHTML = events.map(function(ev,i){
+    var d = new Date(ev.date);
+    var day = d.getDate();
+    var mon = d.toLocaleString('en-IN',{month:'short'});
+    var color = COLORS[i % COLORS.length];
+    return '<div style="display:flex;gap:12px;align-items:flex-start">'
+      + '<div style="background:' + color + ';color:#fff;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:700;text-align:center;min-width:44px;line-height:1.4">' + day + '<br>' + mon + '</div>'
+      + '<div><p style="font-size:13px;font-weight:600">' + ev.title + '</p><p style="font-size:11.5px;color:var(--text-muted)">' + (ev.desc||'') + '</p></div>'
+      + '</div>';
   }).join('');
 }
 renderUpcomingEvents();
