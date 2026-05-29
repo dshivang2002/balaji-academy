@@ -356,6 +356,9 @@ app.post('/api/results/lookup', async (req, res) => {
   if (!name || !cls || !roll || !dob)
     return res.status(400).json({ success: false, message: 'Name, class, roll number and date of birth are all required.' });
  
+  console.log('[LOOKUP] Searching:', { name: name.trim(), cls, roll: roll.trim(), dob });
+ 
+  // Step 1: try exact match on all 4 fields
   const { data: results, error } = await supabase
     .from('results')
     .select('*')
@@ -365,10 +368,39 @@ app.post('/api/results/lookup', async (req, res) => {
     .eq('dob', dob)
     .order('created_at', { ascending: false });
  
-  if (error) return res.status(500).json({ success: false, message: error.message });
+  console.log('[LOOKUP] Results with dob filter:', results?.length ?? 0, error ? 'ERROR: ' + error.message : '');
  
-  if (!results || !results.length)
-    return res.status(404).json({ success: false, message: 'No result found. Please check your details and try again.' });
+  if (error) {
+    // dob column might not exist yet — try without dob filter and explain
+    if (error.message && error.message.includes('dob')) {
+      console.log('[LOOKUP] dob column missing — run: ALTER TABLE results ADD COLUMN IF NOT EXISTS dob DATE;');
+      return res.status(500).json({ success: false, message: 'Database setup incomplete: dob column missing in results table. Please run the SQL migration.' });
+    }
+    return res.status(500).json({ success: false, message: error.message });
+  }
+ 
+  // Step 2: if no results with dob, check if record exists without dob to give helpful message
+  if (!results || !results.length) {
+    const { data: partial } = await supabase
+      .from('results')
+      .select('id, student_name, cls, roll, dob')
+      .ilike('student_name', name.trim())
+      .eq('cls', cls)
+      .eq('roll', roll.trim())
+      .limit(5);
+ 
+    console.log('[LOOKUP] Partial match (name+cls+roll, no dob):', partial?.length ?? 0, JSON.stringify(partial));
+ 
+    if (partial && partial.length > 0) {
+      const hasDob = partial.some(r => r.dob);
+      if (!hasDob) {
+        return res.status(404).json({ success: false, message: 'Result found but Date of Birth not saved. Please contact admin to update the result record.' });
+      }
+      return res.status(404).json({ success: false, message: 'Date of Birth does not match our records. Please check and try again.' });
+    }
+ 
+    return res.status(404).json({ success: false, message: 'No result found for the given details. Please check Name, Class, Roll Number and Date of Birth.' });
+  }
  
   res.json({
     success: true,
