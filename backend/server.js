@@ -349,53 +349,30 @@ app.get('/api/results', authMiddleware, async (req, res) => {
 });
  
 /**
- * PUBLIC result lookup – requires exact match of name + class + roll + dob
- * Does NOT return data for everyone. Only the single verified student.
+ * PUBLIC result lookup – matches name + class + roll + dob directly from results table
  */
 app.post('/api/results/lookup', async (req, res) => {
   const { name, cls, roll, dob } = req.body;
   if (!name || !cls || !roll || !dob)
     return res.status(400).json({ success: false, message: 'Name, class, roll number and date of birth are all required.' });
  
-  // First verify student exists with exact name + class + dob match
-  const { data: students } = await supabase
-    .from('students').select('id,name,cls,dob,roll,father_name')
-    .ilike('name', name.trim())
+  const { data: results, error } = await supabase
+    .from('results')
+    .select('*')
+    .ilike('student_name', name.trim())
     .eq('cls', cls)
+    .eq('roll', roll.trim())
     .eq('dob', dob)
-    .limit(5);
- 
-  if (!students?.length)
-    return res.status(404).json({ success: false, message: 'No student found matching the provided details. Please check name, class and date of birth.' });
- 
-  // Also verify roll number matches
-  const student = students.find(s => (s.roll || '').trim().toLowerCase() === roll.trim().toLowerCase());
-  if (!student)
-    return res.status(404).json({ success: false, message: 'Roll number does not match. Please check your details.' });
- 
-  // Fetch results for this verified student (match by student_id or by name+class+roll)
-  let { data: results } = await supabase
-    .from('results').select('*')
-    .eq('student_id', student.id)
     .order('created_at', { ascending: false });
  
-  // Fallback: match by student_name + cls + roll if student_id not linked
-  if (!results?.length) {
-    const { data: resultsByName } = await supabase
-      .from('results').select('*')
-      .ilike('student_name', name.trim())
-      .eq('cls', cls)
-      .eq('roll', roll.trim())
-      .order('created_at', { ascending: false });
-    results = resultsByName;
-  }
+  if (error) return res.status(500).json({ success: false, message: error.message });
  
-  if (!results?.length)
-    return res.status(404).json({ success: false, message: `Results for ${student.name} have not been published yet.` });
+  if (!results || !results.length)
+    return res.status(404).json({ success: false, message: 'No result found. Please check your details and try again.' });
  
   res.json({
     success: true,
-    student: { name: student.name, cls: student.cls, fatherName: student.father_name },
+    student: { name: results[0].student_name, cls: results[0].cls, fatherName: '' },
     data: results
   });
 });
@@ -403,10 +380,10 @@ app.post('/api/results/lookup', async (req, res) => {
 app.post('/api/results', authMiddleware, async (req, res) => {
   const studentName = req.body.studentName || req.body.student_name;
   const studentId   = req.body.studentId   || req.body.student_id;
-  const { cls, roll, exam, marks } = req.body;
+  const { cls, roll, dob, exam, marks } = req.body;
   if (!studentName || !cls || !marks) return res.status(400).json({ success: false, message: 'Missing required fields.' });
   if (!roll) return res.status(400).json({ success: false, message: 'Roll number is required.' });
-  if (!studentId) return res.status(400).json({ success: false, message: 'student_id is required. Please link the student using the Search Student feature.' });
+  if (!dob)  return res.status(400).json({ success: false, message: 'Date of birth is required.' });
   const vals = Object.values(marks).map(Number);
   const total = vals.reduce((a, b) => a + b, 0);
   const percentage = parseFloat(((total / (vals.length * 100)) * 100).toFixed(1));
@@ -414,8 +391,8 @@ app.post('/api/results', authMiddleware, async (req, res) => {
   const status = vals.every(v => v >= 33) && percentage >= 33 ? 'Pass' : 'Fail';
   const newResult = {
     id: 'R' + uuidv4().slice(0, 6).toUpperCase(),
-    student_id: studentId,
-    student_name: studentName, cls, roll, exam,
+    student_id: studentId || null,
+    student_name: studentName, cls, roll, dob, exam,
     marks, total, percentage, grade, status,
     created_at: new Date().toISOString().split('T')[0]
   };

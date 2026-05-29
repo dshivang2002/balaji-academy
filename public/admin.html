@@ -727,32 +727,9 @@ table{border-collapse:collapse;width:100%}
     <div class="md-h"><h3 id="resModalTitle">Add Result</h3><button class="md-x" onclick="closeModal('resultModal')">✕</button></div>
     <div class="md-b">
       <input type="hidden" id="resId">
-      <input type="hidden" id="res-student-id">
-      <!-- Student lookup -->
-      <div style="background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:8px;padding:12px 14px;margin-bottom:14px">
-        <p style="font-size:12px;font-weight:700;color:var(--p);margin-bottom:8px">🔍 Step 1: Find Student from Database</p>
-        <div class="fg-row" style="margin-bottom:8px">
-          <div class="fg2" style="margin-bottom:0"><label class="fl2">Student Name</label><input class="fc2" id="res-lookup-name" placeholder="Type name to search..."></div>
-          <div class="fg2" style="margin-bottom:0"><label class="fl2">Class</label>
-            <select class="fc2" id="res-lookup-cls"><option value="">Select Class</option>
-              <option>Class 1</option><option>Class 2</option><option>Class 3</option>
-              <option>Class 4</option><option>Class 5</option><option>Class 6</option>
-              <option>Class 7</option><option>Class 8</option><option>Class 9</option>
-              <option>Class 10</option><option>Class 11</option><option>Class 12</option>
-            </select>
-          </div>
-        </div>
-        <button class="btn btn-p btn-sm" onclick="lookupStudentForResult()" style="width:100%">🔍 Search Student</button>
-        <div id="res-lookup-result" style="margin-top:10px;display:none;background:#fff;border-radius:6px;padding:10px;font-size:12.5px;border:1px solid #bfdbfe">
-          <strong id="res-lookup-name-display"></strong>
-          <span id="res-lookup-info" style="color:var(--muted)"></span>
-          <span style="color:var(--ok);font-weight:600;margin-left:8px">✅ Student linked</span>
-        </div>
-        <div id="res-lookup-error" style="display:none;margin-top:8px;color:var(--err);font-size:12px"></div>
-      </div>
       <div class="fg-row">
-        <div class="fg2"><label class="fl2">Student Name * <span style="font-size:10px;color:var(--muted)">(auto-filled above)</span></label><input class="fc2" id="res-name" placeholder="Full name"></div>
-        <div class="fg2"><label class="fl2">Roll No *</label><input class="fc2" id="res-roll" placeholder="Roll number"></div>
+        <div class="fg2"><label class="fl2">Student Name *</label><input class="fc2" id="res-name" placeholder="Full name"></div>
+        <div class="fg2"><label class="fl2">Roll No *</label><input class="fc2" id="res-roll" placeholder="e.g. 2024-10-01"></div>
         <div class="fg2"><label class="fl2">Class *</label>
           <select class="fc2" id="res-cls"><option value="">Select</option>
             <option>Class 1</option><option>Class 2</option><option>Class 3</option>
@@ -761,7 +738,8 @@ table{border-collapse:collapse;width:100%}
             <option>Class 10</option><option>Class 11</option><option>Class 12</option>
           </select>
         </div>
-        <div class="fg2"><label class="fl2">Exam Type</label>
+        <div class="fg2"><label class="fl2">Date of Birth * <span style="font-size:10px;color:var(--err);font-weight:400">(used for student verification)</span></label><input class="fc2" id="res-dob" type="date"></div>
+        <div class="fg2" style="grid-column:span 2"><label class="fl2">Exam Type</label>
           <select class="fc2" id="res-exam"><option>Half-Yearly Exam 2024</option><option>Annual Exam 2024</option><option>Unit Test – I</option><option>Unit Test – II</option></select>
         </div>
       </div>
@@ -1233,42 +1211,6 @@ async function delFee(id){
 // ═══════════════════════════════════════════════════════
 // RESULTS
 // ═══════════════════════════════════════════════════════
-async function lookupStudentForResult(){
-  const name = document.getElementById('res-lookup-name').value.trim();
-  const cls  = document.getElementById('res-lookup-cls').value;
-  const errEl = document.getElementById('res-lookup-error');
-  const resEl = document.getElementById('res-lookup-result');
-  errEl.style.display='none';
-  resEl.style.display='none';
-  if(!name||!cls){ errEl.textContent='Please enter both name and class to search.'; errEl.style.display='block'; return; }
-
-  const res = await api('GET', `/students?q=${encodeURIComponent(name)}&cls=${encodeURIComponent(cls)}`);
-  if(!res||!res.data||!res.data.length){
-    errEl.textContent='No student found with that name and class. Please add the student first.';
-    errEl.style.display='block';
-    return;
-  }
-
-  // Find exact or closest match
-  const student = res.data.find(s=>s.name.toLowerCase()===name.toLowerCase()) || res.data[0];
-
-  if(!student.dob){
-    errEl.textContent=`⚠️ Student "${student.name}" has no Date of Birth saved. Please edit the student record and add DOB first, otherwise result lookup will fail.`;
-    errEl.style.display='block';
-    return;
-  }
-
-  // Auto-fill result form fields
-  document.getElementById('res-student-id').value = student.id;
-  document.getElementById('res-name').value = student.name;
-  document.getElementById('res-roll').value = student.roll||'';
-  document.getElementById('res-cls').value = student.cls;
-
-  document.getElementById('res-lookup-name-display').textContent = student.name;
-  document.getElementById('res-lookup-info').textContent = ` — ${student.cls} | Roll: ${student.roll||'—'} | DOB: ${student.dob}`;
-  resEl.style.display='block';
-  toast(`Student "${student.name}" linked successfully.`);
-}
 function calcModalResult(){
   const ids = ['rm-hindi','rm-english','rm-maths','rm-sci','rm-sst','rm-comp'];
   const vals = ids.map(id=>parseInt(document.getElementById(id).value)||0);
@@ -1306,39 +1248,35 @@ async function loadResults(){
 }
  
 async function saveResult(){
-  const studentId = document.getElementById('res-student-id').value;
+  const name = document.getElementById('res-name').value.trim();
+  const roll = document.getElementById('res-roll').value.trim();
+  const cls  = document.getElementById('res-cls').value;
+  const dob  = document.getElementById('res-dob').value;
+  const exam = document.getElementById('res-exam').value;
+  if(!name){ toast('Student name is required.','error'); return; }
+  if(!roll){ toast('Roll number is required.','error'); return; }
+  if(!cls){  toast('Class is required.','error'); return; }
+  if(!dob){  toast('Date of Birth is required — students need it to verify their result.','error'); return; }
   const data = {
-    student_id: studentId || undefined,
-    studentName: document.getElementById('res-name').value.trim(),
-    student_name: document.getElementById('res-name').value.trim(),
-    roll: document.getElementById('res-roll').value.trim(),
-    cls: document.getElementById('res-cls').value,
-    exam: document.getElementById('res-exam').value,
+    studentName: name, student_name: name,
+    roll, cls, dob, exam,
     marks:{
-      Hindi:    parseInt(document.getElementById('rm-hindi').value)||0,
-      English:  parseInt(document.getElementById('rm-english').value)||0,
-      Maths:    parseInt(document.getElementById('rm-maths').value)||0,
-      Science:  parseInt(document.getElementById('rm-sci').value)||0,
-      SST:      parseInt(document.getElementById('rm-sst').value)||0,
-      Comp:     parseInt(document.getElementById('rm-comp').value)||0,
+      Hindi:   parseInt(document.getElementById('rm-hindi').value)||0,
+      English: parseInt(document.getElementById('rm-english').value)||0,
+      Maths:   parseInt(document.getElementById('rm-maths').value)||0,
+      Science: parseInt(document.getElementById('rm-sci').value)||0,
+      SST:     parseInt(document.getElementById('rm-sst').value)||0,
+      Comp:    parseInt(document.getElementById('rm-comp').value)||0,
     }
   };
-  if(!data.studentName||!data.cls){ toast('Student name and class are required.','error'); return; }
-  if(!data.roll){ toast('Roll number is required.','error'); return; }
-  if(!studentId){ toast('Please use "Search Student" above to link the student from the database first.','error'); return; }
-
-  const res = await api('POST','/results',data);
+  const res = await api('POST', '/results', data);
   if(res?.success){
     toast('Result saved successfully.');
     closeModal('resultModal');
     loadResults();
-    // Clear all fields
-    ['res-student-id','res-name','res-roll','res-lookup-name','rm-hindi','rm-english','rm-maths','rm-sci','rm-sst','rm-comp'].forEach(id=>document.getElementById(id).value='');
+    ['res-name','res-roll','res-dob','rm-hindi','rm-english','rm-maths','rm-sci','rm-sst','rm-comp'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('res-cls').value='';
-    document.getElementById('res-lookup-cls').value='';
     document.getElementById('resSummary').style.display='none';
-    document.getElementById('res-lookup-result').style.display='none';
-    document.getElementById('res-lookup-error').style.display='none';
   } else toast(res?.message||'Failed to save result.','error');
 }
  
