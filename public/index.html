@@ -41,6 +41,44 @@ img{max-width:100%}
 ::-webkit-scrollbar-track{background:#f1f5f9}
 ::-webkit-scrollbar-thumb{background:#94a3b8;border-radius:3px}
  
+/* ===== A4 PRINT STYLES ===== */
+@media print {
+  /* Hide every element on the page except the printable result wrapper */
+  body * {
+    visibility: hidden;
+  }
+  
+  #printableResultCard, #printableResultCard * {
+    visibility: visible;
+  }
+  
+  /* Target the printable element and position it perfectly at the top left */
+  #printableResultCard {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    max-width: 100% !important;
+    box-shadow: none !important;
+    border: 1px solid #000 !important;
+    padding: 20px !important;
+    margin: 0 !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Define standard A4 Page margins */
+  @page {
+    size: A4;
+    margin: 20mm 15mm 20mm 15mm;
+  }
+  
+  /* Hide the action buttons during print */
+  .no-print {
+    display: none !important;
+  }
+}
+
 /* ===== SIDEBAR ===== */
 .sidebar{
   position:fixed;left:0;top:0;bottom:0;width:var(--sidebar-w);
