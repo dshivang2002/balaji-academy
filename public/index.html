@@ -1085,10 +1085,10 @@ function getGrade(pct){
   return 'F';
 }
  
-function searchResult(){
-  const name = document.getElementById('studentSearchInput').value.trim().toLowerCase();
+async function searchResult() {
+  const name = document.getElementById('studentSearchInput').value.trim();
   const cls  = document.getElementById('studentClassFilter').value.trim();
-  const roll = document.getElementById('studentRollInput').value.trim().toLowerCase();
+  const roll = document.getElementById('studentRollInput').value.trim();
   const dob  = document.getElementById('studentDobInput').value.trim();
   const cardArea = document.getElementById('resultCardArea');
   const notFound = document.getElementById('resultNotFound');
@@ -1097,28 +1097,42 @@ function searchResult(){
   cardArea.classList.remove('show');
   notFound.classList.remove('show');
 
-  if(!name || !cls || !roll || !dob){
+  if (!name || !cls || !roll || !dob) {
     alert('⚠️ Please fill in all four fields: Name, Class, Roll Number, and Date of Birth.');
     return;
   }
 
-  const allResults = getResults();
-  // All four fields must match exactly (name case-insensitive, dob exact)
-  const matched = allResults.filter(r => {
-    const nameMatch = r.name.trim().toLowerCase() === name;
-    const clsMatch  = r.cls === cls;
-    const rollMatch = (r.roll || '').trim().toLowerCase() === roll;
-    const dobMatch  = (r.dob || '') === dob;
-    return nameMatch && clsMatch && rollMatch && dobMatch;
-  });
-
-  if(!matched.length){
-    notFound.classList.add('show');
-    return;
-  }
-
-  cardArea.innerHTML = matched.map((r,idx) => buildResultCard(r, idx)).join('');
+  // Show loading state
+  cardArea.innerHTML = '<p style="text-align:center;padding:30px;color:var(--text-muted)">🔍 Searching...</p>';
   cardArea.classList.add('show');
+
+  try {
+    const resp = await fetch('https://balaji-academy-academy.onrender.com/api/results/lookup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, cls, roll, dob })
+    });
+
+    const result = await resp.json();
+    cardArea.innerHTML = '';
+    cardArea.classList.remove('show');
+
+    if (!result.success || !result.data?.length) {
+      // Show the server's specific error message
+      notFound.querySelector('p').textContent =
+        result.message || 'No result found. Please check your details and try again.';
+      notFound.classList.add('show');
+      return;
+    }
+
+    cardArea.innerHTML = result.data.map((r, idx) => buildResultCard(r, idx)).join('');
+    cardArea.classList.add('show');
+
+  } catch (err) {
+    cardArea.innerHTML = '';
+    notFound.querySelector('p').textContent = 'Network error. Please check your connection and try again.';
+    notFound.classList.add('show');
+  }
 }
  
 function buildResultCard(r, idx){
