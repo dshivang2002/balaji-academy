@@ -1162,7 +1162,8 @@ async function searchResult() {
       notFound.classList.add('show');
       return;
     }
-
+    
+    window.latestResultData = result.data[0];
     cardArea.innerHTML = result.data.map((r, idx) => buildResultCard(r, idx)).join('');
     cardArea.classList.add('show');
 
