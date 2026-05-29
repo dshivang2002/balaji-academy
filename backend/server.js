@@ -207,17 +207,10 @@ app.post('/api/students', authMiddleware, async (req, res) => {
       gender
     } = req.body;
  
-    if (!name || !cls || !roll) {
+    if (!name || !cls || !roll || !dob) {
       return res.status(400).json({
         success: false,
-        message: 'Name, class, roll number and date of birth are required.'
-      });
-    }
- 
-    if (!dob) {
-      return res.status(400).json({
-        success: false,
-        message: 'Date of birth is required. It is used for result verification.'
+        message: 'Name, class, roll number and date of birth are all required.'
       });
     }
  
@@ -412,6 +405,8 @@ app.post('/api/results', authMiddleware, async (req, res) => {
   const studentId   = req.body.studentId   || req.body.student_id;
   const { cls, roll, exam, marks } = req.body;
   if (!studentName || !cls || !marks) return res.status(400).json({ success: false, message: 'Missing required fields.' });
+  if (!roll) return res.status(400).json({ success: false, message: 'Roll number is required.' });
+  if (!studentId) return res.status(400).json({ success: false, message: 'student_id is required. Please link the student using the Search Student feature.' });
   const vals = Object.values(marks).map(Number);
   const total = vals.reduce((a, b) => a + b, 0);
   const percentage = parseFloat(((total / (vals.length * 100)) * 100).toFixed(1));
@@ -419,7 +414,7 @@ app.post('/api/results', authMiddleware, async (req, res) => {
   const status = vals.every(v => v >= 33) && percentage >= 33 ? 'Pass' : 'Fail';
   const newResult = {
     id: 'R' + uuidv4().slice(0, 6).toUpperCase(),
-    student_id: studentId || null,
+    student_id: studentId,
     student_name: studentName, cls, roll, exam,
     marks, total, percentage, grade, status,
     created_at: new Date().toISOString().split('T')[0]
