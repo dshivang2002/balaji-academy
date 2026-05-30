@@ -1175,6 +1175,10 @@ async function searchResult() {
 }
  
 function buildResultCard(r, idx){
+  // Normalize API fields (student_name) to local fields (name)
+  if (!r.name && r.student_name) r.name = r.student_name;
+  if (!r.exam && r.exam_name)    r.exam = r.exam_name;
+
   const subjects = [
     {name:'Hindi', key:'Hindi'},
     {name:'English', key:'English'},
@@ -1267,18 +1271,13 @@ function printResultCard(){
   const cardArea = document.getElementById('resultCardArea');
   if(!cardArea || !cardArea.innerHTML.trim()) return;
 
-  const name = document.getElementById('studentSearchInput').value.trim().toLowerCase();
-  const cls  = document.getElementById('studentClassFilter').value.trim();
-  const roll = document.getElementById('studentRollInput').value.trim().toLowerCase();
-  const dob  = document.getElementById('studentDobInput').value.trim();
-  const allResults = getResults();
-  const matched = allResults.filter(function(r){
-    return r.name.trim().toLowerCase()===name && r.cls===cls &&
-           (r.roll||'').trim().toLowerCase()===roll && (r.dob||'')===dob;
-  });
-  if(!matched.length) return;
+  // Use the globally stored API result (set when search succeeds)
+  if(!window.latestResultData) return;
+  var r = window.latestResultData;
 
-  var r = matched[0];
+  // Normalize API field names
+  if (!r.name && r.student_name) r.name = r.student_name;
+  if (!r.exam && r.exam_name)    r.exam = r.exam_name;
   var subjects = [
     {label:'Hindi',key:'Hindi'},{label:'English',key:'English'},
     {label:'Mathematics',key:'Maths'},{label:'Science',key:'Science'},
