@@ -1269,12 +1269,16 @@ function printResultCard(){
     var m = r.marks[s.key]||0;
     var p = m>=33;
     marksRowsHTML += '<tr>'
-      +'<td style="padding:8px 12px;border:1px solid #ddd">'+s.label+'</td>'
-      +'<td style="padding:8px 12px;border:1px solid #ddd;text-align:center">100</td>'
-      +'<td style="padding:8px 12px;border:1px solid #ddd;text-align:center;font-weight:700;color:'+(p?'#16a34a':'#dc2626')+'">'+m+'</td>'
-      +'<td style="padding:8px 12px;border:1px solid #ddd;text-align:center">'+(p?'Pass':'Fail')+'</td>'
+      +'<td>'+s.label+'</td>'
+      +'<td style="text-align:center">100</td>'
+      +'<td style="text-align:center;font-weight:700;'+(p?'color:#16a34a':'color:#dc2626')+'">'+m+'</td>'
+      +'<td style="text-align:center" class="'+(p?'pass-cell':'fail-cell')+'">'+(p?'Pass':'Fail')+'</td>'
       +'</tr>';
   });
+
+  // Grab the school logo from the page
+  var logoImg = document.querySelector('.result-card-crest img');
+  var logoSrc = logoImg ? logoImg.src : '';
 
   var win = window.open('','_blank','width=820,height=950');
   var doc = win.document;
@@ -1283,41 +1287,44 @@ function printResultCard(){
   doc.write('<style>');
   doc.write('*{box-sizing:border-box;margin:0;padding:0}');
   doc.write('body{font-family:Georgia,serif;background:#fff;color:#111;padding:30px}');
-  doc.write('.page{max-width:720px;margin:0 auto;border:2px solid #1a3c6e;border-radius:8px;padding:30px}');
+  doc.write('.page{max-width:720px;margin:0 auto;padding:30px}');
   doc.write('.school-header{text-align:center;border-bottom:2px solid #1a3c6e;padding-bottom:18px;margin-bottom:18px}');
-  doc.write('.logo-circle{width:90px;height:90px;border-radius:50%;border:3px solid #1a3c6e;background:#e8f0fe;display:flex;align-items:center;justify-content:center;font-size:38px;margin:0 auto 12px}');
+  doc.write('.logo-circle{width:90px;height:90px;border-radius:50%;border:3px solid #1a3c6e;overflow:hidden;margin:0 auto 12px;display:flex;align-items:center;justify-content:center}');
+  doc.write('.logo-circle img{width:100%;height:100%;object-fit:cover;border-radius:50%}');
   doc.write('.school-name{font-size:26px;font-weight:900;color:#1a3c6e;letter-spacing:1px;text-transform:uppercase}');
-  doc.write('.school-sub{font-size:13px;color:#444;margin-top:4px}');
-  doc.write('.school-addr{font-size:12px;color:#666;margin-top:4px}');
+  doc.write('.school-sub{font-size:13px;color:#111;margin-top:4px}');
+  doc.write('.school-addr{font-size:12px;color:#111;margin-top:4px}');
   doc.write('.exam-title{background:#1a3c6e;color:#fff;text-align:center;padding:9px;border-radius:5px;font-size:14px;font-weight:700;margin-bottom:18px}');
   doc.write('.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;margin-bottom:20px;background:#f0f4fa;padding:14px;border-radius:6px;border:1px solid #c7d6ee}');
   doc.write('.sf label{font-size:11px;font-weight:700;color:#1a3c6e;text-transform:uppercase;letter-spacing:.5px;display:block}');
   doc.write('.sf span{font-size:14px;font-weight:600;color:#111}');
   doc.write('table{width:100%;border-collapse:collapse;margin-bottom:18px}');
   doc.write('th{background:#1a3c6e;color:#fff;padding:9px 12px;text-align:left;font-size:13px}');
-  doc.write('td{padding:8px 12px;border:1px solid #ddd;font-size:13px}');
+  doc.write('td{padding:8px 12px;border:1px solid #ddd;font-size:13px;color:#111}');
   doc.write('tr:nth-child(even) td{background:#f8fafc}');
+  doc.write('.pass-cell{color:#16a34a!important;font-weight:700}');
+  doc.write('.fail-cell{color:#dc2626!important;font-weight:700}');
   doc.write('.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}');
   doc.write('.sbox{border:2px solid #c7d6ee;border-radius:6px;padding:10px;text-align:center}');
-  doc.write('.sbox label{font-size:11px;color:#555;font-weight:700;display:block;margin-bottom:4px;text-transform:uppercase}');
+  doc.write('.sbox label{font-size:11px;color:#111;font-weight:700;display:block;margin-bottom:4px;text-transform:uppercase}');
   doc.write('.sbox span{font-size:20px;font-weight:900;color:#1a3c6e}');
   doc.write('.pass-sbox{border-color:#16a34a}.pass-sbox span{color:#16a34a}');
   doc.write('.fail-sbox{border-color:#dc2626}.fail-sbox span{color:#dc2626}');
   doc.write('.seal-row{display:flex;justify-content:space-between;margin-top:36px;font-size:12px}');
   doc.write('.seal-item{text-align:center;min-width:120px}');
   doc.write('.seal-line{border-top:1px solid #333;margin-bottom:4px}');
-  doc.write('.footer{text-align:center;margin-top:24px;font-size:11px;color:#888;border-top:1px solid #ddd;padding-top:12px}');
-  doc.write('@media print{body{padding:10px}.page{border:2px solid #1a3c6e;padding:20px}}');
+  doc.write('.footer{text-align:center;margin-top:24px;font-size:11px;color:#111;border-top:1px solid #ddd;padding-top:12px}');
+  doc.write('@media print{body{padding:10px}.page{padding:20px}}');
   doc.write('</style></head><body>');
   doc.write('<div class="page">');
   doc.write('<div class="school-header">');
-  doc.write('<div class="logo-circle">&#127979;</div>');
+  doc.write('<div class="logo-circle"><img src="'+logoSrc+'" alt="Balaji Academy Logo"></div>');
   doc.write('<div class="school-name">Balaji Academy</div>');
   doc.write('<div class="school-sub">Affiliated: CBSE Board &nbsp;|&nbsp; Est. 2005</div>');
   doc.write('<div class="school-addr">Near Balaji Temple, Main Road, Gursahaiganj, Kannauj, Uttar Pradesh &ndash; 209721</div>');
   doc.write('<div class="school-addr" style="margin-top:4px">Academic Year 2024&ndash;25</div>');
   doc.write('</div>');
-  doc.write('<div class="exam-title">&#128196; RESULT CARD &nbsp;&ndash;&nbsp; '+r.exam+'</div>');
+  doc.write('<div class="exam-title">RESULT CARD &nbsp;&ndash;&nbsp; '+r.exam+'</div>');
   doc.write('<div class="sgrid">');
   doc.write('<div class="sf"><label>Student Name</label><span>'+r.name+'</span></div>');
   doc.write('<div class="sf"><label>Class</label><span>'+r.cls+'</span></div>');
