@@ -1458,23 +1458,53 @@ const DEFAULT_EVENTS = [
 ];
 const COLORS = ['var(--primary)','var(--accent)','var(--success)','var(--warning)','var(--danger)'];
  
-function renderUpcomingEvents(){
-  const events = JSON.parse(localStorage.getItem('ba_events') || JSON.stringify(DEFAULT_EVENTS));
+// ✅ UPDATED: Pulls Live Events dynamically from your Database
+async function renderUpcomingEvents() {
   const container = document.getElementById('upcomingEventsList');
-  if(!events.length){
-    container.innerHTML='<p style="font-size:13px;color:var(--text-muted);text-align:center">No upcoming events.</p>';
-    return;
+  if (!container) return;
+
+  const COLORS = ['var(--primary)', 'var(--accent)', 'var(--success)', 'var(--warning)', 'var(--danger)'];
+
+  try {
+    // Pull from notices table filtering for event elements
+    const response = await fetch('http://localhost:3001/api/notices');
+    const result = await response.json();
+
+    if (!result.success || !result.data || result.data.length === 0) {
+      container.innerHTML = '<p style="font-size:13px;color:var(--text-muted);text-align:center;padding:10px;">No upcoming events scheduled.</p>';
+      return;
+    }
+
+    // Display all active notices as upcoming feed entities
+    const eventItems = result.data.slice(0, 5);
+
+    container.innerHTML = eventItems.map(function(ev, i) {
+      // Clean date construction parsing 
+      let eventDate = ev.date ? new Date(ev.date) : new Date();
+      if (isNaN(eventDate.getTime())) eventDate = new Date(); // Fallback if format varies
+      
+      let day = eventDate.getDate();
+      let mon = eventDate.toLocaleString('en-IN', { month: 'short' });
+      let color = COLORS[i % COLORS.length];
+
+      return `
+        <div style="display:flex; gap:14px; align-items:center; margin-bottom:14px; background:#fff; padding:10px; border-radius:8px; box-shadow:0 1px 2px rgba(0,0,0,0.02);">
+          <div style="background:${color}; color:#fff; padding:6px; border-radius:6px; text-align:center; min-width:50px; box-shadow:0 2px 6px ${color}30;">
+            <div style="font-size:18px; font-weight:800; line-height:1;">${day}</div>
+            <div style="font-size:10px; text-transform:uppercase; font-weight:600; margin-top:2px;">${mon}</div>
+          </div>
+          <div style="flex:1;">
+            <h4 style="font-size:13px; font-weight:600; color:var(--text); margin-bottom:2px;">${ev.title}</h4>
+            <p style="font-size:11px; color:var(--text-muted); line-height:1.3;">${ev.body.substring(0, 75)}${ev.body.length > 75 ? '...' : ''}</p>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+  } catch (error) {
+    console.error('Failed to update live events timeline:', error);
+    container.innerHTML = '<p style="font-size:12px;color:var(--text-muted);padding:10px;">Events stream unavailable.</p>';
   }
-  container.innerHTML = events.map(function(ev,i){
-    var d = new Date(ev.date);
-    var day = d.getDate();
-    var mon = d.toLocaleString('en-IN',{month:'short'});
-    var color = COLORS[i % COLORS.length];
-    return '<div style="display:flex;gap:12px;align-items:flex-start">'
-      + '<div style="background:' + color + ';color:#fff;padding:4px 8px;border-radius:6px;font-size:11px;font-weight:700;text-align:center;min-width:44px;line-height:1.4">' + day + '<br>' + mon + '</div>'
-      + '<div><p style="font-size:13px;font-weight:600">' + ev.title + '</p><p style="font-size:11.5px;color:var(--text-muted)">' + (ev.desc||'') + '</p></div>'
-      + '</div>';
-  }).join('');
 }
 renderUpcomingEvents();
 </script>
