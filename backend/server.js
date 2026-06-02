@@ -308,33 +308,17 @@ app.post('/api/fees', authMiddleware, async (req, res) => {
   const feeType     = req.body.feeType     || req.body.fee_type;
   const dueDate     = req.body.dueDate     || req.body.due_date;
   const { cls, amount, month } = req.body;
-  
   if (!studentName || !cls || !amount) return res.status(400).json({ success: false, message: 'Missing required fields.' });
-  
-  // Enforce foreign key synchronization explicitly
-  if (!studentId) {
-    return res.status(400).json({ success: false, message: 'Cannot record payment without a valid Student ID link.' });
-  }
-
   const newFee = {
-    id: generateNumericId('F'), // Custom prefix generator mapping
-    student_id: studentId,      // Links to students.id foreign key column
-    student_name: studentName, 
-    cls,
-    fee_type: feeType, 
-    amount: Number(amount), 
-    status: 'Pending',
-    due_date: dueDate, 
-    paid_date: null, 
-    month, 
-    receipt_no: null,
+    id: generateNumericId('F'),
+    student_id: studentId, student_name: studentName, cls,
+    fee_type: feeType, amount: Number(amount), status: 'Pending',
+    due_date: dueDate, paid_date: null, month, receipt_no: null,
     created_at: new Date().toISOString()
   };
-  
   const { data, error } = await supabase.from('fee_payments').insert(newFee).select().single();
   if (error) return res.status(500).json({ success: false, message: error.message });
-  
-  res.status(201).json({ success: true, message: 'Fee record added successfully.', data });
+  res.status(201).json({ success: true, message: 'Fee record added.', data });
 });
  
 app.patch('/api/fees/:id/pay', authMiddleware, async (req, res) => {
@@ -435,41 +419,23 @@ app.post('/api/results', authMiddleware, async (req, res) => {
   const studentName = req.body.studentName || req.body.student_name;
   const studentId   = req.body.studentId   || req.body.student_id;
   const { cls, roll, dob, exam, marks } = req.body;
-  
   if (!studentName || !cls || !marks) return res.status(400).json({ success: false, message: 'Missing required fields.' });
   if (!roll) return res.status(400).json({ success: false, message: 'Roll number is required.' });
   if (!dob)  return res.status(400).json({ success: false, message: 'Date of birth is required.' });
-  
-  // Strict check to make sure a valid Student Foreign Key (like S001) is attached
-  if (!studentId) {
-    return res.status(400).json({ success: false, message: 'A valid Student ID link (e.g. Sxxx) is required.' });
-  }
-
   const vals = Object.values(marks).map(Number);
   const total = vals.reduce((a, b) => a + b, 0);
   const percentage = parseFloat(((total / (vals.length * 100)) * 100).toFixed(1));
   const grade = percentage >= 90 ? 'A+' : percentage >= 80 ? 'A' : percentage >= 70 ? 'B' : percentage >= 60 ? 'C' : percentage >= 33 ? 'D' : 'F';
   const status = vals.every(v => v >= 33) && percentage >= 33 ? 'Pass' : 'Fail';
-  
   const newResult = {
-    id: generateNumericId('R'), // Uses your custom numeric format strategy
-    student_id: studentId,      // Maps foreign key securely to database
-    student_name: studentName, 
-    cls, 
-    roll, 
-    dob, 
-    exam,
-    marks, 
-    total, 
-    percentage, 
-    grade, 
-    status,
+    id: generateNumericId('R'),
+    student_id: studentId || null,
+    student_name: studentName, cls, roll, dob, exam,
+    marks, total, percentage, grade, status,
     created_at: new Date().toISOString().split('T')[0]
   };
-  
   const { data, error } = await supabase.from('results').insert(newResult).select().single();
   if (error) return res.status(500).json({ success: false, message: error.message });
-  
   await auditLog('CREATE', 'Result', `Added result for ${studentName}`, req.user);
   res.status(201).json({ success: true, message: 'Result saved successfully.', data });
 });
