@@ -24,6 +24,12 @@ const { createClient } = require('@supabase/supabase-js');
  
 // ─── Init ────────────────────────────────────────────────
 const app = express();
+const generateNumericId = (prefix) => {
+  // Generates a predictable, clean number sequence using current timestamp and a random offset
+  const timestampPart = Date.now().toString().slice(-5); 
+  const randomPart = Math.floor(100 + Math.random() * 900);
+  return `${prefix}${timestampPart}${randomPart}`;
+};
 const PORT = process.env.PORT || 3001;
 const JWT_SECRET = process.env.JWT_SECRET || 'balaji_academy_secret_key_2024';
 const UPLOAD_DIR = path.join(__dirname, '../public/uploads');
@@ -215,7 +221,7 @@ app.post('/api/students', authMiddleware, async (req, res) => {
     }
  
     const newStudent = {
-      id: 'S' + uuidv4().slice(0, 6).toUpperCase(),
+      id: generateNumericId('S'),
       name,
       cls,
       section: section || 'A',
@@ -304,7 +310,7 @@ app.post('/api/fees', authMiddleware, async (req, res) => {
   const { cls, amount, month } = req.body;
   if (!studentName || !cls || !amount) return res.status(400).json({ success: false, message: 'Missing required fields.' });
   const newFee = {
-    id: 'F' + uuidv4().slice(0, 6).toUpperCase(),
+    id: generateNumericId('F'),
     student_id: studentId, student_name: studentName, cls,
     fee_type: feeType, amount: Number(amount), status: 'Pending',
     due_date: dueDate, paid_date: null, month, receipt_no: null,
@@ -422,7 +428,7 @@ app.post('/api/results', authMiddleware, async (req, res) => {
   const grade = percentage >= 90 ? 'A+' : percentage >= 80 ? 'A' : percentage >= 70 ? 'B' : percentage >= 60 ? 'C' : percentage >= 33 ? 'D' : 'F';
   const status = vals.every(v => v >= 33) && percentage >= 33 ? 'Pass' : 'Fail';
   const newResult = {
-    id: 'R' + uuidv4().slice(0, 6).toUpperCase(),
+    id: generateNumericId('R'),
     student_id: studentId || null,
     student_name: studentName, cls, roll, dob, exam,
     marks, total, percentage, grade, status,
@@ -485,7 +491,7 @@ app.post('/api/admissions', upload.single('photo'), async (req, res) => {
  
     // Use timestamp + uuid fragment for unique ID (avoids random collision on primary key)
     const newAdm = {
-      id: 'BA-' + Date.now() + '-' + uuidv4().slice(0, 4).toUpperCase(),
+      id: 'BA-' + Math.floor(100000 + Math.random() * 900000),
       student_name: studentName,
       father_name: fatherName,
       mother_name: motherName,
@@ -576,7 +582,7 @@ app.get('/api/classes', authMiddleware, async (req, res) => {
 app.post('/api/classes', authMiddleware, async (req, res) => {
   const { name, section, teacher, students, room } = req.body;
   if (!name || !teacher) return res.status(400).json({ success: false, message: 'Class name and teacher are required.' });
-  const cls = { id: 'C' + uuidv4().slice(0, 6).toUpperCase(), name, section: section || 'A', teacher, students: Number(students) || 0, room };
+  const cls = { id: generateNumericId('C'), name, section: section || 'A', teacher, students: Number(students) || 0, room };
   const { data, error } = await supabase.from('classes').insert(cls).select().single();
   if (error) return res.status(500).json({ success: false, message: error.message });
   res.status(201).json({ success: true, message: 'Class added.', data });
@@ -905,12 +911,27 @@ app.post('/api/import/:collection', authMiddleware, roleMiddleware('superadmin')
     return res.status(400).json({ success: false, message: 'Max 500 records per import.' });
  
   // Assign IDs to any records that don't have them
-  const prefixMap = { students: 'S', results: 'R', fee_payments: 'F', admissions: 'BA-', classes: 'C' };
-  const prefix = prefixMap[table] || 'X';
-  const prepared = records.map(r => ({
-    ...r,
-    id: r.id || prefix + uuidv4().slice(0, 6).toUpperCase()
-  }));
+  const prepared = records.map(r => {
+    // If the record already has a correctly formatted ID, keep it
+    if (r.id) return r;
+    
+    let generatedId;
+    if (table === 'students') {
+      generatedId = generateNumericId('S');
+    } else if (table === 'results') {
+      generatedId = generateNumericId('R');
+    } else if (table === 'fee_payments') {
+      generatedId = generateNumericId('F');
+    } else if (table === 'classes') {
+      generatedId = generateNumericId('C');
+    } else if (table === 'admissions') {
+      generatedId = 'BA-' + Math.floor(100000 + Math.random() * 900000);
+    } else {
+      generatedId = 'X' + Date.now();
+    }
+
+    return { ...r, id: generatedId };
+  });
  
   const { data, error } = await supabase.from(table).upsert(prepared, { onConflict: 'id' }).select();
   if (error) return res.status(500).json({ success: false, message: error.message });
