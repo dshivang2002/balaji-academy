@@ -1759,7 +1759,7 @@ async function loadEvents(){
   const body = document.getElementById('evBody');
   body.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted)">Loading...</td></tr>';
   try {
-    const res = await fetch(API + '/events', { headers: { 'Authorization': 'Bearer ' + token } });
+    const res = await fetch(API + '/events', { headers: { 'Authorization': 'Bearer ' + TOKEN } });
     const result = await res.json();
     const events = result.data || [];
     if(!events.length){
@@ -1787,7 +1787,7 @@ async function loadEvents(){
 
 async function editEvent(id){
   try {
-    const res = await fetch(API + '/events/all', { headers: { 'Authorization': 'Bearer ' + token } });
+    const res = await fetch(API + '/events/all', { headers: { 'Authorization': 'Bearer ' + TOKEN } });
     const result = await res.json();
     const ev = (result.data||[]).find(e=>e.id===id);
     if(!ev) return;
@@ -1811,7 +1811,7 @@ async function saveEvent(){
     const url = id ? API + '/events/' + id : API + '/events';
     const res = await fetch(url, {
       method,
-      headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token },
+      headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+TOKEN },
       body: JSON.stringify({ title, desc, date })
     });
     const result = await res.json();
@@ -1827,7 +1827,7 @@ async function deleteEvent(id){
   try {
     await fetch(API + '/events/' + id, {
       method: 'DELETE',
-      headers: { 'Authorization': 'Bearer ' + token }
+      headers: { 'Authorization': 'Bearer ' + TOKEN }
     });
     toast('Event deleted.');
     loadEvents();
