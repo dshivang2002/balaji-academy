@@ -13,4 +13,4 @@ Disallow: /api/
 # Block uploaded private files
 Disallow: /uploads/
 
-Sitemap: https://www.balajiacademy.in/sitemap.xml
+Sitemap: https://www.balajiacademy.info/sitemap.xml
