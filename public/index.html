@@ -650,7 +650,7 @@ img{max-width:100%}
     <div class="page-title" id="pageTitle">🏠 Home Dashboard</div>
   </div>
   <div class="topbar-right">
-    <button class="topbar-btn no-print">📅 2026–27</button>
+    <button class="topbar-btn no-print">📅 2024–25</button>
     <div class="user-chip" onclick="window.location.href='admin.html'" style="cursor:pointer" title="Go to Admin Panel">
       <div class="user-avatar">AD</div>
       <span>Admin</span>
@@ -678,8 +678,7 @@ img{max-width:100%}
   <div class="ticker-wrap">
     <span class="ticker-label">📢 Notice</span>
     <div class="ticker-track">
-      <div class="ticker-inner" id="noticeTicker">
-        <span>Loading notices...</span>
+      <div class="ticker-inner" id="noticeTicker"><span>Loading notices...</span>
       </div>
     </div>
   </div>
@@ -1343,7 +1342,7 @@ function printResultCard(){
   doc.write('body{font-family:Georgia,serif;background:#fff;color:#111;padding:30px}');
   doc.write('.page{max-width:720px;margin:0 auto;padding:30px}');
   doc.write('.school-header{text-align:center;border-bottom:2px solid #1a3c6e;padding-bottom:18px;margin-bottom:18px}');
-  doc.write('.logo-circle{width:90px;height:90px;border-radius:50%;border:3px solid #1a3c6e;overflow:hidden;margin:0 auto 12px;display:flex;align-items:center;justify-content:center}');
+  doc.write('.logo-circle{width:90px;height:90px;border-radius:50%;overflow:hidden;margin:0 auto 12px;display:flex;align-items:center;justify-content:center}');
   doc.write('.logo-circle img{width:100%;height:100%;object-fit:cover;border-radius:50%}');
   doc.write('.school-name{font-size:26px;font-weight:900;color:#1a3c6e;letter-spacing:1px;text-transform:uppercase}');
   doc.write('.school-sub{font-size:13px;color:#111;margin-top:4px}');
@@ -1514,7 +1513,6 @@ const COLORS = ['var(--primary)','var(--accent)','var(--success)','var(--warning
  
 const NOTICES_API = 'https://balaji-academy-academy.onrender.com/api/notices';
 
-// Load notices into the scrolling ticker
 async function loadNoticeTicker() {
   const ticker = document.getElementById('noticeTicker');
   if (!ticker) return;
@@ -1551,11 +1549,11 @@ async function renderUpcomingEvents() {
       return;
     }
 
-    // Display all active events
+    // Display all active notices as upcoming feed entities
     const eventItems = result.data.slice(0, 5);
 
     container.innerHTML = eventItems.map(function(ev, i) {
-      // Parse date safely — Supabase returns "YYYY-MM-DD", split to avoid timezone shift
+      // Parse date safely — split to avoid timezone shift
       let eventDate;
       if (ev.date && ev.date.includes('-')) {
         const [y, m, d] = ev.date.split('-').map(Number);
@@ -1590,4 +1588,4 @@ async function renderUpcomingEvents() {
 renderUpcomingEvents();
 </script>
 </body>
-</html
+</html>
