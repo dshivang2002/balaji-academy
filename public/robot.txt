@@ -1,0 +1,16 @@
+# Balaji Academy – Gursahaiganj, Kannauj
+# robots.txt
+
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /frontend.html
+
+# Block admin panel from indexing
+Disallow: /admin.html
+Disallow: /api/
+
+# Block uploaded private files
+Disallow: /uploads/
+
+Sitemap: https://www.balajiacademy.in/sitemap.xml
