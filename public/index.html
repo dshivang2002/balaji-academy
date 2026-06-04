@@ -1555,9 +1555,14 @@ async function renderUpcomingEvents() {
     const eventItems = result.data.slice(0, 5);
 
     container.innerHTML = eventItems.map(function(ev, i) {
-      // Clean date construction parsing 
-      let eventDate = ev.date ? new Date(ev.date) : new Date();
-      if (isNaN(eventDate.getTime())) eventDate = new Date(); // Fallback if format varies
+      // Parse date safely — Supabase returns "YYYY-MM-DD", split to avoid timezone shift
+      let eventDate;
+      if (ev.date && ev.date.includes('-')) {
+        const [y, m, d] = ev.date.split('-').map(Number);
+        eventDate = new Date(y, m - 1, d);
+      } else {
+        eventDate = new Date();
+      }
       
       let day = eventDate.getDate();
       let mon = eventDate.toLocaleString('en-IN', { month: 'short' });
@@ -1571,7 +1576,7 @@ async function renderUpcomingEvents() {
           </div>
           <div style="flex:1;">
             <h4 style="font-size:13px; font-weight:600; color:var(--text); margin-bottom:2px;">${ev.title}</h4>
-            <p style="font-size:11px; color:var(--text-muted); line-height:1.3;">${ev.body.substring(0, 75)}${ev.body.length > 75 ? '...' : ''}</p>
+            <p style="font-size:11px; color:var(--text-muted); line-height:1.3;">${(ev.description||ev.desc||'').substring(0, 75)}${(ev.description||ev.desc||'').length > 75 ? '...' : ''}</p>
           </div>
         </div>
       `;
@@ -1585,4 +1590,4 @@ async function renderUpcomingEvents() {
 renderUpcomingEvents();
 </script>
 </body>
-</html>
+</html
