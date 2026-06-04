@@ -678,13 +678,8 @@ img{max-width:100%}
   <div class="ticker-wrap">
     <span class="ticker-label">📢 Notice</span>
     <div class="ticker-track">
-      <div class="ticker-inner">
-        <span>🎉 Annual Prize Distribution Ceremony on 25 November 2024 — All students &amp; parents are invited</span>
-        <span>📚 Half-Yearly Examinations begin from 10 October 2024 — Check timetable on notice board</span>
-        <span>🏆 Balaji Academy wins District-Level Science Quiz — Congratulations to Team!</span>
-        <span>💰 Last date for fee submission: 15 October 2024 — Avoid late fine</span>
-        <span>🌿 School will remain closed on Diwali holidays: 29 Oct – 3 Nov 2024</span>
-        <span>📣 Parent-Teacher Meeting scheduled for 30 September 2024 at 10:00 AM</span>
+      <div class="ticker-inner" id="noticeTicker">
+        <span>Loading notices...</span>
       </div>
     </div>
   </div>
@@ -1517,7 +1512,30 @@ const DEFAULT_EVENTS = [
 ];
 const COLORS = ['var(--primary)','var(--accent)','var(--success)','var(--warning)','var(--danger)'];
  
-// ✅ UPDATED: Pulls Live Events dynamically from your Database
+const NOTICES_API = 'https://balaji-academy-api.onrender.com/api/notices';
+
+// Load notices into the scrolling ticker
+async function loadNoticeTicker() {
+  const ticker = document.getElementById('noticeTicker');
+  if (!ticker) return;
+  try {
+    const res = await fetch(NOTICES_API);
+    const result = await res.json();
+    if (!result.success || !result.data || result.data.length === 0) {
+      ticker.innerHTML = '<span>No active notices at this time.</span>';
+      return;
+    }
+    const icons = { high: '🔴', medium: '📢', low: '🔵' };
+    ticker.innerHTML = result.data.map(n =>
+      `<span>${icons[n.priority] || '📢'} ${n.title} — ${n.body}</span>`
+    ).join('');
+  } catch (e) {
+    ticker.innerHTML = '<span>📢 Welcome to Balaji Academy, Gursahaiganj</span>';
+  }
+}
+loadNoticeTicker();
+
+// ✅ Pulls Live Events dynamically from your Database
 async function renderUpcomingEvents() {
   const container = document.getElementById('upcomingEventsList');
   if (!container) return;
@@ -1525,8 +1543,7 @@ async function renderUpcomingEvents() {
   const COLORS = ['var(--primary)', 'var(--accent)', 'var(--success)', 'var(--warning)', 'var(--danger)'];
 
   try {
-    // Pull from notices table filtering for event elements
-    const response = await fetch('http://localhost:3001/api/notices');
+    const response = await fetch(NOTICES_API);
     const result = await response.json();
 
     if (!result.success || !result.data || result.data.length === 0) {
