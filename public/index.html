@@ -1543,7 +1543,7 @@ async function renderUpcomingEvents() {
   const COLORS = ['var(--primary)', 'var(--accent)', 'var(--success)', 'var(--warning)', 'var(--danger)'];
 
   try {
-    const response = await fetch(NOTICES_API);
+    const response = await fetch(NOTICES_API.replace('/notices', '/events'));
     const result = await response.json();
 
     if (!result.success || !result.data || result.data.length === 0) {
@@ -1551,7 +1551,7 @@ async function renderUpcomingEvents() {
       return;
     }
 
-    // Display all active notices as upcoming feed entities
+    // Display all active events
     const eventItems = result.data.slice(0, 5);
 
     container.innerHTML = eventItems.map(function(ev, i) {

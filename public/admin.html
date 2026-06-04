@@ -1753,82 +1753,85 @@ async function loadAudit(){
 }
  
 // ═══════════════════════════════════════════════════════
-// EVENTS (localStorage based - shared with frontend)
+// EVENTS (Database backed via /api/events)
 // ═══════════════════════════════════════════════════════
-const DEFAULT_EVENTS = [
-  {id:'ev1',title:'Parent-Teacher Meeting',desc:'10:00 AM – School Premises',date:'2024-09-30'},
-  {id:'ev2',title:'Half-Yearly Examinations',desc:'All Classes',date:'2024-10-10'},
-  {id:'ev3',title:'Annual Prize Distribution',desc:'4:00 PM – School Auditorium',date:'2024-11-25'},
-];
- 
-function getEvents(){
-  return JSON.parse(localStorage.getItem('ba_events') || JSON.stringify(DEFAULT_EVENTS));
-}
-function saveEvents(events){
-  localStorage.setItem('ba_events', JSON.stringify(events));
-}
- 
-function loadEvents(){
-  const events = getEvents();
+async function loadEvents(){
   const body = document.getElementById('evBody');
-  if(!events.length){
-    body.innerHTML='<tr class="empty-row"><td colspan="5">No events found.</td></tr>'; return;
+  body.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted)">Loading...</td></tr>';
+  try {
+    const res = await fetch(API + '/events', { headers: { 'Authorization': 'Bearer ' + token } });
+    const result = await res.json();
+    const events = result.data || [];
+    if(!events.length){
+      body.innerHTML='<tr class="empty-row"><td colspan="5">No events found.</td></tr>'; return;
+    }
+    body.innerHTML = events.map((e,i)=>{
+      const d = new Date(e.date);
+      const day = d.getDate();
+      const mon = d.toLocaleString('en-IN',{month:'short'});
+      return `<tr>
+        <td>${i+1}</td>
+        <td><strong>${day} ${mon}</strong></td>
+        <td>${e.title}</td>
+        <td style="color:var(--muted)">${e.desc||'—'}</td>
+        <td>
+          <button class="btn btn-p btn-xs" onclick="editEvent('${e.id}')">✏️</button>
+          <button class="btn btn-err btn-xs" onclick="deleteEvent('${e.id}')">🗑️</button>
+        </td>
+      </tr>`;
+    }).join('');
+  } catch(err) {
+    body.innerHTML='<tr><td colspan="5" style="color:var(--danger);text-align:center">Failed to load events.</td></tr>';
   }
-  body.innerHTML = events.map((e,i)=>{
-    const d = new Date(e.date);
-    const day = d.getDate();
-    const mon = d.toLocaleString('en-IN',{month:'short'});
-    return `<tr>
-      <td>${i+1}</td>
-      <td><strong>${day} ${mon}</strong></td>
-      <td>${e.title}</td>
-      <td style="color:var(--muted)">${e.desc||'—'}</td>
-      <td>
-        <button class="btn btn-p btn-xs" onclick="editEvent('${e.id}')">✏️</button>
-        <button class="btn btn-err btn-xs" onclick="deleteEvent('${e.id}')">🗑️</button>
-      </td>
-    </tr>`;
-  }).join('');
 }
- 
-function editEvent(id){
-  const events = getEvents();
-  const ev = events.find(e=>e.id===id);
-  if(!ev) return;
-  document.getElementById('evId').value = ev.id;
-  document.getElementById('evModalTitle').textContent = 'Edit Event';
-  document.getElementById('ev-title').value = ev.title;
-  document.getElementById('ev-desc').value = ev.desc||'';
-  document.getElementById('ev-date').value = ev.date;
-  openModal('eventModal');
+
+async function editEvent(id){
+  try {
+    const res = await fetch(API + '/events/all', { headers: { 'Authorization': 'Bearer ' + token } });
+    const result = await res.json();
+    const ev = (result.data||[]).find(e=>e.id===id);
+    if(!ev) return;
+    document.getElementById('evId').value = ev.id;
+    document.getElementById('evModalTitle').textContent = 'Edit Event';
+    document.getElementById('ev-title').value = ev.title;
+    document.getElementById('ev-desc').value = ev.desc||'';
+    document.getElementById('ev-date').value = ev.date;
+    openModal('eventModal');
+  } catch(err){ toast('Could not load event.','error'); }
 }
- 
-function saveEvent(){
+
+async function saveEvent(){
   const id = document.getElementById('evId').value;
   const title = document.getElementById('ev-title').value.trim();
   const desc = document.getElementById('ev-desc').value.trim();
   const date = document.getElementById('ev-date').value;
   if(!title||!date){ toast('Title and date are required.','error'); return; }
-  const events = getEvents();
-  if(id){
-    const idx = events.findIndex(e=>e.id===id);
-    if(idx>-1) events[idx]={...events[idx],title,desc,date};
-  } else {
-    events.push({id:'ev'+Date.now(),title,desc,date});
-  }
-  events.sort((a,b)=>new Date(a.date)-new Date(b.date));
-  saveEvents(events);
-  toast(id?'Event updated.':'Event added.');
-  closeModal('eventModal');
-  loadEvents();
+  try {
+    const method = id ? 'PUT' : 'POST';
+    const url = id ? API + '/events/' + id : API + '/events';
+    const res = await fetch(url, {
+      method,
+      headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token },
+      body: JSON.stringify({ title, desc, date })
+    });
+    const result = await res.json();
+    if(!result.success) throw new Error(result.message);
+    toast(id ? 'Event updated.' : 'Event added.');
+    closeModal('eventModal');
+    loadEvents();
+  } catch(err){ toast(err.message||'Failed to save event.','error'); }
 }
- 
-function deleteEvent(id){
+
+async function deleteEvent(id){
   if(!confirm('Delete this event?')) return;
-  const events = getEvents().filter(e=>e.id!==id);
-  saveEvents(events);
-  toast('Event deleted.');
-  loadEvents();
+  try {
+    await fetch(API + '/events/' + id, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    toast('Event deleted.');
+    loadEvents();
+  } catch(err){ toast('Failed to delete event.','error'); }
 }
  
 // ═══════════════════════════════════════════════════════

@@ -632,6 +632,38 @@ app.delete('/api/notices/:id', authMiddleware, async (req, res) => {
   res.json({ success: true, message: 'Notice deleted.' });
 });
  
+// ── UPCOMING EVENTS ───────────────────────────────────────
+app.get('/api/events', async (req, res) => {
+  const { data } = await supabase.from('upcoming_events').select('*').order('date', { ascending: true });
+  res.json({ success: true, data: data || [] });
+});
+ 
+app.get('/api/events/all', authMiddleware, async (req, res) => {
+  const { data } = await supabase.from('upcoming_events').select('*').order('date', { ascending: true });
+  res.json({ success: true, data: data || [] });
+});
+ 
+app.post('/api/events', authMiddleware, async (req, res) => {
+  const { title, desc, date } = req.body;
+  if (!title || !date) return res.status(400).json({ success: false, message: 'Title and date are required.' });
+  const event = { id: 'EV' + uuidv4().slice(0, 6).toUpperCase(), title, desc: desc || '', date };
+  const { data, error } = await supabase.from('upcoming_events').insert(event).select().single();
+  if (error) return res.status(500).json({ success: false, message: error.message });
+  res.status(201).json({ success: true, message: 'Event added.', data });
+});
+ 
+app.put('/api/events/:id', authMiddleware, async (req, res) => {
+  const { title, desc, date } = req.body;
+  const { data, error } = await supabase.from('upcoming_events').update({ title, desc, date }).eq('id', req.params.id).select().single();
+  if (error) return res.status(500).json({ success: false, message: error.message });
+  res.json({ success: true, message: 'Event updated.', data });
+});
+ 
+app.delete('/api/events/:id', authMiddleware, async (req, res) => {
+  await supabase.from('upcoming_events').delete().eq('id', req.params.id);
+  res.json({ success: true, message: 'Event deleted.' });
+});
+ 
 // ── ADMINS ────────────────────────────────────────────────
 app.get('/api/admins', authMiddleware, roleMiddleware('superadmin'), async (req, res) => {
   const { data } = await supabase.from('admins').select('id,username,name,role,email,created_at');
@@ -929,7 +961,7 @@ app.post('/api/import/:collection', authMiddleware, roleMiddleware('superadmin')
     } else {
       generatedId = 'X' + Date.now();
     }
-
+ 
     return { ...r, id: generatedId };
   });
  
